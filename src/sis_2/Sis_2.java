@@ -5,6 +5,12 @@
  */
 package sis_2;
 
+
+import java.util.Scanner;
+import POJOS.*;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 /**
  *
  * @author gar27
@@ -16,6 +22,18 @@ public class Sis_2 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("Introduzca un DNI:");
+        String newNIF = sc.nextLine();
+        
+        
+        
+        
+        sc.close();
+        
+        
     }
     
 }
