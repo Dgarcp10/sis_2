@@ -18,7 +18,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-public class sis_2 {
+public class Sis_2 {
     
     static SessionFactory sf = null;
     static Session sesion = null;
@@ -35,8 +35,9 @@ public class sis_2 {
         try{
             sf = HibernateUtil.getSessionFactory();
             
-            mostrarContribuyente(DNI);
-            importeTotalReciboContribuyente(DNI);
+            if(mostrarContribuyente(DNI)){
+                importeTotalReciboContribuyente(DNI);
+            }
             eliminarRecibosMenorMedia();
         }finally{
             sf.close();
@@ -47,25 +48,33 @@ public class sis_2 {
     }
     //09677930J
     
-    private static void mostrarContribuyente(String DNI){
+    private static boolean mostrarContribuyente(String DNI){
         
-        
+        boolean salida = true;
         sesion = sf.openSession();
             
         Query query = sesion.createQuery("SELECT c FROM Contribuyente c WHERE c.nifnie = :n");
         query.setParameter("n", DNI);
 
         Contribuyente c = (Contribuyente) query.uniqueResult();
-        System.out.println(c.getNombre());
-        System.out.println(c.getApellido1());
-        System.out.println(c.getApellido2());
-        System.out.println(c.getNifnie());
-        System.out.println(c.getDireccion());
+        if(c != null){
+            System.out.println(c.getNombre());
+            System.out.println(c.getApellido1());
+            if(c.getApellido2() != null){
+                System.out.println(c.getApellido2());
+            }
+            System.out.println(c.getNifnie());
+            System.out.println(c.getDireccion());
+        
+        }else salida = false;
         
         sesion.close();
+        return salida;
     }
     
     private static void importeTotalReciboContribuyente(String DNI){
+        
+        sesion = sf.openSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r WHERE r.nifContribuyente = :n");
         query.setParameter("n", DNI);
             
@@ -79,6 +88,8 @@ public class sis_2 {
     }
     
     private static void eliminarRecibosMenorMedia(){
+        
+        sesion = sf.openSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r");
             
         List<Recibos> listaRecibos = query.list();
@@ -88,7 +99,8 @@ public class sis_2 {
             media += r.getTotalRecibo();
         }
         media = media/listaRecibos.size();
-        System.out.println(media);
+        //System.out.println("Media: " + media);
+        tx = sesion.beginTransaction();
         for (Recibos r : listaRecibos) {
             if(r.getTotalRecibo()<media){
                 sesion.delete(r);
