@@ -8,9 +8,11 @@ package sis_2;
 
 import java.util.Scanner;
 import POJOS.*;
+import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 /**
  *
  * @author gar27
@@ -29,7 +31,27 @@ public class Sis_2 {
         String newNIF = sc.nextLine();
         
         
+        SessionFactory sf = null;
+        Session session = null;
+        Transaction tx = null;
         
+        try{
+            sf = HibernateUtil.getSessionFactory();
+            session = sf.openSession();
+            
+            String HQL = "from Recibos r WHERE Recibos.idContribuyente.nifnie = :nifNie";
+            
+            Query query = session.createQuery(HQL);
+            query.setParameter("nifNie", newNIF);
+            
+            List<Contribuyente> lista = query.list();
+            
+            
+            
+        }
+        catch(NullPointerException e){
+            System.out.println("El usuario no se encuentra entre nuestros datos."); 
+        }
         
         sc.close();
         
