@@ -114,11 +114,18 @@ public class Sis_2 {
         sesion.close();
     }*/
     
-    private boolean validadorNif(String nif){
+    private boolean validadorNif(int id, String nif){
         boolean salida = false;
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
-            //TODO
+            if(CorrectorNIF(nif).equalsIgnoreCase("1")){
+                //es correcto, comprueba si es repe y continua.
+            }else{
+                //devuelve dni corregido, actualiza, comprueba si es repe y continua.
+                //llama al excelManager y le pasa id y dni actualizado.
+            }
+        }else{
+                //es un error y se manda al xml de errores.
         }
         return salida;
     }
