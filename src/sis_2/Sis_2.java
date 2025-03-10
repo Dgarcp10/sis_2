@@ -33,22 +33,22 @@ public class Sis_2 {
         String DNI = sc.nextLine();
   
         try{
-            sf = HibernateUtil.getSessionFactory();
+            /*sf = HibernateUtil.getSessionFactory();
             
             if(mostrarContribuyente(DNI)){
                 importeTotalReciboContribuyente(DNI);
             }
-            eliminarRecibosMenorMedia();
+            eliminarRecibosMenorMedia();*/
         }finally{
-            sf.close();
-            HibernateUtil.shutdown();
+            /*sf.close();
+            HibernateUtil.shutdown();*/
             
         }
            
     }
     //09677930J
     
-    private static boolean mostrarContribuyente(String DNI){
+    /*private static boolean mostrarContribuyente(String DNI){
         
         boolean salida = true;
         sesion = sf.openSession();
@@ -111,5 +111,5 @@ public class Sis_2 {
 
 
         sesion.close();
-    }
+    }*/
 }
