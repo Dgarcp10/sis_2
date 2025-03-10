@@ -17,6 +17,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import java.util.regex.Pattern; //validador de patrones (PL)
 
 public class Sis_2 {
     
@@ -112,4 +113,60 @@ public class Sis_2 {
 
         sesion.close();
     }*/
+    
+    private boolean validadorNif(String nif){
+        boolean salida = false;
+        String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
+        if(Pattern.matches(regexp, nif)){
+            //TODO
+        }
+        return salida;
+    }
+    
+    
+    /**
+     * 
+     * @param nif (recibe un dato valido, no es nul ni tienen tipo extraño concretamente tiene 9 caracteres u 8 (le falta la letra)) 
+     * @return String (1 si es correcto, o el dni correcto en caso de estar subsanado.
+     */
+    private String CorrectorNIF(String nif){
+        String salida = "-1";
+        String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        String nifAux;
+        switch(nif.toUpperCase().charAt(0)){        //cambia la letra X, Y o Z del inicio por su numero correspondiente.
+            case 'X':
+                nifAux = "0" + nif.substring(1, nif.length());
+                break;
+            case 'Y':
+                nifAux = "1" + nif.substring(1, nif.length());
+                break;
+            case 'Z':
+                nifAux = "2" + nif.substring(1, nif.length());
+                break;
+            default:
+                nifAux = nif.substring(0, nif.length());
+                break;
+        }
+        if(nifAux.length()==8){
+            int aux = ((Integer.parseInt(nifAux))%23);
+            nif +=(letras.charAt(aux));
+            salida = nif;
+            
+        }else if(nifAux.length()==9){
+            int aux = ((Integer.parseInt(nifAux.substring(0, nifAux.length()-1)))%23);
+            if(nifAux.charAt(8)==letras.charAt(aux)){
+                salida = "1";
+            } else {
+                nifAux = nifAux.substring(0, nifAux.length()-1) + (letras.charAt(aux));
+            }
+            salida = nifAux;
+        }
+        return salida;
+    }
+    
+    
+    boolean isDNI(String cadena){
+        String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]$";
+        return Pattern.matches(regexp, cadena);
+    }
 }
