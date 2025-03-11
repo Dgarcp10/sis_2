@@ -5,18 +5,26 @@
  */
 package sis_2;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 /**
  *
  * @author gar27
+ * @author ngarng00
  */
 public class ExcelManager {
     private int ayuntamientoOrdenanzaColumn, tipoVehiculoColumn, unidadColumn, minimoColumn, maximoColumn, importeColumn; //ORDENANZA EXCEL
     private int nifnieColumn, apellido1Column, apellido2Column, nombreColumn, direccionColumn, numeroColumn, emailColumn, ayuntamientoContribuyenteColumn, paisCCCColumn,CCCColumn, IBANColumn, bonificacionColumn; //CONTRIBUYENTE EXCEL
     private int tipoColumn, marcaColumn, modeloColumn, matriculaColumn, bastidorColumn, caballosColumn, plazasColumn, kgColumn, CCColumn, exencionColumn,fechaMatriculaciónColumn, fechaAltaColumn, fechaBajaColumn,fechaBajaTemporalColumn, nifPropietarioColumn; //VEHICULO EXCEL
-    
-    //private Workbook libro = WorkbookFactory.create(true);
+    String direccionOrdenanzas = "../../resources/SistemasOrdenanzas";
+    String direccionVehiculos = "../../resources/SistemasVehiculos";
+    private Workbook libroOrdenanzas;
+    private Workbook libroVehiculos;
     
     //GETTERS Y SETTERS
     public int getAyuntamientoOrdenanzaColumn() {
@@ -284,6 +292,15 @@ public class ExcelManager {
     }
 
     public ExcelManager(){
-        //inicializarValores();
+        inicializarValores();
+    }
+
+    private void inicializarValores() {
+        try {
+            libroOrdenanzas = WorkbookFactory.create(new File(direccionOrdenanzas));
+            libroVehiculos = WorkbookFactory.create(new File(direccionVehiculos));
+        } catch (IOException | EncryptedDocumentException ex) {
+            Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
