@@ -5,7 +5,8 @@
  */
 package sis_2;
 
-//import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 /**
  *
  * @author gar27
@@ -15,7 +16,7 @@ public class ExcelManager {
     private int nifnieColumn, apellido1Column, apellido2Column, nombreColumn, direccionColumn, numeroColumn, emailColumn, ayuntamientoContribuyenteColumn, paisCCCColumn,CCCColumn, IBANColumn, bonificacionColumn; //CONTRIBUYENTE EXCEL
     private int tipoColumn, marcaColumn, modeloColumn, matriculaColumn, bastidorColumn, caballosColumn, plazasColumn, kgColumn, CCColumn, exencionColumn,fechaMatriculaciónColumn, fechaAltaColumn, fechaBajaColumn,fechaBajaTemporalColumn, nifPropietarioColumn; //VEHICULO EXCEL
     
-    //private Workbook 
+    //private Workbook libro = WorkbookFactory.create(true);
     
     //GETTERS Y SETTERS
     public int getAyuntamientoOrdenanzaColumn() {
