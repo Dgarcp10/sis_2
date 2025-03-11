@@ -122,15 +122,17 @@ public class Sis_2 {
      * 
      */
     private boolean validadorNif(int id, String nif){
-        boolean salida = false;
+        boolean salida;
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
             if(CorrectorNIF(nif).equalsIgnoreCase("1")){    //el nif es correcto 
                 if(anyadirNIFNIE(nif)){
                     //es correcto y no existia 
                     //SALE
+                    salida = true;
                 }else{
                     //lo manda al xml de errores y continua
+                    salida = false;
                 }
                 
             }else{      //El nif ha sido subsanado
@@ -139,12 +141,15 @@ public class Sis_2 {
                 if(anyadirNIFNIE(nif)){
                     //es correcto y no existia 
                     //SALE
+                    salida = true;
                 }else{
                     //lo manda al xml de errores y continua
+                    salida = false;
                 }
             }
         }else{
             //es un error y se manda al xml de errores.
+            salida = false;
         }
         return salida;
     }
