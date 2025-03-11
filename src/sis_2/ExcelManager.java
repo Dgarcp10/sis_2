@@ -7,9 +7,12 @@ package sis_2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 /**
@@ -23,8 +26,8 @@ public class ExcelManager {
     private int tipoColumn, marcaColumn, modeloColumn, matriculaColumn, bastidorColumn, caballosColumn, plazasColumn, kgColumn, CCColumn, exencionColumn,fechaMatriculaciónColumn, fechaAltaColumn, fechaBajaColumn,fechaBajaTemporalColumn, nifPropietarioColumn; //VEHICULO EXCEL
     String direccionOrdenanzas = "../../resources/SistemasOrdenanzas";
     String direccionVehiculos = "../../resources/SistemasVehiculos";
-    private Workbook libroOrdenanzas;
-    private Workbook libroVehiculos;
+    private Workbook libroOrdenanzas, libroVehiculos;
+    private Sheet hojaOrdenanza, hojaContribuyente, hojaVehiculos;
     
     //GETTERS Y SETTERS
     public int getAyuntamientoOrdenanzaColumn() {
@@ -292,15 +295,161 @@ public class ExcelManager {
     }
 
     public ExcelManager(){
-        inicializarValores();
+        inicializar();
+        asignarValores();
     }
 
-    private void inicializarValores() {
+    private void inicializar() {
         try {
             libroOrdenanzas = WorkbookFactory.create(new File(direccionOrdenanzas));
             libroVehiculos = WorkbookFactory.create(new File(direccionVehiculos));
+            hojaOrdenanza = libroOrdenanzas.getSheet("Ordenanza");
+            hojaContribuyente = libroVehiculos.getSheet("Contribuyente");
+            hojaVehiculos = libroVehiculos.getSheet("Vehiculos");
         } catch (IOException | EncryptedDocumentException ex) {
             Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void asignarValores() {
+        asignarValoresOrdenanza();
+        asignarValoresContribuyente();
+        asignarValoresVehiculos();
+    }
+
+    private void asignarValoresOrdenanza() {
+        Iterator<Cell> ordenanzaColumn = hojaOrdenanza.getRow(0).cellIterator();
+        while(ordenanzaColumn.hasNext()){
+            Cell celda = ordenanzaColumn.next();
+            switch (celda.getStringCellValue()) {
+                case "AYUNTAMIENTO":
+                    ayuntamientoOrdenanzaColumn = celda.getColumnIndex();
+                    break;
+                case "TIPOVEHICULO":
+                    tipoVehiculoColumn = celda.getColumnIndex();
+                    break;
+                case "UNIDAD":
+                    unidadColumn = celda.getColumnIndex();
+                    break;
+                case "MINIMO":
+                    minimoColumn = celda.getColumnIndex();
+                    break;
+                case "MAXIMO":
+                    maximoColumn = celda.getColumnIndex();
+                    break;
+                case "IMPORTE":
+                    importeColumn = celda.getColumnIndex();
+                    break;
+                default:
+                    System.out.println("HAY ALGUN ERROR ASIGNANDO VALORES COLUMNAS ORDENANZA");
+                    break;
+            }
+        }
+    }
+
+    private void asignarValoresContribuyente() {
+        Iterator<Cell> contribuyenteColumn = hojaContribuyente.getRow(0).cellIterator();
+        while(contribuyenteColumn.hasNext()){
+            Cell celda = contribuyenteColumn.next();
+            switch (celda.getStringCellValue()) {
+                case "NIFNIE":
+                    nifnieColumn = celda.getColumnIndex();
+                    break;
+                case "Apellido1":
+                    apellido1Column = celda.getColumnIndex();
+                    break;
+                case "Apellido2":
+                    apellido2Column = celda.getColumnIndex();
+                    break;
+                case "Nombre":
+                    nombreColumn = celda.getColumnIndex();
+                    break;
+                case "Direccion":
+                    direccionColumn = celda.getColumnIndex();
+                    break;
+                case "Numero":
+                    numeroColumn = celda.getColumnIndex();
+                    break;
+                case "Email":
+                    emailColumn = celda.getColumnIndex();
+                    break;
+                case "Ayuntamiento":
+                    ayuntamientoContribuyenteColumn = celda.getColumnIndex();
+                    break;
+                case "PaisCCC":
+                    paisCCCColumn = celda.getColumnIndex();
+                    break;
+                case "CCC":
+                    CCCColumn = celda.getColumnIndex();
+                    break;
+                case "IBAN":
+                    IBANColumn = celda.getColumnIndex();
+                    break;
+                case "Bonificacion":
+                    bonificacionColumn = celda.getColumnIndex();
+                    break;
+                default:
+                    System.out.println("HAY ALGUN ERROR ASIGNANDO VALORES COLUMNAS CONTRIBUYENTE");
+                    break;
+            }
+        }
+    }
+
+    private void asignarValoresVehiculos() {
+        Iterator<Cell> vehiculosColumn = hojaVehiculos.getRow(0).cellIterator();
+        while(vehiculosColumn.hasNext()){
+            Cell celda = vehiculosColumn.next();
+            switch (celda.getStringCellValue()) {
+                case "TIPO":
+                    tipoColumn = celda.getColumnIndex();
+                    break;
+                case "MARCA":
+                    marcaColumn = celda.getColumnIndex();
+                    break;
+                case "MODELO":
+                    modeloColumn = celda.getColumnIndex();
+                    break;
+                case "MATRICULA":
+                    matriculaColumn = celda.getColumnIndex();
+                    break;
+                case "BASTIDOR":
+                    bastidorColumn = celda.getColumnIndex();
+                    break;
+                case "CABALLOS":
+                    caballosColumn = celda.getColumnIndex();
+                    break;
+                case "PLAZAS":
+                    plazasColumn = celda.getColumnIndex();
+                    break;
+                case "KG":
+                    kgColumn = celda.getColumnIndex();
+                    break;
+                case "CC":
+                    CCColumn = celda.getColumnIndex();
+                    break;
+                case "EXENCION":
+                    exencionColumn = celda.getColumnIndex();
+                    break;
+                case "FECHAMATRICULACION":
+                    fechaMatriculaciónColumn = celda.getColumnIndex();
+                    break;
+                case "FECHAALTA":
+                    fechaAltaColumn = celda.getColumnIndex();
+                    break;
+                case "FECHABAJA":
+                    fechaBajaColumn = celda.getColumnIndex();
+                    break;
+                case "FECHABAJATEMPORAL":
+                    fechaBajaTemporalColumn = celda.getColumnIndex();
+                    break;
+                case "NIFPROPIETARIO":
+                    nifPropietarioColumn = celda.getColumnIndex();
+                    break;
+                default:
+                    System.out.println("HAY ALGUN ERROR ASIGNANDO VALORES COLUMNAS VEHICULOS");
+                    break;
+            }
+            //int tipoColumn, marcaColumn, modeloColumn, matriculaColumn, bastidorColumn, caballosColumn, plazasColumn, kgColumn, CCColumn, exencionColumn,fechaMatriculaciónColumn, fechaAltaColumn, fechaBajaColumn,fechaBajaTemporalColumn, nifPropietarioColumn;
         }
     }
 }
