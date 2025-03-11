@@ -21,6 +21,7 @@ import java.util.regex.Pattern; //validador de patrones (PL)
 
 public class Sis_2 {
     
+    String[] listaNIFNIE;
     static SessionFactory sf = null;
     static Session sesion = null;
     static Transaction tx = null;
@@ -114,18 +115,36 @@ public class Sis_2 {
         sesion.close();
     }*/
     
+    /**
+     * 
+     * @param cadena
+     * @return true si la cadena coincide con un DNI o NIF, conteniendo o no la letra al final.
+     * 
+     */
     private boolean validadorNif(int id, String nif){
         boolean salida = false;
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
-            if(CorrectorNIF(nif).equalsIgnoreCase("1")){
-                //es correcto, comprueba si es repe y continua.
-            }else{
-                //devuelve dni corregido, actualiza, comprueba si es repe y continua.
+            if(CorrectorNIF(nif).equalsIgnoreCase("1")){    //el nif es correcto 
+                if(anyadirNIFNIE(nif)){
+                    //es correcto y no existia 
+                    //SALE
+                }else{
+                    //lo manda al xml de errores y continua
+                }
+                
+            }else{      //El nif ha sido subsanado
+                //Actualiza el nif en el excel.
                 //llama al excelManager y le pasa id y dni actualizado.
+                if(anyadirNIFNIE(nif)){
+                    //es correcto y no existia 
+                    //SALE
+                }else{
+                    //lo manda al xml de errores y continua
+                }
             }
         }else{
-                //es un error y se manda al xml de errores.
+            //es un error y se manda al xml de errores.
         }
         return salida;
     }
@@ -170,10 +189,51 @@ public class Sis_2 {
         }
         return salida;
     }
-    
-    
-    boolean isDNI(String cadena){
-        String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]$";
-        return Pattern.matches(regexp, cadena);
+    /**
+     * 
+     * @param NIFNIE
+     * @return true si no existia false si ya existia el dni.
+     */
+    private boolean anyadirNIFNIE(String nif){
+        boolean salida = false;
+        if (isFull(listaNIFNIE)) expandir(listaNIFNIE);
+        for (int i = 0; i < listaNIFNIE.length; i++) {
+            String str = listaNIFNIE[i];
+            if (str != null && str.equals(nif)) {
+                salida = false;       //ya existe en la lista (es repe).
+            }else if(str == null){
+                listaNIFNIE[i]=nif;
+                salida = true;      // No existe en la lista, lo añadimos.
+            }
+        }
+        return salida;
     }
+    
+    /**
+     * 
+     * @param array
+     * @return comprueba si la lista que recibe como parametro esta llena, true si esta llena.
+     */
+    private boolean isFull(String[] array) {
+        for (String str : array) {
+            if (str == null) {
+                return false; // El array no está lleno
+            }
+        }
+        return true; // El array está lleno
+    }
+    
+    /**
+     * 
+     * @param array 
+     * Expande el array que recibe como parametro.
+     */
+    private void expandir(String[] array) {
+        String[] nuevoArray = new String[array.length * 2];   // Duplicar el tamaño del array
+
+        System.arraycopy(array, 0, nuevoArray, 0, array.length);    // Copiar los elementos del array original al nuevo array
+
+        array = nuevoArray;   // Asignar el nuevo array al array original.
+    }
+    
 }
