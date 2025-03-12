@@ -19,7 +19,7 @@ import java.util.Scanner;
 //import org.hibernate.Transaction;
 
 public class Sis_2 {
-    static Conexion conexion = null;
+    //static ConexionManager conexion = null;
     //static SessionFactory sf = null;
     //static Session sesion = null;
     //static Transaction tx = null;
@@ -35,13 +35,13 @@ public class Sis_2 {
         try{
             
             //sf = HibernateUtil.getSessionFactory();
-            conexion = Conexion.getIntance();
+            //conexion = ConexionManager.getIntance();
             if(DAO.mostrarContribuyente(DNI)){
                 DAO.importeTotalReciboContribuyente(DNI);
             }
             DAO.eliminarRecibosMenorMedia();
         }finally{
-            conexion.close();
+            //conexion.close();
             HibernateUtil.shutdown();
             
         }

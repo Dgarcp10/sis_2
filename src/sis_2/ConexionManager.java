@@ -13,22 +13,23 @@ import org.hibernate.SessionFactory;
  *
  * @author Nicol
  */
-public class Conexion {
-    private static Conexion instancia;
+public class ConexionManager {
+    private static ConexionManager instancia;
     private static SessionFactory sessionFactory;
 
-    private Conexion(){
+    private ConexionManager(){
         sessionFactory = HibernateUtil.getSessionFactory();
     }
     
-    public static Conexion getIntance(){
+    public static ConexionManager getIntance(){
         if(instancia == null || sessionFactory.isClosed()){
-            instancia = new Conexion();
+            instancia = new ConexionManager();
         }
         return instancia;
     }
     
-    public Session getSession(){
+    public static Session getSession(){
+        getIntance();
         return sessionFactory.openSession();
     }
     

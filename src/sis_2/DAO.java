@@ -11,11 +11,13 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 /**
  *
  * @author Nicol
  */
 public class DAO {
+    static ConexionManager con = null;
     static Session sesion = null;
     static Transaction tx = null;
     public DAO (){
@@ -25,7 +27,8 @@ public class DAO {
     public static boolean mostrarContribuyente(String DNI){
         
         boolean salida = true;
-        sesion.getSession();
+        //con = ConexionManager.getIntance();
+        sesion = ConexionManager.getSession();
             
         Query query = sesion.createQuery("SELECT c FROM Contribuyente c WHERE c.nifnie = :n");
         query.setParameter("n", DNI);
@@ -48,7 +51,7 @@ public class DAO {
     
     public static void importeTotalReciboContribuyente(String DNI){
         
-        sesion.getSession();
+        sesion = ConexionManager.getSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r WHERE r.nifContribuyente = :n");
         query.setParameter("n", DNI);
             
@@ -63,7 +66,7 @@ public class DAO {
     
     public static void eliminarRecibosMenorMedia(){
         
-        sesion.getSession();
+        sesion = ConexionManager.getSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r");
             
         List<Recibos> listaRecibos = query.list();
