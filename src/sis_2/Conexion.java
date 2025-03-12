@@ -15,14 +15,14 @@ import org.hibernate.SessionFactory;
  */
 public class Conexion {
     private static Conexion instancia;
-    private SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
     private Conexion(){
         sessionFactory = HibernateUtil.getSessionFactory();
     }
     
     public static Conexion getIntance(){
-        if(instancia == null){
+        if(instancia == null || sessionFactory.isClosed()){
             instancia = new Conexion();
         }
         return instancia;
@@ -30,5 +30,9 @@ public class Conexion {
     
     public Session getSession(){
         return sessionFactory.openSession();
+    }
+    
+    public void close(){
+        sessionFactory.close();
     }
 }

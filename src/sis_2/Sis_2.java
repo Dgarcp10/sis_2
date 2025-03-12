@@ -13,17 +13,17 @@ package sis_2;
 import POJOS.*;
 import java.util.List;
 import java.util.Scanner;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+//import org.hibernate.Query;
+//import org.hibernate.Session;
+//import org.hibernate.SessionFactory;
+//import org.hibernate.Transaction;
 
 public class Sis_2 {
-    
-    static SessionFactory sf = null;
-    static Session sesion = null;
-    static Transaction tx = null;
-    
+    static Conexion conexion = null;
+    //static SessionFactory sf = null;
+    //static Session sesion = null;
+    //static Transaction tx = null;
+    //static DAO dao = null;
     /**
      * @param args the command line arguments
      */
@@ -33,21 +33,22 @@ public class Sis_2 {
         String DNI = sc.nextLine();
   
         try{
-            sf = HibernateUtil.getSessionFactory();
             
-            if(mostrarContribuyente(DNI)){
-                importeTotalReciboContribuyente(DNI);
+            //sf = HibernateUtil.getSessionFactory();
+            conexion = Conexion.getIntance();
+            if(DAO.mostrarContribuyente(DNI)){
+                DAO.importeTotalReciboContribuyente(DNI);
             }
-            eliminarRecibosMenorMedia();
+            DAO.eliminarRecibosMenorMedia();
         }finally{
-            sf.close();
+            conexion.close();
             HibernateUtil.shutdown();
             
         }
            
     }
     //09677930J
-    
+    /*
     private static boolean mostrarContribuyente(String DNI){
         
         boolean salida = true;
@@ -111,5 +112,5 @@ public class Sis_2 {
 
 
         sesion.close();
-    }
+    }*/
 }
