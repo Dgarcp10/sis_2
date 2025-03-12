@@ -13,6 +13,7 @@ package sis_2;
 import POJOS.*;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 //import org.hibernate.Query;
 //import org.hibernate.Session;
 //import org.hibernate.SessionFactory;
@@ -21,9 +22,9 @@ import java.util.Scanner;
 public class Sis_2 {
     
     String[] listaNIFNIE;
-    static SessionFactory sf = null;
-    static Session sesion = null;
-    static Transaction tx = null;
+    //static SessionFactory sf = null;
+    //static Session sesion = null;
+    //static Transaction tx = null;
     
     /**
      * @param args the command line arguments
