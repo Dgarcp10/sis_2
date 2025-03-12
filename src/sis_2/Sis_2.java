@@ -13,11 +13,10 @@ package sis_2;
 import POJOS.*;
 import java.util.List;
 import java.util.Scanner;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import java.util.regex.Pattern; //validador de patrones (PL)
+//import org.hibernate.Query;
+//import org.hibernate.Session;
+//import org.hibernate.SessionFactory;
+//import org.hibernate.Transaction;
 
 public class Sis_2 {
     
@@ -35,15 +34,16 @@ public class Sis_2 {
         String DNI = sc.nextLine();
   
         try{
-            /*sf = HibernateUtil.getSessionFactory();
             
-            if(mostrarContribuyente(DNI)){
-                importeTotalReciboContribuyente(DNI);
+            //sf = HibernateUtil.getSessionFactory();
+            //conexion = ConexionManager.getIntance();
+            if(DAO.mostrarContribuyente(DNI)){
+                DAO.importeTotalReciboContribuyente(DNI);
             }
-            eliminarRecibosMenorMedia();*/
+            DAO.eliminarRecibosMenorMedia();
         }finally{
-            /*sf.close();
-            HibernateUtil.shutdown();*/
+            //conexion.close();
+            HibernateUtil.shutdown();
             
         }
            
