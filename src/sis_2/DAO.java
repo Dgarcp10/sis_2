@@ -4,55 +4,31 @@
  * and open the template in the editor.
  */
 package sis_2;
+
+import POJOS.Contribuyente;
+import POJOS.Recibos;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 /**
  *
- * @author Nico
- * @author Diego
+ * @author Nicol
  */
-
-import POJOS.*;
-import java.util.List;
-import java.util.Scanner;
-//import org.hibernate.Query;
-//import org.hibernate.Session;
-//import org.hibernate.SessionFactory;
-//import org.hibernate.Transaction;
-
-public class Sis_2 {
-    //static ConexionManager conexion = null;
-    //static SessionFactory sf = null;
-    //static Session sesion = null;
-    //static Transaction tx = null;
-    //static DAO dao = null;
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        System.out.println("INTRODUZCA SU DNI:");
-        Scanner sc = new Scanner (System.in);
-        String DNI = sc.nextLine();
-  
-        try{
-            
-            //sf = HibernateUtil.getSessionFactory();
-            //conexion = ConexionManager.getIntance();
-            if(DAO.mostrarContribuyente(DNI)){
-                DAO.importeTotalReciboContribuyente(DNI);
-            }
-            DAO.eliminarRecibosMenorMedia();
-        }finally{
-            //conexion.close();
-            HibernateUtil.shutdown();
-            
-        }
-           
+public class DAO {
+    static ConexionManager con = null;
+    static Session sesion = null;
+    static Transaction tx = null;
+    public DAO (){
+        sesion.getSession();
     }
-    //09677930J
-    /*
-    private static boolean mostrarContribuyente(String DNI){
+    
+    public static boolean mostrarContribuyente(String DNI){
         
         boolean salida = true;
-        sesion = sf.openSession();
+        //con = ConexionManager.getIntance();
+        sesion = ConexionManager.getSession();
             
         Query query = sesion.createQuery("SELECT c FROM Contribuyente c WHERE c.nifnie = :n");
         query.setParameter("n", DNI);
@@ -73,9 +49,9 @@ public class Sis_2 {
         return salida;
     }
     
-    private static void importeTotalReciboContribuyente(String DNI){
+    public static void importeTotalReciboContribuyente(String DNI){
         
-        sesion = sf.openSession();
+        sesion = ConexionManager.getSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r WHERE r.nifContribuyente = :n");
         query.setParameter("n", DNI);
             
@@ -88,9 +64,9 @@ public class Sis_2 {
         tx.commit();
     }
     
-    private static void eliminarRecibosMenorMedia(){
+    public static void eliminarRecibosMenorMedia(){
         
-        sesion = sf.openSession();
+        sesion = ConexionManager.getSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r");
             
         List<Recibos> listaRecibos = query.list();
@@ -112,5 +88,5 @@ public class Sis_2 {
 
 
         sesion.close();
-    }*/
+    }
 }
