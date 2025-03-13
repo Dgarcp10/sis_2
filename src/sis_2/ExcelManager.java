@@ -190,22 +190,22 @@ public class ExcelManager {
     }
     //int nifnieColumn, apellido1Column, apellido2Column, nombreColumn, direccionColumn, numeroColumn, emailColumn, ayuntamientoContribuyenteColumn, paisCCCColumn,CCCColumn, IBANColumn, bonificacionColumn;
     public Contribuyente obtenerContribuyente(int i){
-        if(i>hojaContribuyente.getPhysicalNumberOfRows()) return null;
+        if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
         Row contribuyenteExcel = hojaContribuyente.getRow(i);
         Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).toString(), contribuyenteExcel.getCell(apellido1Column).toString(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
         contribuyente.setIdContribuyente(i);
         if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).toString());
-        if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(numeroColumn).toString());
-        if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(paisCCCColumn).toString());
-        if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(CCCColumn).toString());
-        if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(IBANColumn).toString());
-        if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(emailColumn).toString());
-        if(contribuyenteExcel.getCell(bonificacionColumn) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(bonificacionColumn).toString());
+        if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).toString());
+        if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).toString());
+        if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).toString());
+        if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).toString());
+        if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).toString());
+        if(contribuyenteExcel.getCell(bonificacionColumn) != null) contribuyente.setBonificacion(contribuyenteExcel.getCell(bonificacionColumn).getNumericCellValue());
         return contribuyente;
     }
     
     public void modificarContribuyente(Contribuyente contribuyente){
-        if(i>hojaContribuyente.getPhysicalNumberOfRows()) return;
+        if(contribuyente.getIdContribuyente()>hojaContribuyente.getPhysicalNumberOfRows()) return;
         hojaContribuyente.getRow(contribuyente.getIdContribuyente()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
     }
 }
