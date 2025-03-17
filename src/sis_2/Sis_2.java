@@ -42,12 +42,6 @@ public class Sis_2 {
             HibernateUtil.shutdown();
             
         }
-        /*      Para probar que funcione descomentar esto y comentar el try catch
-        Contribuyente con = new Contribuyente("Diego", "Garcia", DNI, "Mayor", "Lerma"); 
-        
-        boolean aux = u.validadorNif(con);
-        System.out.println(aux);
-        */
 
     }
 }
