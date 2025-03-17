@@ -14,7 +14,7 @@ import POJOS.Contribuyente;
  */
 public class Utilities {
     String[] listaNIFNIE;
-    
+    ExcelManager em;
 
     public Utilities(){
        inicializar(); 
@@ -23,20 +23,20 @@ public class Utilities {
     
     private void inicializar() {
             listaNIFNIE = new String[2];
+            em = new ExcelManager();
     }
     
     /**
      * 
-     * @param cadena
+     * @param con
      * @return true si la cadena coincide con un DNI o NIF, conteniendo o no la letra al final.
      * 
      */
-    public boolean validadorNif(Contribuyente con){
+    public boolean validadorNif(Contribuyente con){         //Si excelManager.
         boolean salida;
         String nif = con.getNifnie().toUpperCase();
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
-            System.out.println("Tiene la forma correcta.");
             nif = correctorNIF(nif);
             if(nif.equalsIgnoreCase("1")){ 
                 if(anyadirNIFNIE(nif)){
@@ -47,17 +47,18 @@ public class Utilities {
                     
                     salida = false; //ES REPE
                 }
-            }else{      
-                con.setNifnie(nif);
-                
-                //llama al excelManager y le pasa id y dni actualizado.
-                
+            }else{                      
                 if(anyadirNIFNIE(nif)){
                     salida = true;      //ES CORRECTO
+                    //llama al excelManager y le pasa id y dni actualizado.
+                    con.setNifnie(nif);
+                    em.modificarContribuyente(con);
                 }else{
                     
                     //lo manda al xml de errores
-                    
+                    //
+                    //NO  LO  ACTUALIZA  EN  EL  EXCEL
+                    //
                     salida = false;     //ES REPE
                 }
             }
@@ -65,11 +66,6 @@ public class Utilities {
             //es un error y se manda al xml de errores.
             salida = false;
         }
-        System.out.println("LISTA: ");
-        for (int i = 0; i < listaNIFNIE.length; i++) {
-            System.out.println(listaNIFNIE[i]);
-        }
-        System.out.println("FIN ");
         
         return salida;
     }
@@ -97,13 +93,11 @@ public class Utilities {
                 break;
         }
         if(nifAux.length()==8){
-            System.out.println("Tiene 8 caracteres.");
             int aux = ((Integer.parseInt(nifAux))%23);
             nif +=(letras.charAt(aux));
             salida = nif;
 
         }else if(nifAux.length()==9){
-            System.out.println("Tiene 9 caracteres.");
             int aux = ((Integer.parseInt(nifAux.substring(0, nifAux.length()-1)))%23);
             if(nifAux.charAt(8)==letras.charAt(aux)){
                 salida = "1";
@@ -112,7 +106,6 @@ public class Utilities {
             }
             salida = nifAux;
         }
-        System.out.println("DNI: "+ salida);
         return salida;
     }
     
@@ -146,7 +139,6 @@ public class Utilities {
                 return false; // El array no está lleno
             }
         }
-        System.out.println("Estamos llenos");
         return true; // El array está lleno
     }
 
@@ -155,12 +147,11 @@ public class Utilities {
      * Expande el array de DNI correctos.
      */
     private void expandir() {
-        String[] nuevoArray = new String[listaNIFNIE.length * 2];   // Duplicar el tamaño del array
+        String[] nuevoArray = new String[listaNIFNIE.length + 10];   // Duplicar el tamaño del array
 
         System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
 
         listaNIFNIE = nuevoArray;   // Asignar el nuevo array al array original.
-        System.out.println("lista expandida");
     }
 
 }
