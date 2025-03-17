@@ -30,6 +30,8 @@ public class Contribuyente  implements java.io.Serializable {
 
      @Transient
      private int idExcel;
+     @Transient
+     private String errNif;     //vacio si es correcto, NIF ERRONEO, NIF BLANCO, NIF DUPLICADO.
     public Contribuyente() {
     }
 
@@ -170,6 +172,14 @@ public class Contribuyente  implements java.io.Serializable {
 
     public void setIdExcel(int idExcel) {
         this.idExcel = idExcel;
+    }
+
+    public String getErrNif() {
+        return errNif;
+    }
+
+    public void setErrNif(String errNif) {
+        this.errNif = errNif;
     }
 }
 

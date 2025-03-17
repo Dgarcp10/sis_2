@@ -32,19 +32,20 @@ public class Utilities {
      * @return true si la cadena coincide con un DNI o NIF, conteniendo o no la letra al final.
      * 
      */
-    public boolean validadorNif(Contribuyente con){         //Si excelManager.
+    public Contribuyente validadorNif(Contribuyente con){         //Si excelManager.
         boolean salida;
         String nif = con.getNifnie().toUpperCase();
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
             nif = correctorNIF(nif);
             if(nif.equalsIgnoreCase("1")){ 
-                if(anyadirNIFNIE(nif)){
-                    salida = true;  //ES CORRECTO, SALE
-                }else{
+                if(anyadirNIFNIE(nif)){//ES CORRECTO, SALE
+                    return null;
+                    //salida = true;  
+                }else{//CORRECCTO PERO DUPLICADO
                     
                     //lo manda al xml de errores 
-                    
+                    con.setErrNif("NIF DUPLICADO");
                     salida = false; //ES REPE
                 }
             }else{                      
