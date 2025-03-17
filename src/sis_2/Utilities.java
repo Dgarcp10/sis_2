@@ -14,7 +14,7 @@ import POJOS.Contribuyente;
  */
 public class Utilities {
     String[] listaNIFNIE;
-    
+    ExcelManager em;
 
     public Utilities(){
        inicializar(); 
@@ -23,15 +23,16 @@ public class Utilities {
     
     private void inicializar() {
             listaNIFNIE = new String[2];
+            em = new ExcelManager();
     }
     
     /**
      * 
-     * @param cadena
+     * @param con
      * @return true si la cadena coincide con un DNI o NIF, conteniendo o no la letra al final.
      * 
      */
-    public boolean validadorNif(Contribuyente con){
+    public boolean validadorNif(Contribuyente con){         //Si excelManager.
         boolean salida;
         String nif = con.getNifnie().toUpperCase();
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
@@ -46,13 +47,12 @@ public class Utilities {
                     
                     salida = false; //ES REPE
                 }
-            }else{      
-                con.setNifnie(nif);
-                
+            }else{                      
                 if(anyadirNIFNIE(nif)){
                     salida = true;      //ES CORRECTO
                     //llama al excelManager y le pasa id y dni actualizado.
-                    
+                    con.setNifnie(nif);
+                    em.modificarContribuyente(con);
                 }else{
                     
                     //lo manda al xml de errores
@@ -147,7 +147,7 @@ public class Utilities {
      * Expande el array de DNI correctos.
      */
     private void expandir() {
-        String[] nuevoArray = new String[listaNIFNIE.length * 2];   // Duplicar el tamaño del array
+        String[] nuevoArray = new String[listaNIFNIE.length + 10];   // Duplicar el tamaño del array
 
         System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
 

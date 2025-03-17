@@ -189,12 +189,17 @@ public class ExcelManager {
         }
     }
     //int nifnieColumn, apellido1Column, apellido2Column, nombreColumn, direccionColumn, numeroColumn, emailColumn, ayuntamientoContribuyenteColumn, paisCCCColumn,CCCColumn, IBANColumn, bonificacionColumn;
-    public Contribuyente obtenerContribuyente(int i){
+    /**
+     * 
+     * @param i
+     * 
+     */
+    public Contribuyente obtenerContribuyente(int i){ //@return null si hemos llegado al final del excel     * Contribuyente vacio si es una fila del excel sin contribuyente     * Contribuyente con parametros es que se ha encontrado contribuyente  y se ha devuelto
         if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
         Row contribuyenteExcel = hojaContribuyente.getRow(i);
-        if(contribuyenteExcel.getCell(nifnieColumn)==null || contribuyenteExcel.getCell(nifnieColumn).toString().equals("")) return new Contribuyente();
+        if(contribuyenteExcel.getCell(nifnieColumn)==null || contribuyenteExcel.getCell(nifnieColumn).toString().equals("")) return new Contribuyente(); //CAMBIAR
         Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).toString(), contribuyenteExcel.getCell(apellido1Column).toString(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
-        contribuyente.setIdContribuyente(i);
+        contribuyente.setIdExcel(i);
         if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).toString());
         if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).toString());
         if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).toString());
@@ -206,7 +211,7 @@ public class ExcelManager {
     }
     
     public void modificarContribuyente(Contribuyente contribuyente){
-        if(contribuyente.getIdContribuyente()>hojaContribuyente.getPhysicalNumberOfRows()) return;
+        if(contribuyente.getIdExcel()>hojaContribuyente.getPhysicalNumberOfRows()) return;
         hojaContribuyente.getRow(contribuyente.getIdContribuyente()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
     }
 }
