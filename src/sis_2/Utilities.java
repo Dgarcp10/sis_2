@@ -36,7 +36,6 @@ public class Utilities {
         String nif = con.getNifnie().toUpperCase();
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
-            System.out.println("Tiene la forma correcta.");
             nif = correctorNIF(nif);
             if(nif.equalsIgnoreCase("1")){ 
                 if(anyadirNIFNIE(nif)){
@@ -50,14 +49,16 @@ public class Utilities {
             }else{      
                 con.setNifnie(nif);
                 
-                //llama al excelManager y le pasa id y dni actualizado.
-                
                 if(anyadirNIFNIE(nif)){
                     salida = true;      //ES CORRECTO
+                    //llama al excelManager y le pasa id y dni actualizado.
+                    
                 }else{
                     
                     //lo manda al xml de errores
-                    
+                    //
+                    //NO  LO  ACTUALIZA  EN  EL  EXCEL
+                    //
                     salida = false;     //ES REPE
                 }
             }
@@ -65,11 +66,6 @@ public class Utilities {
             //es un error y se manda al xml de errores.
             salida = false;
         }
-        System.out.println("LISTA: ");
-        for (int i = 0; i < listaNIFNIE.length; i++) {
-            System.out.println(listaNIFNIE[i]);
-        }
-        System.out.println("FIN ");
         
         return salida;
     }
@@ -97,13 +93,11 @@ public class Utilities {
                 break;
         }
         if(nifAux.length()==8){
-            System.out.println("Tiene 8 caracteres.");
             int aux = ((Integer.parseInt(nifAux))%23);
             nif +=(letras.charAt(aux));
             salida = nif;
 
         }else if(nifAux.length()==9){
-            System.out.println("Tiene 9 caracteres.");
             int aux = ((Integer.parseInt(nifAux.substring(0, nifAux.length()-1)))%23);
             if(nifAux.charAt(8)==letras.charAt(aux)){
                 salida = "1";
@@ -112,7 +106,6 @@ public class Utilities {
             }
             salida = nifAux;
         }
-        System.out.println("DNI: "+ salida);
         return salida;
     }
     
@@ -146,7 +139,6 @@ public class Utilities {
                 return false; // El array no está lleno
             }
         }
-        System.out.println("Estamos llenos");
         return true; // El array está lleno
     }
 
@@ -160,7 +152,6 @@ public class Utilities {
         System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
 
         listaNIFNIE = nuevoArray;   // Asignar el nuevo array al array original.
-        System.out.println("lista expandida");
     }
 
 }
