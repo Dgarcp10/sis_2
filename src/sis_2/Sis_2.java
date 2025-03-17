@@ -11,10 +11,10 @@ package sis_2;
  */
 
 import POJOS.*;
-import sis_2.*;
-import java.util.List;
+//import sis_2.*;
+//import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 //import org.hibernate.Query;
 //import org.hibernate.Session;
 //import org.hibernate.SessionFactory;
@@ -29,7 +29,9 @@ public class Sis_2 {
     public static void main(String[] args) {
         Scanner sc = new Scanner (System.in);
         Utilities u = new Utilities();
-
+        ExcelManager eM = new ExcelManager();
+        XmlManager xmlM = new XmlManager();
+        /* PRIMERA PRACTICA
         System.out.println("INTRODUZCA SU DNI:");
         String DNI = sc.nextLine();
 
@@ -41,7 +43,22 @@ public class Sis_2 {
         }finally{
             HibernateUtil.shutdown();
             
+        */
+        
+        //PRIMERA VERSION SUJETA A MUCHISSISISIMOS CAMBIOS
+        int count = 0;
+        while(count!=-1){
+            Contribuyente con = eM.obtenerContribuyente(count);
+            if(con == null){
+                count = -1;
+            }else if(con.getNifnie() == null){
+                count++;
+            }else{
+                con = u.validadorNif(con);
+                if(con == null) continue;
+                else xmlM.agregarContribuyente(con);
+                count++;
+            }
         }
-
     }
 }
