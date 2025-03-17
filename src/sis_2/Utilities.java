@@ -33,42 +33,45 @@ public class Utilities {
      * 
      */
     public Contribuyente validadorNif(Contribuyente con){         //Si excelManager.
-        boolean salida;
+        //boolean salida;
         String nif = con.getNifnie().toUpperCase();
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
             nif = correctorNIF(nif);
             if(nif.equalsIgnoreCase("1")){ 
                 if(anyadirNIFNIE(nif)){//ES CORRECTO, SALE
-                    return null;
+                    con = null;
                     //salida = true;  
                 }else{//CORRECCTO PERO DUPLICADO
                     
                     //lo manda al xml de errores 
                     con.setErrNif("NIF DUPLICADO");
-                    salida = false; //ES REPE
+                    //salida = false; //ES REPE
                 }
             }else{                      
                 if(anyadirNIFNIE(nif)){
-                    salida = true;      //ES CORRECTO
+                    //salida = true;      //ES CORRECTO
                     //llama al excelManager y le pasa id y dni actualizado.
                     con.setNifnie(nif);
-                    em.modificarContribuyente(con);
+                    //em.modificarContribuyente(con);
                 }else{
                     
                     //lo manda al xml de errores
                     //
                     //NO  LO  ACTUALIZA  EN  EL  EXCEL
                     //
-                    salida = false;     //ES REPE
+                    //salida = false;     //ES REPE
+                    con.setErrNif("NIF DUPLICADO");
                 }
             }
         }else{
             //es un error y se manda al xml de errores.
-            salida = false;
+            //salida = false;
+            if(con.getNifnie() == null || "".equals(con.getNifnie())) con.setErrNif(" NIF BLANCO");
+            else con.setErrNif("NIF ERRONEO");
         }
         
-        return salida;
+        return con;
     }
 
     /**

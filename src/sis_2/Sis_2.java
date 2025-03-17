@@ -29,7 +29,8 @@ public class Sis_2 {
     public static void main(String[] args) {
         Scanner sc = new Scanner (System.in);
         Utilities u = new Utilities();
-        ExcelManager em = new ExcelManager();
+        ExcelManager eM = new ExcelManager();
+        XmlManager xmlM = new XmlManager();
         /* PRIMERA PRACTICA
         System.out.println("INTRODUZCA SU DNI:");
         String DNI = sc.nextLine();
@@ -47,7 +48,7 @@ public class Sis_2 {
         //PRIMERA VERSION SUJETA A MUCHISSISISIMOS CAMBIOS
         int count = 0;
         while(count!=-1){
-            Contribuyente con = em.obtenerContribuyente(count);
+            Contribuyente con = eM.obtenerContribuyente(count);
             if(con == null){
                 count = -1;
             }else if(con.getNifnie() == null){
@@ -55,7 +56,7 @@ public class Sis_2 {
             }else{
                 con = u.validadorNif(con);
                 if(con == null) continue;
-                else if(con) ;
+                else xmlM.agregarContribuyente(con);
                 count++;
             }
         }
