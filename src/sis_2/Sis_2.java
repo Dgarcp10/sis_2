@@ -60,5 +60,6 @@ public class Sis_2 {
                 count++;
             }
         }
+        xmlM.escribir();
     }
 }
