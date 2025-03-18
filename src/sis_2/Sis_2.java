@@ -31,6 +31,7 @@ public class Sis_2 {
         Utilities u = new Utilities();
         ExcelManager eM = new ExcelManager();
         XmlManager xmlM = new XmlManager();
+
         /* PRIMERA PRACTICA
         System.out.println("INTRODUZCA SU DNI:");
         String DNI = sc.nextLine();
@@ -46,7 +47,7 @@ public class Sis_2 {
         */
         
         //PRIMERA VERSION SUJETA A MUCHISSISISIMOS CAMBIOS
-        int count = 0;
+        int count = 1;
         while(count!=-1){
             Contribuyente con = eM.obtenerContribuyente(count);
             if(con == null){
