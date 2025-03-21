@@ -32,7 +32,7 @@ public class XmlManager {
     Document documento;
     Element contribuyentes;
     File archivo;
-    
+     
     public XmlManager() {
         
         try {
@@ -55,21 +55,17 @@ public class XmlManager {
     
     public void agregarContribuyente(Contribuyente con){
         Element contribuyente = documento.createElement("Contribuyente");
+        contribuyente.setAttribute("id", String.valueOf(con.getIdExcel()));
+        contribuyentes.appendChild(contribuyente);
         
         Element NIF_NIE = documento.createElement("NIF_NIE");
-        //Text textNIF_NIE = null;
-        /*if("".equals(con.getNifnie())|| con.getNifnie()==null){
-            
-        }else{
-            Text textNIF_NIE = documento.createTextNode(con.getNifnie());
-            NIF_NIE.appendChild(textNIF_NIE);
-        }
-        contribuyente.appendChild(NIF_NIE);*/
         if (!"".equals(con.getNifnie()) && con.getNifnie() != null) {
             Text textNIF_NIE = documento.createTextNode(con.getNifnie());
             NIF_NIE.appendChild(textNIF_NIE);
             contribuyente.appendChild(NIF_NIE);
         }
+        NIF_NIE.appendChild(textNIF_NIE);
+        contribuyente.appendChild(NIF_NIE);
 
 
         Element Nombre = documento.createElement("Nombre");
@@ -82,9 +78,7 @@ public class XmlManager {
         PrimerApellido.appendChild(textPrimerApellido);
         contribuyente.appendChild(PrimerApellido);
 
-        /*if("".equals(con.getApellido2())|| con.getApellido2()==null){
-            
-        }else{
+        if (con.getApellido2() != null && !con.getApellido2().isEmpty()) {
             Element SegundoApellido = documento.createElement("SegundoApellido");
             Text textSegundoApellido = documento.createTextNode(con.getApellido2());
             SegundoApellido.appendChild(textSegundoApellido);
@@ -98,15 +92,10 @@ public class XmlManager {
         }
 
 
-
         Element TipoDeError = documento.createElement("TipoDeError");
         Text textTipoDeError = documento.createTextNode(con.getErrNif());
         TipoDeError.appendChild(textTipoDeError);
-        contribuyente.appendChild(TipoDeError);
-
-
-        contribuyentes.appendChild(contribuyente);
-        
+        contribuyente.appendChild(TipoDeError);        
     }
     
     public boolean escribir(){
