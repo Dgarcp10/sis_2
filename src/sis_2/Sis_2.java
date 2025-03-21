@@ -53,22 +53,22 @@ public class Sis_2 {
             con = eM.obtenerContribuyente(count);
             conAux = eM.obtenerContribuyente(count);
             if(con == null){
-                count = -2;
+                count = -1;
             }else if(con.getNombre() == null){
-                
+                count++;
             }else{
-                con = u.validadorNif(conAux);
+                conAux = u.validadorNif(conAux);
                 if(conAux != null){
-                    if(con.getErrNif()== null || "".equals(con.getErrNif())){
-                        //Es un NIF_NUIE correcto.
+                    if(conAux.getErrNif()== null || "".equals(conAux.getErrNif())){
+                        //Es un NIF_NIE correcto.
                     }else{
-                        xmlM.agregarContribuyente(con);
+                        xmlM.agregarContribuyente(conAux);
                     }
                 }
-                else xmlM.agregarContribuyente(con);
+                else xmlM.agregarContribuyente(conAux);
                 
+                count++;
             }
-            count++;
         }
         xmlM.escribir();
     }
