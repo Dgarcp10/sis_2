@@ -213,6 +213,6 @@ public class ExcelManager {
     
     public void modificarContribuyente(Contribuyente contribuyente){
         if(contribuyente.getIdExcel()>hojaContribuyente.getPhysicalNumberOfRows()) return;
-        hojaContribuyente.getRow(contribuyente.getIdContribuyente()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
+        hojaContribuyente.getRow(contribuyente.getIdExcel()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
     }
 }

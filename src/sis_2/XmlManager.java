@@ -56,11 +56,11 @@ public class XmlManager {
     }
     
     public void agregarContribuyente(Contribuyente con){
-        if(con.getErrNif() == null || "".equals(con.getErrNif())){
-        }else{
+        //if(con.getErrNif() == null || "".equals(con.getErrNif())){
+        //}else{
             
             Element contribuyente = documento.createElement("Contribuyente");
-            contribuyente.setAttribute("id", String.valueOf(con.getIdExcel()));
+            contribuyente.setAttribute("id", String.valueOf(con.getIdExcel()+1));
             rootElem.appendChild(contribuyente);
 
             Element NIF_NIE = documento.createElement("NIF_NIE");
@@ -97,7 +97,7 @@ public class XmlManager {
             Text textTipoDeError = documento.createTextNode(con.getErrNif());
             TipoDeError.appendChild(textTipoDeError);
             contribuyente.appendChild(TipoDeError);
-        }
+        //}
           
     }
     

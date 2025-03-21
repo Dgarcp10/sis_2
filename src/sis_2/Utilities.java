@@ -53,7 +53,7 @@ public class Utilities {
                     //salida = true;      //ES CORRECTO
                     //llama al excelManager y le pasa id y dni actualizado.
                     con.setNifnie(nif);
-                    //em.modificarContribuyente(con);
+                    em.modificarContribuyente(con);
                 }else{
                     
                     //lo manda al xml de errores
@@ -67,7 +67,7 @@ public class Utilities {
         }else{
             //es un error y se manda al xml de errores.
             //salida = false;
-            if(con.getNifnie() == null || "".equals(con.getNifnie())) con.setErrNif(" NIF BLANCO");
+            if(con.getNifnie() == null || "".equals(con.getNifnie())) con.setErrNif("NIF BLANCO");
             else con.setErrNif("NIF ERRONEO");
         }
         

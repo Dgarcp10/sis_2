@@ -48,18 +48,27 @@ public class Sis_2 {
         
         //PRIMERA VERSION SUJETA A MUCHISSISISIMOS CAMBIOS
         int count = 1;
+        Contribuyente con, conAux;
         while(count!=-1){
-            Contribuyente con = eM.obtenerContribuyente(count);
+            con = eM.obtenerContribuyente(count);
+            conAux = eM.obtenerContribuyente(count);
             if(con == null){
-                count = -1;
-            }else if(con.getNifnie() == null){
-                count++;
+                count = -2;
+            }else if(con.getNombre() == null){
+                
             }else{
-                con = u.validadorNif(con);
-                if(con == null) continue;
+                con = u.validadorNif(conAux);
+                if(conAux != null){
+                    if(con.getErrNif()== null || "".equals(con.getErrNif())){
+                        //Es un NIF_NUIE correcto.
+                    }else{
+                        xmlM.agregarContribuyente(con);
+                    }
+                }
                 else xmlM.agregarContribuyente(con);
-                count++;
+                
             }
+            count++;
         }
         xmlM.escribir();
     }
