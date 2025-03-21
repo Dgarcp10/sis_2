@@ -62,11 +62,8 @@ public class XmlManager {
         if (!"".equals(con.getNifnie()) && con.getNifnie() != null) {
             Text textNIF_NIE = documento.createTextNode(con.getNifnie());
             NIF_NIE.appendChild(textNIF_NIE);
-            contribuyente.appendChild(NIF_NIE);
         }
-        NIF_NIE.appendChild(textNIF_NIE);
         contribuyente.appendChild(NIF_NIE);
-
 
         Element Nombre = documento.createElement("Nombre");
         Text textNombre = documento.createTextNode(con.getNombre());
@@ -83,14 +80,7 @@ public class XmlManager {
             Text textSegundoApellido = documento.createTextNode(con.getApellido2());
             SegundoApellido.appendChild(textSegundoApellido);
             contribuyente.appendChild(SegundoApellido);
-        }*/
-        if (con.getApellido2() != null && !con.getApellido2().isEmpty()) {
-            Element SegundoApellido = documento.createElement("SegundoApellido");
-            Text textSegundoApellido = documento.createTextNode(con.getApellido2());
-            SegundoApellido.appendChild(textSegundoApellido);
-            contribuyente.appendChild(SegundoApellido);
         }
-
 
         Element TipoDeError = documento.createElement("TipoDeError");
         Text textTipoDeError = documento.createTextNode(con.getErrNif());
