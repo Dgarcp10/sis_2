@@ -32,8 +32,8 @@ public class XmlManager {
     Document documento;
     Element contribuyentes;
     File archivo;
-    
-    public void xmlManager() {
+     
+    public XmlManager() {
         
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -44,10 +44,10 @@ public class XmlManager {
             
             contribuyentes = documento.createElement("Contribuyentes");
             documento.appendChild(contribuyentes);
-            String rutaArchivo = "";
+            String rutaArchivo = "resources/";
             String nombreArchivo = "ErroresNifNie.xml";
             archivo = new File(rutaArchivo + nombreArchivo);
-            
+            //System.out.println("A");
         } catch (ParserConfigurationException ex) {
             System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml correctamente");
         }
@@ -55,15 +55,15 @@ public class XmlManager {
     
     public void agregarContribuyente(Contribuyente con){
         Element contribuyente = documento.createElement("Contribuyente");
+        contribuyente.setAttribute("id", String.valueOf(con.getIdExcel()));
+        contribuyentes.appendChild(contribuyente);
         
         Element NIF_NIE = documento.createElement("NIF_NIE");
-        Text textNIF_NIE = null;
-        if("".equals(con.getNifnie())|| con.getNifnie()==null){
-        }else{
-            textNIF_NIE = documento.createTextNode(con.getNifnie());
+        if (!"".equals(con.getNifnie()) && con.getNifnie() != null) {
+            Text textNIF_NIE = documento.createTextNode(con.getNifnie());
+            NIF_NIE.appendChild(textNIF_NIE);
+            contribuyente.appendChild(NIF_NIE);
         }
-        NIF_NIE.appendChild(textNIF_NIE);
-        contribuyente.appendChild(NIF_NIE);
 
         Element Nombre = documento.createElement("Nombre");
         Text textNombre = documento.createTextNode(con.getNombre());
@@ -75,23 +75,17 @@ public class XmlManager {
         PrimerApellido.appendChild(textPrimerApellido);
         contribuyente.appendChild(PrimerApellido);
 
-        if("".equals(con.getApellido2())|| con.getApellido2()==null){
-        }else{
+        if (con.getApellido2() != null && !con.getApellido2().isEmpty()) {
             Element SegundoApellido = documento.createElement("SegundoApellido");
             Text textSegundoApellido = documento.createTextNode(con.getApellido2());
             SegundoApellido.appendChild(textSegundoApellido);
             contribuyente.appendChild(SegundoApellido);
         }
 
-
         Element TipoDeError = documento.createElement("TipoDeError");
         Text textTipoDeError = documento.createTextNode(con.getErrNif());
         TipoDeError.appendChild(textTipoDeError);
-        contribuyente.appendChild(TipoDeError);
-
-
-        contribuyentes.appendChild(contribuyente);
-        
+        contribuyente.appendChild(TipoDeError);        
     }
     
     public boolean escribir(){
@@ -100,14 +94,16 @@ public class XmlManager {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(documento);
+            //System.out.println(archivo.getAbsolutePath());
             StreamResult result = new StreamResult(archivo);
+            //if(documento != null) System.out.println("bla");
             transformer.transform(source, result);
             
             salida = true;
         } catch (TransformerConfigurationException ex) {
-            System.out.println("ERROR: no se pudo escribir el ErroresNifNie.xml correctamente");
+            System.out.println("ERROR 1: no se pudo escribir el ErroresNifNie.xml correctamente");
         } catch (TransformerException ex) {
-            System.out.println("ERROR: no se pudo escribir el ErroresNifNie.xml correctamente");
+            System.out.println("ERROR 2: no se pudo escribir el ErroresNifNie.xml correctamente");
         }
         return salida;
     }
