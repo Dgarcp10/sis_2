@@ -15,15 +15,15 @@ import POJOS.Contribuyente;
  */
 public class Utilities {
     String[] listaNIFNIE;
-    ExcelManager em;
+    //ExcelManager em;
 
     public Utilities(){
        inicializar(); 
     }
     
     private void inicializar() {
-            listaNIFNIE = new String[2];
-            em = new ExcelManager();
+            listaNIFNIE = new String[10];
+            //em = new ExcelManager();
     }
     
     /**
@@ -51,8 +51,8 @@ public class Utilities {
                 if(anyadirNIFNIE(nif)){
                     //Es subsanable no repetido, lo actualiza y lo debuelve actualizado
                     con.setNifnie(nif);
-                    em.modificarContribuyente(con);
-                    con.setErrNif("");
+                    //em.modificarContribuyente(con);
+                    con.setErrNif("SUBSANADO");
                 }else{
                     //No actualiza excel, lo manda al xml de errores (es repe y subsanable)
                     con.setErrNif("NIF DUPLICADO");

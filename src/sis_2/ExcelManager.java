@@ -7,6 +7,7 @@ package sis_2;
 
 import POJOS.Contribuyente;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -216,4 +217,19 @@ public class ExcelManager {
         if(contribuyente.getIdExcel()>hojaContribuyente.getPhysicalNumberOfRows()) return;
         hojaContribuyente.getRow(contribuyente.getIdExcel()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
     }
+    
+    public boolean guardarCambios() {
+        boolean salida = false;
+        try {
+            libroOrdenanzas.close();
+            libroVehiculos.close();
+
+            salida = true;
+        } catch (IOException ex) {
+            Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, "Error al guardar los cambios", ex);
+            salida = false;
+        }
+        return salida;
+    }
+
 }

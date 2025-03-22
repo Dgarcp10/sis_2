@@ -105,7 +105,6 @@ public class XmlManager {
     public boolean escribir(){
         boolean salida = false;
         try {
-            System.out.println(rootElem);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -120,7 +119,6 @@ public class XmlManager {
             System.out.println("ERROR 1: no se pudo escribir el ErroresNifNie.xml correctamente");
         } catch (TransformerException ex) {
             System.out.println("ERROR 2: no se pudo escribir el ErroresNifNie.xml correctamente");
-            System.out.println(ex);
         }
         return salida;
     }

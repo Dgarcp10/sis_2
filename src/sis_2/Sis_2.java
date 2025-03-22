@@ -26,19 +26,7 @@ public class Sis_2 {
         ExcelManager eM = new ExcelManager();
         XmlManager xmlM = new XmlManager();
 
-        /* PRIMERA PRACTICA
-        System.out.println("INTRODUZCA SU DNI:");
-        String DNI = sc.nextLine();
-        try{
-            if(DAO.mostrarContribuyente(DNI)){
-                DAO.importeTotalReciboContribuyente(DNI);
-            }
-            DAO.eliminarRecibosMenorMedia();
-        }finally{
-            HibernateUtil.shutdown();
-        */
-        
-        //PRIMERA VERSION SUJETA A CAMBIOS
+
         int count = 1;
         Contribuyente con;
         while(count!=-1){
@@ -49,14 +37,22 @@ public class Sis_2 {
                 count++;
             }else{
                 con = u.validadorNif(con);
-                if("".equals(con.getErrNif())){
+                if("SUBSANADO".equals(con.getErrNif())){
+                    //Subsanamos el NIF_NIE.
+                    eM.modificarContribuyente(con);
+                    //con.setErrNif("");
+                }
+                if(!"".equals(con.getErrNif())) {
+                    xmlM.agregarContribuyente(con);     //NIF_NIE erroneo, blanco o duplicado
+                }else{
                     //NIF_NIE CORRECTO (correcto o subsanado no repe) codigo futuro para BBDD o lo que corresponda.
                     
-                }else xmlM.agregarContribuyente(con);
-                
+                }
                 count++;
             }
         }
         xmlM.escribir();
+        if(eM.guardarCambios()) System.out.println("Excel guardado exitosamente.");
+        
     }
 }
