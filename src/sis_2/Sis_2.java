@@ -36,11 +36,14 @@ public class Sis_2 {
             }else if(con.getNombre() == null){
                 count++;
             }else{
+                
+                //System.out.println(con.getNifnie());
                 con = u.validadorNif(con);
                 if("SUBSANADO".equals(con.getErrNif())){
                     //Subsanamos el NIF_NIE.
+                    //System.out.println(con.getNifnie());
                     eM.modificarContribuyente(con);
-                    //con.setErrNif("");
+                    con.setErrNif("");
                 }
                 if(!"".equals(con.getErrNif())) {
                     xmlM.agregarContribuyente(con);     //NIF_NIE erroneo, blanco o duplicado

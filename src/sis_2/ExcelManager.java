@@ -216,11 +216,27 @@ public class ExcelManager {
     public void modificarContribuyente(Contribuyente contribuyente){
         if(contribuyente.getIdExcel()>hojaContribuyente.getPhysicalNumberOfRows()) return;
         hojaContribuyente.getRow(contribuyente.getIdExcel()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
+        //System.out.println(contribuyente.getIdExcel()+1 + "  Actualizado a: " + contribuyente.getNifnie());
     }
     
     public boolean guardarCambios() {
         boolean salida = false;
         try {
+            //      PRUEBA  SOLUCIONANDO  SALIDA
+            //      Con esto funciona sin ello no nose por que
+            
+            String dirOrdSal = "resources/SistemasOrdenanzas_salida.xlsx";
+            String dirVehSal = "resources/SistemasVehiculos_salida.xlsx";
+            
+            FileOutputStream salidaOrd = new FileOutputStream(dirOrdSal);
+            FileOutputStream salidaVeh = new FileOutputStream(dirVehSal);
+            
+            libroOrdenanzas.write(salidaOrd);
+            libroVehiculos.write(salidaVeh);
+            salidaOrd.close();
+            salidaVeh.close();
+            
+            // hasta aqui para la salida en otro fichero
             libroOrdenanzas.close();
             libroVehiculos.close();
 
