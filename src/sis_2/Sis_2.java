@@ -4,22 +4,16 @@
  * and open the template in the editor.
  */
 package sis_2;
+
+
+import POJOS.*;
+import java.util.Scanner;
+
 /**
  *
  * @author Nico
  * @author Diego
  */
-
-import POJOS.*;
-//import sis_2.*;
-//import java.util.List;
-import java.util.Scanner;
-//import java.util.regex.Pattern;
-//import org.hibernate.Query;
-//import org.hibernate.Session;
-//import org.hibernate.SessionFactory;
-//import org.hibernate.Transaction;
-
 public class Sis_2 {
     
     
@@ -35,7 +29,6 @@ public class Sis_2 {
         /* PRIMERA PRACTICA
         System.out.println("INTRODUZCA SU DNI:");
         String DNI = sc.nextLine();
-
         try{
             if(DAO.mostrarContribuyente(DNI)){
                 DAO.importeTotalReciboContribuyente(DNI);
@@ -43,29 +36,23 @@ public class Sis_2 {
             DAO.eliminarRecibosMenorMedia();
         }finally{
             HibernateUtil.shutdown();
-            
         */
         
-        //PRIMERA VERSION SUJETA A MUCHISSISISIMOS CAMBIOS
+        //PRIMERA VERSION SUJETA A CAMBIOS
         int count = 1;
-        Contribuyente con, conAux;
+        Contribuyente con;
         while(count!=-1){
             con = eM.obtenerContribuyente(count);
-            conAux = eM.obtenerContribuyente(count);
             if(con == null){
                 count = -1;
             }else if(con.getNombre() == null){
                 count++;
             }else{
-                conAux = u.validadorNif(conAux);
-                if(conAux != null){
-                    if(conAux.getErrNif()== null || "".equals(conAux.getErrNif())){
-                        //Es un NIF_NIE correcto.
-                    }else{
-                        xmlM.agregarContribuyente(conAux);
-                    }
-                }
-                else xmlM.agregarContribuyente(conAux);
+                con = u.validadorNif(con);
+                if("".equals(con.getErrNif())){
+                    //NIF_NIE CORRECTO (correcto o subsanado no repe) codigo futuro para BBDD o lo que corresponda.
+                    
+                }else xmlM.agregarContribuyente(con);
                 
                 count++;
             }

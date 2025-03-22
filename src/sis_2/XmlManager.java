@@ -29,6 +29,7 @@ import org.w3c.dom.Text;
 /**
  *
  * @author gar27
+ * @author ngarng00
  */
 public class XmlManager {
     Document documento;

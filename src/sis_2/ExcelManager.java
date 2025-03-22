@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+
 /**
  *
  * @author gar27
@@ -193,7 +194,7 @@ public class ExcelManager {
      * 
      * @param i
      * 
-     */
+     */         //Revisar comentarios
     public Contribuyente obtenerContribuyente(int i){ //@return null si hemos llegado al final del excel     * Contribuyente vacio si es una fila del excel sin contribuyente     * Contribuyente con parametros es que se ha encontrado contribuyente  y se ha devuelto
         if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
         Row contribuyenteExcel = hojaContribuyente.getRow(i);

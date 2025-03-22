@@ -11,6 +11,7 @@ import POJOS.Contribuyente;
 /**
  *
  * @author gar27
+ * @author ngarng00
  */
 public class Utilities {
     String[] listaNIFNIE;
@@ -18,7 +19,6 @@ public class Utilities {
 
     public Utilities(){
        inicializar(); 
-        
     }
     
     private void inicializar() {
@@ -29,45 +29,37 @@ public class Utilities {
     /**
      * 
      * @param con
-     * @return true si la cadena coincide con un DNI o NIF, conteniendo o no la letra al final.
+     * Si es erroneo (blanco, erroneo o repetido) lo marca como tal y no lo subsana en cado de ser posinle.
+     * @return contribuyente actualizado si corresponde (marca el tipo de error si no tiene es correcto)
      * 
      */
-    public Contribuyente validadorNif(Contribuyente con){         //Si excelManager.
+    public Contribuyente validadorNif(Contribuyente con){
         //boolean salida;
         String nif = con.getNifnie().toUpperCase();
         String regexp = "^[XYZxyz0-9][\\d]{7}[A-Ha-hJ-Nj-nP-Tp-tV-Zv-z]{0,1}$";
         if(Pattern.matches(regexp, nif)){
             nif = correctorNIF(nif);
             if(nif.equalsIgnoreCase("1")){ 
-                if(anyadirNIFNIE(nif)){//ES CORRECTO, SALE
-                    con = null;
-                    //salida = true;  
-                }else{//CORRECCTO PERO DUPLICADO
-                    
-                    //lo manda al xml de errores 
+                if(anyadirNIFNIE(nif)){
+                    //Es un nif correcto no duplicado.
+                    con.setErrNif("");
+                }else{
+                    //Es un nif correcto pero duplicado, se marca y se manda al xml de errores
                     con.setErrNif("NIF DUPLICADO");
-                    //salida = false; //ES REPE
                 }
             }else{                      
                 if(anyadirNIFNIE(nif)){
-                    //salida = true;      //ES CORRECTO
-                    //llama al excelManager y le pasa id y dni actualizado.
+                    //Es subsanable no repetido, lo actualiza y lo debuelve actualizado
                     con.setNifnie(nif);
                     em.modificarContribuyente(con);
                     con.setErrNif("");
                 }else{
-                    
-                    //lo manda al xml de errores
-                    //
-                    //NO  LO  ACTUALIZA  EN  EL  EXCEL
-                    //
-                    //salida = false;     //ES REPE
+                    //No actualiza excel, lo manda al xml de errores (es repe y subsanable)
                     con.setErrNif("NIF DUPLICADO");
                 }
             }
         }else{
-            //es un error y se manda al xml de errores.
-            //salida = false;
+            //Es un nif que no cumple la forma: erroneo o blanco, se manda al xml de errores.
             if(con.getNifnie() == null || "".equals(con.getNifnie())){
                 con.setErrNif("NIF BLANCO");
             }else{
@@ -80,7 +72,7 @@ public class Utilities {
 
     /**
      * @param nif entre 8 y 9 caracters compatible con un NIF NIE correcto o subsanable. 
-     * @return String (1 si es correcto, el dni correcto en caso de ser subsanado o -1 en caso de error.
+     * @return String (1, si es correcto; el dni corrregido, en caso de ser subsanado; -1, en caso de error.
      */
     private String correctorNIF(String nif){
         String salida = "-1";
@@ -107,7 +99,7 @@ public class Utilities {
 
         }else if(nifAux.length()==9){
             int aux = ((Integer.parseInt(nifAux.substring(0, nifAux.length()-1)))%23);
-            if(nifAux.charAt(8)==letras.charAt(aux)){
+            if(nifAux.toUpperCase().charAt(8)==letras.charAt(aux)){
                 salida = "1";
             } else {
                 nifAux = nif.substring(0, nif.length()-1) + (letras.charAt(aux));
@@ -156,11 +148,7 @@ public class Utilities {
      */
     private void expandir() {
         String[] nuevoArray = new String[listaNIFNIE.length + 10];   // Duplicar el tamaño del array
-
         System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
-
         listaNIFNIE = nuevoArray;   // Asignar el nuevo array al array original.
     }
-
 }
-
