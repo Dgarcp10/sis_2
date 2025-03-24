@@ -70,7 +70,11 @@ public class XmlManager {
                 textNIF_NIE = documento.createTextNode("");
                 NIF_NIE.appendChild(textNIF_NIE);
             }else{
-                textNIF_NIE = documento.createTextNode(con.getNifnie());
+                String text = con.getNifnie();
+                if (text.matches("\\d+\\.0+")) { 
+                    text = text.substring(0, text.indexOf('.'));
+                }
+                textNIF_NIE = documento.createTextNode(text);
                 NIF_NIE.appendChild(textNIF_NIE);
             }
             contribuyente.appendChild(NIF_NIE); 
