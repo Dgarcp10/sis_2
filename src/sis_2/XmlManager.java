@@ -163,14 +163,14 @@ public class XmlManager {
             cuenta.appendChild(NIF_NIE); 
             
                 //añadir ccc e iban si es posible
-            if(con.getCccErroneo()!= ""){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
+            if(con.getCccErroneo()!= "IMPOSIBLE GENERAR IBAN"){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
                 Element CccErroneo = documentoCcc.createElement("CCCErroneo");
                 Text textCccErroneo = documentoCcc.createTextNode(con.getCcc());
                 CccErroneo.appendChild(textCccErroneo);
                 cuenta.appendChild(CccErroneo);
                 
                 Element TipoError = documentoCcc.createElement("TipoError");
-                Text textTipoError = documentoCcc.createTextNode("IMPOSIBLE GENERAR IBAN");
+                Text textTipoError = documentoCcc.createTextNode(con.getCccErroneo());
                 TipoError.appendChild(textTipoError);
                 cuenta.appendChild(TipoError);
             }else{
@@ -179,6 +179,10 @@ public class XmlManager {
                 CccErroneo.appendChild(textCccErroneo);
                 cuenta.appendChild(CccErroneo);
                 //generar iban y anotarlo aqui.
+                Element IBANCorrecto = documentoCcc.createElement("IBANCorrecto");
+                Text textIBANCorrecto = documentoCcc.createTextNode(con.getIban());       //Dar una vuelta antes de terminarlo llamar desde aqui a generar IBAN??
+                IBANCorrecto.appendChild(textIBANCorrecto);
+                cuenta.appendChild(IBANCorrecto);
             }
             
             
@@ -192,9 +196,13 @@ public class XmlManager {
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             
-            DOMSource source = new DOMSource(documentoNif);
-            StreamResult result = new StreamResult(archivoNif);
-            transformer.transform(source, result);
+            DOMSource sourceNif = new DOMSource(documentoNif);
+            StreamResult resultNif = new StreamResult(archivoNif);
+            transformer.transform(sourceNif, resultNif);
+            
+            DOMSource sourceCcc = new DOMSource(documentoCcc);
+            StreamResult resultCcc = new StreamResult(archivoCcc);
+            transformer.transform(sourceCcc, resultCcc);
             
             salida = true;
         } catch (TransformerConfigurationException ex) {

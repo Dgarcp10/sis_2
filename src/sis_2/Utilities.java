@@ -166,13 +166,14 @@ public class Utilities {
             
         }else{
             //Es un ccc que no cumple la forma, es erroneo, se manda al xml de errores.
-            con.setErrCcc("IMPOSIBLE GENERAR IBAN");
+            con.setCccErroneo("IMPOSIBLE GENERAR IBAN");
         }
         
         return con;
     }
     
-    private void corregirCCC(String ccc) {
+    private Contribuyente corregirCCC(Contribuyente con) {
+        String ccc = con.getCcc();
         int[] parte1 = new int[10];
         int[] parte2 = new int[10];
         int[] control =new int[2];
@@ -189,20 +190,24 @@ public class Utilities {
         }
         int aux1 = digitoControl(parte1);
         int aux2 = digitoControl(parte2);
-        if(control[0] == aux1 && control[1] == aux2){
-            // CCC correcto salimos
-            
-        }else 
-        StringBuilder sb = new StringBuilder(); 
-        for(int i=2; i<parte1.length; i++){
-            sb.append(parte1[i]);
+        
+        if(!(control[0] == aux1 && control[1] == aux2)){
+            StringBuilder sb = new StringBuilder(); 
+            for(int i=2; i<parte1.length; i++){
+                sb.append(parte1[i]);
+            }
+            sb.append(aux1);
+            sb.append(aux2);
+            for(int i=0; i<parte2.length; i++){
+                sb.append(parte2[i]);
+            }
+            con.setCccErroneo(ccc);
+            con.setCcc(sb.toString());
+            //si esta mal guarda ambos para poder mostrarlo en el erroresCcc.xml
+        }else{ 
+            con.setCccErroneo("");
         }
-        sb.append(control[0]);
-        sb.append(control[1]);
-        for(int i=0; i<parte2.length; i++){
-            sb.append(parte2[i]);
-        }
-        return sb.toString();
+        return con;
     }
     
     /**
