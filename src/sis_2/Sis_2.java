@@ -28,7 +28,7 @@ public class Sis_2 {
 
         int count = 1;
         Contribuyente con;
-        Boolean change;
+        Boolean change, hazIban;
         while(count!=-1){
             con = eM.obtenerContribuyente(count);
             if(con == null){
@@ -37,13 +37,15 @@ public class Sis_2 {
                 count++;
             }else{
                 change = false;
-                con = u.validadorNif(con);
+                hazIban = true;
                 //INICIO LOGICA NIFNIE
+                con = u.validadorNif(con);
                 if("SUBSANADO".equals(con.getErrNif())){
                     change = true;
                     con.setErrNif("");
                 }
                 if(!("".equals(con.getErrNif()))) {
+                    hazIban = false;
                     xmlM.agregarContribuyente(con);     //NIF_NIE erroneo, blanco o duplicado
                 }else{
                     //NIF_NIE CORRECTO (correcto o subsanado no repe) codigo futuro para BBDD o lo que corresponda.
@@ -51,17 +53,31 @@ public class Sis_2 {
                 }
                 //FIN LOGICA NIFNIE
                 
+                
+                
                 //INICIO LOGICA CCC
+                con = u.validadorCCC(con);
+                if(!"".equals(con.getCccErroneo())){ //si no esta en blnaco entra
+                    if("IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo())){
+                        hazIban = false;
+                    }
+                    change = true;
+                    xmlM.agregarCcc(con); //lo pasa a errores (puede ser un subsanado)
+                }
                 //FIN LOGICA CCC
+                
+                
                 
                 //INICIO LOGICA IBAN
                 //FIN LOGICA IBAN
+                
+                
                 
                 //INICIO LOGICA EMAIL
                 //FIN LOGICA EMAIL
                 
                 
-                eM.modificarContribuyente(con);
+                if(change) eM.modificarContribuyente(con);
                 count++;
             }
         }

@@ -162,7 +162,7 @@ public class Utilities {
         String regexp = "^[\\d]{20}$";
         if(Pattern.matches(regexp, ccc)){
             //Tiene 20 caracteres numericos 
-            
+            con = corregirCCC(con);
             
         }else{
             //Es un ccc que no cumple la forma, es erroneo, se manda al xml de errores.
