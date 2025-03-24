@@ -6,7 +6,7 @@
 package sis_2;
 
 import POJOS.Contribuyente;
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -39,9 +39,14 @@ public class ExcelManager {
     }
 
     private void inicializar() {
-        try {
-            libroOrdenanzas = WorkbookFactory.create(new File(direccionOrdenanzas));
-            libroVehiculos = WorkbookFactory.create(new File(direccionVehiculos));
+        try {          
+            try (FileInputStream fisOrdenanzas = new FileInputStream(direccionOrdenanzas);
+                 FileInputStream fisVehiculos = new FileInputStream(direccionVehiculos)) {
+
+                libroOrdenanzas = WorkbookFactory.create(fisOrdenanzas);
+                libroVehiculos = WorkbookFactory.create(fisVehiculos);
+            }
+                     
             hojaOrdenanza = libroOrdenanzas.getSheet("Ordenanza");
             hojaContribuyente = libroVehiculos.getSheet("Contribuyente");
             hojaVehiculos = libroVehiculos.getSheet("Vehiculos");
@@ -221,25 +226,17 @@ public class ExcelManager {
     
     public boolean guardarCambios() {
         boolean salida = false;
-        try {
-            //      PRUEBA  SOLUCIONANDO  SALIDA
-            //      Con esto funciona sin ello no nose por que
-            
-            String dirOrdSal = "resources/SistemasOrdenanzas_salida.xlsx";
-            String dirVehSal = "resources/SistemasVehiculos_salida.xlsx";
-            
-            FileOutputStream salidaOrd = new FileOutputStream(dirOrdSal);
-            FileOutputStream salidaVeh = new FileOutputStream(dirVehSal);
-            
-            libroOrdenanzas.write(salidaOrd);
-            libroVehiculos.write(salidaVeh);
-            salidaOrd.close();
-            salidaVeh.close();
-            
-            // hasta aqui para la salida en otro fichero
+        try {           
+            try (FileOutputStream fosOrdenanzas = new FileOutputStream(direccionOrdenanzas);
+                 FileOutputStream fosVehiculos = new FileOutputStream(direccionVehiculos)) {
+
+                libroOrdenanzas.write(fosOrdenanzas);
+                libroVehiculos.write(fosVehiculos);
+            }
+
+            // Cerrar los libros después de escribir
             libroOrdenanzas.close();
             libroVehiculos.close();
-
             salida = true;
         } catch (IOException ex) {
             Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, "Error al guardar los cambios", ex);

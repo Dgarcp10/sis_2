@@ -45,12 +45,13 @@ public class Sis_2 {
                     eM.modificarContribuyente(con);
                     con.setErrNif("");
                 }
-                if(!"".equals(con.getErrNif())) {
+                if(!("".equals(con.getErrNif()))) {
                     xmlM.agregarContribuyente(con);     //NIF_NIE erroneo, blanco o duplicado
                 }else{
                     //NIF_NIE CORRECTO (correcto o subsanado no repe) codigo futuro para BBDD o lo que corresponda.
                     
                 }
+                
                 count++;
             }
         }
