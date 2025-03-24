@@ -26,9 +26,9 @@ public class Sis_2 {
         ExcelManager eM = new ExcelManager();
         XmlManager xmlM = new XmlManager();
 
-
         int count = 1;
         Contribuyente con;
+        Boolean change;
         while(count!=-1){
             con = eM.obtenerContribuyente(count);
             if(con == null){
@@ -36,13 +36,11 @@ public class Sis_2 {
             }else if(con.getNombre() == null){
                 count++;
             }else{
-                
-                //System.out.println(con.getNifnie());
+                change = false;
                 con = u.validadorNif(con);
+                //INICIO LOGICA NIFNIE
                 if("SUBSANADO".equals(con.getErrNif())){
-                    //Subsanamos el NIF_NIE.
-                    //System.out.println(con.getNifnie());
-                    eM.modificarContribuyente(con);
+                    change = true;
                     con.setErrNif("");
                 }
                 if(!("".equals(con.getErrNif()))) {
@@ -51,7 +49,19 @@ public class Sis_2 {
                     //NIF_NIE CORRECTO (correcto o subsanado no repe) codigo futuro para BBDD o lo que corresponda.
                     
                 }
+                //FIN LOGICA NIFNIE
                 
+                //INICIO LOGICA CCC
+                //FIN LOGICA CCC
+                
+                //INICIO LOGICA IBAN
+                //FIN LOGICA IBAN
+                
+                //INICIO LOGICA EMAIL
+                //FIN LOGICA EMAIL
+                
+                
+                eM.modificarContribuyente(con);
                 count++;
             }
         }
