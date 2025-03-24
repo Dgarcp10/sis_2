@@ -161,9 +161,27 @@ public class XmlManager {
                 NIF_NIE.appendChild(textNIF_NIE);
             }
             cuenta.appendChild(NIF_NIE); 
+            
                 //añadir ccc e iban si es posible
-
-          
+            if(con.getCccErroneo()!= ""){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
+                Element CccErroneo = documentoCcc.createElement("CCCErroneo");
+                Text textCccErroneo = documentoCcc.createTextNode(con.getCcc());
+                CccErroneo.appendChild(textCccErroneo);
+                cuenta.appendChild(CccErroneo);
+                
+                Element TipoError = documentoCcc.createElement("TipoError");
+                Text textTipoError = documentoCcc.createTextNode("IMPOSIBLE GENERAR IBAN");
+                TipoError.appendChild(textTipoError);
+                cuenta.appendChild(TipoError);
+            }else{
+                Element CccErroneo = documentoCcc.createElement("CCCErroneo");
+                Text textCccErroneo = documentoCcc.createTextNode(con.getCccErroneo());
+                CccErroneo.appendChild(textCccErroneo);
+                cuenta.appendChild(CccErroneo);
+                //generar iban y anotarlo aqui.
+            }
+            
+            
     }
     
     public boolean escribir(){
