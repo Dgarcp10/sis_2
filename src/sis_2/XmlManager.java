@@ -32,9 +32,12 @@ import org.w3c.dom.Text;
  * @author ngarng00
  */
 public class XmlManager {
-    Document documento;
-    Element rootElem;
-    File archivo;
+    Document documentoNif;
+    Element rootElemNIF;
+    File archivoNif;
+    Document documentoCcc;
+    Element rootElemCcc;
+    File archivoCcc;
      
     public XmlManager() {
         
@@ -42,68 +45,147 @@ public class XmlManager {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             
-            documento = builder.newDocument();
-            documento.setXmlVersion("1.0");
+            documentoNif = builder.newDocument();
+            documentoNif.setXmlVersion("1.0");
             
-            rootElem = documento.createElement("Contribuyentes");
-            documento.appendChild(rootElem);
-            String rutaArchivo = "resources/";
-            String nombreArchivo = "ErroresNifNie.xml";
-            archivo = new File(rutaArchivo + nombreArchivo);
-
+            rootElemNIF = documentoNif.createElement("Contribuyentes");
+            documentoNif.appendChild(rootElemNIF);
+            String rutaArchivoNif = "resources/";
+            String nombreArchivoNif = "ErroresNifNie.xml";
+            archivoNif = new File(rutaArchivoNif + nombreArchivoNif);
+            
+            documentoNif = builder.newDocument();
+            documentoNif.setXmlVersion("1.0");
+            
+            rootElemCcc = documentoCcc.createElement("Cuentas");
+            documentoNif.appendChild(rootElemNIF);
+            String rutaArchivoCcc = "resources/";
+            String nombreArchivoCcc = "ErroresCcc.xml";
+            archivoNif = new File(rutaArchivoCcc + nombreArchivoCcc);
+            
         } catch (ParserConfigurationException ex) {
-            System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml correctamente");
+            System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml o erroresCcc.xml correctamente");
         }
     }
     
     public void agregarContribuyente(Contribuyente con){
-        //if(con.getErrNif() == null || "".equals(con.getErrNif())){
-        //}else{
-            
-            Element contribuyente = documento.createElement("Contribuyente");
+        
+            Element contribuyente = documentoNif.createElement("Contribuyente");
             contribuyente.setAttribute("id", String.valueOf(con.getIdExcel()+1));
-            rootElem.appendChild(contribuyente);
+            rootElemNIF.appendChild(contribuyente);
 
-            Element NIF_NIE = documento.createElement("NIF_NIE");
+            Element NIF_NIE = documentoNif.createElement("NIF_NIE");
             Text textNIF_NIE;
             if (con.getNifnie() == null) {
-                textNIF_NIE = documento.createTextNode("");
+                textNIF_NIE = documentoNif.createTextNode("");
                 NIF_NIE.appendChild(textNIF_NIE);
             }else{
                 String text = con.getNifnie();
                 if (text.matches("\\d+\\.0+")) { 
                     text = text.substring(0, text.indexOf('.'));
                 }
-                textNIF_NIE = documento.createTextNode(text);
+                textNIF_NIE = documentoNif.createTextNode(text);
                 NIF_NIE.appendChild(textNIF_NIE);
             }
             contribuyente.appendChild(NIF_NIE); 
 
-            Element Nombre = documento.createElement("Nombre");
-            Text textNombre = documento.createTextNode(con.getNombre());
+            Element Nombre = documentoNif.createElement("Nombre");
+            Text textNombre = documentoNif.createTextNode(con.getNombre());
             Nombre.appendChild(textNombre);
             contribuyente.appendChild(Nombre);
 
-            Element PrimerApellido = documento.createElement("PrimerApellido");
-            Text textPrimerApellido = documento.createTextNode(con.getApellido1());
+            Element PrimerApellido = documentoNif.createElement("PrimerApellido");
+            Text textPrimerApellido = documentoNif.createTextNode(con.getApellido1());
             PrimerApellido.appendChild(textPrimerApellido);
             contribuyente.appendChild(PrimerApellido);
 
             if (con.getApellido2() != null && !con.getApellido2().isEmpty()) {
-                Element SegundoApellido = documento.createElement("SegundoApellido");
-                Text textSegundoApellido = documento.createTextNode(con.getApellido2());
+                Element SegundoApellido = documentoNif.createElement("SegundoApellido");
+                Text textSegundoApellido = documentoNif.createTextNode(con.getApellido2());
                 SegundoApellido.appendChild(textSegundoApellido);
                 contribuyente.appendChild(SegundoApellido);
             }
         
         
         
-            Element TipoDeError = documento.createElement("TipoDeError");
-            Text textTipoDeError = documento.createTextNode(con.getErrNif());
+            Element TipoDeError = documentoNif.createElement("TipoDeError");
+            Text textTipoDeError = documentoNif.createTextNode(con.getErrNif());
             TipoDeError.appendChild(textTipoDeError);
             contribuyente.appendChild(TipoDeError);
         //}
           
+    }
+    /*
+    <Cuenta id="36">
+        <Nombre>Tomas</Nombre>
+        <Apellidos>Cedron Perez</Apellidos>
+        <NIFNIE>a9731953D</NIFNIE>
+        <CCCErroneo>21508149005421346497</CCCErroneo>
+        <IBANCorrecto>DE5021508149175421346497</IBANCorrecto>
+        o
+        <CCCErroneo>245619375215464975</CCCErroneo>
+        <TipoError>IMPOSIBLE GENERAR IBAN</TipoError>  
+    </Cuenta>
+    */
+    
+    public void agregarCcc(Contribuyente con){
+        
+            Element cuenta = documentoCcc.createElement("Cuenta");
+            cuenta.setAttribute("id", String.valueOf(con.getIdExcel()+1));
+            rootElemCcc.appendChild(cuenta);
+
+            Element Nombre = documentoCcc.createElement("Nombre");
+            Text textNombre = documentoCcc.createTextNode(con.getNombre());
+            Nombre.appendChild(textNombre);
+            cuenta.appendChild(Nombre);
+            
+            
+            Element Apellidos = documentoCcc.createElement("Apellidos");
+            Text textApellidos;
+            if (con.getApellido2() != null && !con.getApellido2().isEmpty()) {
+                textApellidos = documentoCcc.createTextNode(con.getApellido1() + " " + con.getApellido2());
+            }else {
+                textApellidos = documentoCcc.createTextNode(con.getApellido1());
+            }
+            Apellidos.appendChild(textApellidos);
+            cuenta.appendChild(Apellidos);
+
+            
+            Element NIF_NIE = documentoCcc.createElement("NIF_NIE");
+            Text textNIF_NIE;
+            if (con.getNifnie() == null) {
+                textNIF_NIE = documentoCcc.createTextNode("");
+                NIF_NIE.appendChild(textNIF_NIE);
+            }else{
+                textNIF_NIE = documentoCcc.createTextNode(con.getNifnie());
+                NIF_NIE.appendChild(textNIF_NIE);
+            }
+            cuenta.appendChild(NIF_NIE); 
+            
+                //añadir ccc e iban si es posible
+            if(con.getCccErroneo()!= "IMPOSIBLE GENERAR IBAN"){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
+                Element CccErroneo = documentoCcc.createElement("CCCErroneo");
+                Text textCccErroneo = documentoCcc.createTextNode(con.getCcc());
+                CccErroneo.appendChild(textCccErroneo);
+                cuenta.appendChild(CccErroneo);
+                
+                Element TipoError = documentoCcc.createElement("TipoError");
+                Text textTipoError = documentoCcc.createTextNode(con.getCccErroneo());
+                TipoError.appendChild(textTipoError);
+                cuenta.appendChild(TipoError);
+            }else{
+                Element CccErroneo = documentoCcc.createElement("CCCErroneo");
+                Text textCccErroneo = documentoCcc.createTextNode(con.getCccErroneo());
+                CccErroneo.appendChild(textCccErroneo);
+                cuenta.appendChild(CccErroneo);
+                //generar iban y anotarlo aqui.
+                Element IBANCorrecto = documentoCcc.createElement("IBANCorrecto");
+                Text textIBANCorrecto = documentoCcc.createTextNode(con.getIban());       //Dar una vuelta antes de terminarlo llamar desde aqui a generar IBAN??
+                IBANCorrecto.appendChild(textIBANCorrecto);
+                cuenta.appendChild(IBANCorrecto);
+            }
+            
+            
     }
     
     public boolean escribir(){
@@ -114,9 +196,13 @@ public class XmlManager {
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             
-            DOMSource source = new DOMSource(documento);
-            StreamResult result = new StreamResult(archivo);
-            transformer.transform(source, result);
+            DOMSource sourceNif = new DOMSource(documentoNif);
+            StreamResult resultNif = new StreamResult(archivoNif);
+            transformer.transform(sourceNif, resultNif);
+            
+            DOMSource sourceCcc = new DOMSource(documentoCcc);
+            StreamResult resultCcc = new StreamResult(archivoCcc);
+            transformer.transform(sourceCcc, resultCcc);
             
             salida = true;
         } catch (TransformerConfigurationException ex) {
