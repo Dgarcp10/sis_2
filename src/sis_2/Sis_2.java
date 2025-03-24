@@ -4,113 +4,59 @@
  * and open the template in the editor.
  */
 package sis_2;
+
+
+import POJOS.*;
+import java.util.Scanner;
+
 /**
  *
  * @author Nico
  * @author Diego
  */
-
-import POJOS.*;
-import java.util.List;
-import java.util.Scanner;
-//import org.hibernate.Query;
-//import org.hibernate.Session;
-//import org.hibernate.SessionFactory;
-//import org.hibernate.Transaction;
-
 public class Sis_2 {
-    //static ConexionManager conexion = null;
-    //static SessionFactory sf = null;
-    //static Session sesion = null;
-    //static Transaction tx = null;
-    //static DAO dao = null;
+    
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("INTRODUZCA SU DNI:");
         Scanner sc = new Scanner (System.in);
-        String DNI = sc.nextLine();
-  
-        try{
-            
-            //sf = HibernateUtil.getSessionFactory();
-            //conexion = ConexionManager.getIntance();
-            if(DAO.mostrarContribuyente(DNI)){
-                DAO.importeTotalReciboContribuyente(DNI);
-            }
-            DAO.eliminarRecibosMenorMedia();
-        }finally{
-            //conexion.close();
-            HibernateUtil.shutdown();
-            
-        }
-           
-    }
-    //09677930J
-    /*
-    private static boolean mostrarContribuyente(String DNI){
-        
-        boolean salida = true;
-        sesion = sf.openSession();
-            
-        Query query = sesion.createQuery("SELECT c FROM Contribuyente c WHERE c.nifnie = :n");
-        query.setParameter("n", DNI);
+        Utilities u = new Utilities();
+        ExcelManager eM = new ExcelManager();
+        XmlManager xmlM = new XmlManager();
 
-        Contribuyente c = (Contribuyente) query.uniqueResult();
-        if(c != null){
-            System.out.println(c.getNombre());
-            System.out.println(c.getApellido1());
-            if(c.getApellido2() != null){
-                System.out.println(c.getApellido2());
-            }
-            System.out.println(c.getNifnie());
-            System.out.println(c.getDireccion());
-        
-        }else salida = false;
-        
-        sesion.close();
-        return salida;
-    }
-    
-    private static void importeTotalReciboContribuyente(String DNI){
-        
-        sesion = sf.openSession();
-        Query query = sesion.createQuery("SELECT r FROM Recibos r WHERE r.nifContribuyente = :n");
-        query.setParameter("n", DNI);
-            
-        List<Recibos> listaRecibos = query.list();
-        tx = sesion.beginTransaction();
-        for (Recibos r : listaRecibos) {
-            r.setTotalRecibo(115D);
-            sesion.update(r);
-        }
-        tx.commit();
-    }
-    
-    private static void eliminarRecibosMenorMedia(){
-        
-        sesion = sf.openSession();
-        Query query = sesion.createQuery("SELECT r FROM Recibos r");
-            
-        List<Recibos> listaRecibos = query.list();
 
-        double media = 0;
-        for (Recibos r : listaRecibos) {
-            media += r.getTotalRecibo();
-        }
-        media = media/listaRecibos.size();
-        //System.out.println("Media: " + media);
-        tx = sesion.beginTransaction();
-        for (Recibos r : listaRecibos) {
-            if(r.getTotalRecibo()<media){
-                sesion.delete(r);
+        int count = 1;
+        Contribuyente con;
+        while(count!=-1){
+            con = eM.obtenerContribuyente(count);
+            if(con == null){
+                count = -1;
+            }else if(con.getNombre() == null){
+                count++;
+            }else{
+                
+                //System.out.println(con.getNifnie());
+                con = u.validadorNif(con);
+                if("SUBSANADO".equals(con.getErrNif())){
+                    //Subsanamos el NIF_NIE.
+                    //System.out.println(con.getNifnie());
+                    eM.modificarContribuyente(con);
+                    con.setErrNif("");
+                }
+                if(!("".equals(con.getErrNif()))) {
+                    xmlM.agregarContribuyente(con);     //NIF_NIE erroneo, blanco o duplicado
+                }else{
+                    //NIF_NIE CORRECTO (correcto o subsanado no repe) codigo futuro para BBDD o lo que corresponda.
+                    
+                }
+                
+                count++;
             }
         }
-        tx.commit();
-
-
-
-        sesion.close();
-    }*/
+        xmlM.escribir();
+        if(eM.guardarCambios()) System.out.println("Excel guardado exitosamente.");
+        
+    }
 }
