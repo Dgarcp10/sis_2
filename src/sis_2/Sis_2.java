@@ -28,7 +28,7 @@ public class Sis_2 {
 
         int count = 1;
         Contribuyente con;
-        Boolean change, hazIban;    //hazIban solo lirve como indicador de di hay que escribir el iban en excel o no.
+        Boolean change, correctNif, correctCcc;    //hazIban solo lirve como indicador de di hay que escribir el iban en excel o no.
         while(count!=-1){
             con = eM.obtenerContribuyente(count);
             if(con == null){
@@ -37,17 +37,20 @@ public class Sis_2 {
                 count++;
             }else{
                 change = false;
-                hazIban = true;
+                correctNif = false;
+                correctCcc = false;
                 //INICIO LOGICA NIFNIE
                 con = u.validadorNif(con);
                 if("SUBSANADO".equals(con.getErrNif())){
                     change = true;
+                    correctNif = true;
                     con.setErrNif("");
                 }
                 if(!("".equals(con.getErrNif()))) {
-                    hazIban = false;
+                    correctNif = false;
                     xmlM.agregarContribuyente(con);     //NIF_NIE erroneo, blanco o duplicado
                 }else{
+                    correctNif = true;
                     //NIF_NIE CORRECTO (correcto o subsanado no repe) codigo futuro para BBDD o lo que corresponda.
                     
                 }
@@ -55,40 +58,42 @@ public class Sis_2 {
                 
                 
                 
-                //INICIO LOGICA CCC
+                //INICIO LOGICA CCC E IBAN
                 con = u.validadorCCC(con);
-                if(!"".equals(con.getCccErroneo())){ //si no esta en blnaco entra
+                if(!"".equals(con.getCccErroneo())){    //si no esta en blnaco entra
                     
                     if("IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo())){
-                        xmlM.agregarCcc(con); //lo pasa a errores (puede ser un subsanado)
-                        
+                        xmlM.agregarCcc(con);           //lo pasa a errores
+                        correctCcc = false;
                     }else{
                         change =true;
-                        xmlM.agregarCcc(con);       //lo pasa a errores y lo actualiza en excell
+                        xmlM.agregarCcc(con);           //lo pasa a errores y lo actualiza en excell
+                        correctCcc = true;
                     }
+                }else correctCcc = true;
+                //FIN LOGICA CCC E IBAN
+                
+                
+                
+                //INICIO LOGICA EMAIL Y SUBSANAR IBAN 
+                if(correctNif && correctCcc){
+                    //Se genera el email (el iban ya esta calculado)
+                    change = true;
+                    con = u.generadorEmail(con);
+                }else {
+                    con.setIban("");    //Se borra en caso de que no sea necesario 
+                    con.setEmail("");   //Se borra en caso de que no sea necesario, para que la casilla no sea null;
                 }
-                //FIN LOGICA CCC
+                //FIN LOGICA EMAIL Y SUBSANAR IBAN
                 
-                
-                
-                //INICIO LOGICA IBAN
-                if(!"IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo()) && !"".equals(con.getCccErroneo())){
-                    hazIban = false;
-                }
-                //FIN LOGICA IBAN
-                
-                
-                
-                //INICIO LOGICA EMAIL
-                //FIN LOGICA EMAIL
                 
                 
                 if(change) eM.modificarContribuyente(con);
                 count++;
             }
         }
-        xmlM.escribir();
-        if(eM.guardarCambios()) System.out.println("Excel guardado exitosamente.");
         
+        if(xmlM.escribir()) System.out.println("XMLs guardados exitosamente.");
+        if(eM.guardarCambios()) System.out.println("EXCELs guardados exitosamente.");
     }
 }

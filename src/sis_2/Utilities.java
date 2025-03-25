@@ -248,4 +248,9 @@ public class Utilities {
         return con;
     }
     
+    public Contribuyente generadorEmail(Contribuyente con) {
+        //TODO  Realizar codigo para el email
+    
+        return con;
+    }
 }
