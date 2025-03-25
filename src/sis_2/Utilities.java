@@ -7,6 +7,7 @@ package sis_2;
 
 import java.util.regex.Pattern;
 import POJOS.Contribuyente;
+import java.math.BigInteger;
 
 /**
  *
@@ -163,7 +164,8 @@ public class Utilities {
         if(Pattern.matches(regexp, ccc)){
             //Tiene 20 caracteres numericos 
             con = corregirCCC(con);
-            
+            con = generadorIBAN(con);
+
         }else{
             //Es un ccc que no cumple la forma, es erroneo, se manda al xml de errores.
             con.setCccErroneo("IMPOSIBLE GENERAR IBAN");
@@ -191,7 +193,9 @@ public class Utilities {
         int aux1 = digitoControl(parte1);
         int aux2 = digitoControl(parte2);
         
-        if(!(control[0] == aux1 && control[1] == aux2)){
+        if(control[0] == aux1 && control[1] == aux2){
+            con.setCccErroneo(""); // El CCC es correcto
+        }else { 
             StringBuilder sb = new StringBuilder(); 
             for(int i=2; i<parte1.length; i++){
                 sb.append(parte1[i]);
@@ -203,10 +207,9 @@ public class Utilities {
             }
             con.setCccErroneo(ccc);
             con.setCcc(sb.toString());
-            //si esta mal guarda ambos para poder mostrarlo en el erroresCcc.xml
-        }else{ 
-            con.setCccErroneo("");
+            //Estaba mal, guarda ambos para poder mostrarlo en el erroresCcc.xml
         }
+        
         return con;
     }
     
@@ -225,6 +228,24 @@ public class Utilities {
         if(control == 10) control = 1;
         if(control == 11) control = 0;
         return control;
+    }
+    
+    public Contribuyente generadorIBAN(Contribuyente con) {
+        
+        String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String IBANStr = con.getCcc() + (letras.indexOf(con.getPaisCcc().charAt(0))+10) + "" + (letras.indexOf(con.getPaisCcc().charAt(1))+10) + "00";
+        //int IBANINT = Integer.parseInt(IBANStr);
+        BigInteger ibanBigInt = new BigInteger(IBANStr);
+        BigInteger digControl = BigInteger.valueOf(98).subtract(ibanBigInt.mod(BigInteger.valueOf(97)));
+        IBANStr = con.getPaisCcc();
+        if (digControl.compareTo(BigInteger.TEN) < 0) {
+            IBANStr += "0";
+        }
+        IBANStr += digControl + con.getCcc();
+        
+        con.setIban(IBANStr);
+        
+        return con;
     }
     
 }

@@ -28,7 +28,7 @@ public class Sis_2 {
 
         int count = 1;
         Contribuyente con;
-        Boolean change, hazIban;
+        Boolean change, hazIban;    //hazIban solo lirve como indicador de di hay que escribir el iban en excel o no.
         while(count!=-1){
             con = eM.obtenerContribuyente(count);
             if(con == null){
@@ -58,17 +58,23 @@ public class Sis_2 {
                 //INICIO LOGICA CCC
                 con = u.validadorCCC(con);
                 if(!"".equals(con.getCccErroneo())){ //si no esta en blnaco entra
+                    
                     if("IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo())){
-                        hazIban = false;
+                        xmlM.agregarCcc(con); //lo pasa a errores (puede ser un subsanado)
+                        
+                    }else{
+                        change =true;
+                        xmlM.agregarCcc(con);       //lo pasa a errores y lo actualiza en excell
                     }
-                    change = true;
-                    xmlM.agregarCcc(con); //lo pasa a errores (puede ser un subsanado)
                 }
                 //FIN LOGICA CCC
                 
                 
                 
                 //INICIO LOGICA IBAN
+                if(!"IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo()) && !"".equals(con.getCccErroneo())){
+                    hazIban = false;
+                }
                 //FIN LOGICA IBAN
                 
                 
