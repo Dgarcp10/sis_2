@@ -16,7 +16,7 @@ import java.math.BigInteger;
  */
 public class Utilities {
     String[] listaNIFNIE;
-    //ExcelManager em;
+    String[] listaEmail;
 
     public Utilities(){
        inicializar(); 
@@ -24,7 +24,7 @@ public class Utilities {
     
     private void inicializar() {
             listaNIFNIE = new String[10];
-            //em = new ExcelManager();
+            listaEmail = new String[10];
     }
     
     /**
@@ -116,7 +116,7 @@ public class Utilities {
      */
     private boolean anyadirNIFNIE(String nif){
         boolean salida = false;
-        if (isFull()) expandir();
+        if (isFullNIFNIE()) expandirNIFNIE();
         for (int i = 0; i < listaNIFNIE.length; i++) {
             String str = listaNIFNIE[i];
             if (str != null && str.equals(nif)) {
@@ -134,7 +134,7 @@ public class Utilities {
      * @param array
      * @return true si la lista esta llena false si tiene hueco.
      */
-    private boolean isFull() {
+    private boolean isFullNIFNIE() {
         for (String str : listaNIFNIE) {
             if (str == null) {
                 return false; // El array no está lleno
@@ -142,12 +142,12 @@ public class Utilities {
         }
         return true; // El array está lleno
     }
-
+    
     /**
      * @param array 
      * Expande el array de DNI correctos.
      */
-    private void expandir() {
+    private void expandirNIFNIE() {
         String[] nuevoArray = new String[listaNIFNIE.length + 10];   // Duplicar el tamaño del array
         System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
         listaNIFNIE = nuevoArray;   // Asignar el nuevo array al array original.
@@ -249,8 +249,56 @@ public class Utilities {
     }
     
     public Contribuyente generadorEmail(Contribuyente con) {
-        //TODO  Realizar codigo para el email
-    
+        //      Deberia de leer antes los emails generados ya para no modificarlos en caso de ser ya existentes???
+        //      Este codigo no lo contempla
+        //      Seria hacer una pasada precia leyendo los emails y metiendoles a la laista si son correctos, posteriormente los saltaria en la segunda pasada si estos ya estan en la lista.
+        String email = ("" + con.getNombre().charAt(0) + con.getApellido1().charAt(0));
+        
+        if(con.getApellido2()!= null && con.getApellido2().equals("")){
+            email += con.getApellido2().charAt(0);
+        }
+        int num = 0;
+        String emailAux = "";
+        if (isFullEmail()) expandirEmail();
+        for (int i = 0; i < listaEmail.length; i++) {
+            if(num >= 10){
+                emailAux = email + Integer.toString(num);
+            }else{
+                emailAux = email + "0" + Integer.toString(num);
+            }
+            if (listaEmail[i] == null || listaEmail[i].equals("")) {
+                listaEmail[i] = emailAux;
+                con.setEmail(emailAux + "@vehiculos2025.com");
+                i = listaEmail.length+1;
+            }else if(listaEmail[i].equals(emailAux)){
+                num++;
+            }
+        }
         return con;
     }
+    
+    /**
+     * @param array
+     * @return true si la lista esta llena false si tiene hueco.
+     */
+    private boolean isFullEmail() {
+        for (String str : listaEmail) {
+            if (str == null) {
+                return false; // El array no está lleno
+            }
+        }
+        return true; // El array está lleno
+    }
+
+    
+    /**
+     * @param array 
+     * Expande el array de DNI correctos.
+     */
+    private void expandirEmail() {
+        String[] nuevoArray = new String[listaNIFNIE.length + 10];   // Duplicar el tamaño del array
+        System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
+        listaNIFNIE = nuevoArray;   // Asignar el nuevo array al array original.
+    }
+    
 }
