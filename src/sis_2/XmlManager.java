@@ -54,14 +54,14 @@ public class XmlManager {
             String nombreArchivoNif = "ErroresNifNie.xml";
             archivoNif = new File(rutaArchivoNif + nombreArchivoNif);
             
-            documentoNif = builder.newDocument();
-            documentoNif.setXmlVersion("1.0");
+            documentoCcc = builder.newDocument();
+            documentoCcc.setXmlVersion("1.0");
             
             rootElemCcc = documentoCcc.createElement("Cuentas");
-            documentoNif.appendChild(rootElemNIF);
+            documentoCcc.appendChild(rootElemCcc);
             String rutaArchivoCcc = "resources/";
             String nombreArchivoCcc = "ErroresCcc.xml";
-            archivoNif = new File(rutaArchivoCcc + nombreArchivoCcc);
+            archivoCcc = new File(rutaArchivoCcc + nombreArchivoCcc);
             
         } catch (ParserConfigurationException ex) {
             System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml o erroresCcc.xml correctamente");
@@ -129,7 +129,7 @@ public class XmlManager {
     */
     
     public void agregarCcc(Contribuyente con){
-        
+        if(!("".equals(con.getCccErroneo()) || con.getCccErroneo() == null || "".equals(con.getCcc()) || con.getCcc() == null)){
             Element cuenta = documentoCcc.createElement("Cuenta");
             cuenta.setAttribute("id", String.valueOf(con.getIdExcel()+1));
             rootElemCcc.appendChild(cuenta);
@@ -163,7 +163,7 @@ public class XmlManager {
             cuenta.appendChild(NIF_NIE); 
             
                 //añadir ccc e iban si es posible
-            if(con.getCccErroneo()!= "IMPOSIBLE GENERAR IBAN"){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
+            if(con.getCccErroneo()== "IMPOSIBLE GENERAR IBAN"){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
                 Element CccErroneo = documentoCcc.createElement("CCCErroneo");
                 Text textCccErroneo = documentoCcc.createTextNode(con.getCcc());
                 CccErroneo.appendChild(textCccErroneo);
@@ -180,10 +180,11 @@ public class XmlManager {
                 cuenta.appendChild(CccErroneo);
                 //generar iban y anotarlo aqui.
                 Element IBANCorrecto = documentoCcc.createElement("IBANCorrecto");
-                Text textIBANCorrecto = documentoCcc.createTextNode(con.getIban());       //Dar una vuelta antes de terminarlo llamar desde aqui a generar IBAN??
+                Text textIBANCorrecto = documentoCcc.createTextNode("FALTA GENERAR IBAN");       //Dar una vuelta antes de terminarlo llamar desde aqui a generar IBAN??
                 IBANCorrecto.appendChild(textIBANCorrecto);
                 cuenta.appendChild(IBANCorrecto);
             }
+        }
             
             
     }
@@ -200,16 +201,30 @@ public class XmlManager {
             StreamResult resultNif = new StreamResult(archivoNif);
             transformer.transform(sourceNif, resultNif);
             
+            salida = true;
+        } catch (TransformerConfigurationException ex) {
+            System.out.println("ERROR 1.1: no se pudo escribir el ErroresNifNie.xml correctamente");
+        } catch (TransformerException ex) {
+            System.out.println("ERROR 1.2: no se pudo escribir el ErroresNifNie.xml correctamente");
+        }
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            
             DOMSource sourceCcc = new DOMSource(documentoCcc);
             StreamResult resultCcc = new StreamResult(archivoCcc);
             transformer.transform(sourceCcc, resultCcc);
             
             salida = true;
         } catch (TransformerConfigurationException ex) {
-            System.out.println("ERROR 1: no se pudo escribir el ErroresNifNie.xml correctamente");
+            System.out.println("ERROR 2.1: no se pudo escribir el ErroresCcc.xml correctamente");
         } catch (TransformerException ex) {
-            System.out.println("ERROR 2: no se pudo escribir el ErroresNifNie.xml correctamente");
+            System.out.println("ERROR 2.2: no se pudo escribir el ErroresCcc.xml correctamente");
+            System.out.println(ex);
         }
+        
         return salida;
     }
 }

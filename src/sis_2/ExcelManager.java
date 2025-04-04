@@ -221,7 +221,7 @@ public class ExcelManager {
     public void modificarContribuyente(Contribuyente contribuyente){
         if(contribuyente.getIdExcel()>hojaContribuyente.getPhysicalNumberOfRows()) return;
         hojaContribuyente.getRow(contribuyente.getIdExcel()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
-        //System.out.println(contribuyente.getIdExcel()+1 + "  Actualizado a: " + contribuyente.getNifnie());
+        
     }
     
     public boolean guardarCambios() {
