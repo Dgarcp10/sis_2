@@ -220,8 +220,16 @@ public class ExcelManager {
     
     public void modificarContribuyente(Contribuyente contribuyente){
         if(contribuyente.getIdExcel()>hojaContribuyente.getPhysicalNumberOfRows()) return;
-        hojaContribuyente.getRow(contribuyente.getIdExcel()).getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
+        Row rowAux = hojaContribuyente.getRow(contribuyente.getIdExcel());
         
+        rowAux.getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
+        rowAux.getCell(CCCColumn).setCellValue(contribuyente.getCcc());
+        if(contribuyente.getIban() != null && !"".equals(contribuyente.getIban())){
+            rowAux.createCell(IBANColumn).setCellValue(contribuyente.getIban());
+        }
+        if(contribuyente.getEmail() != null && !"".equals(contribuyente.getEmail())){
+            rowAux.createCell(emailColumn).setCellValue(contribuyente.getEmail());
+        }
     }
     
     public boolean guardarCambios() {

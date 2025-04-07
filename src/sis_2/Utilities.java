@@ -175,7 +175,11 @@ public class Utilities {
     }
     
     private Contribuyente corregirCCC(Contribuyente con) {
+        
+        System.out.println("Dentro del corrector:");
         String ccc = con.getCcc();
+        
+        System.out.println(ccc);
         int[] parte1 = new int[10];
         int[] parte2 = new int[10];
         int[] control =new int[2];
@@ -195,6 +199,7 @@ public class Utilities {
         
         if(control[0] == aux1 && control[1] == aux2){
             con.setCccErroneo(""); // El CCC es correcto
+        System.out.println(con.getCccErroneo() + "Vacio");
         }else { 
             StringBuilder sb = new StringBuilder(); 
             for(int i=2; i<parte1.length; i++){
@@ -205,7 +210,9 @@ public class Utilities {
             for(int i=0; i<parte2.length; i++){
                 sb.append(parte2[i]);
             }
+        //System.out.println(ccc + "Con algo");
             con.setCccErroneo(ccc);
+       // System.out.println(con.getCccErroneo() + "con algo");
             con.setCcc(sb.toString());
             //Estaba mal, guarda ambos para poder mostrarlo en el erroresCcc.xml
         }
@@ -254,7 +261,7 @@ public class Utilities {
         //      Seria hacer una pasada precia leyendo los emails y metiendoles a la laista si son correctos, posteriormente los saltaria en la segunda pasada si estos ya estan en la lista.
         String email = ("" + con.getNombre().charAt(0) + con.getApellido1().charAt(0));
         
-        if(con.getApellido2()!= null && con.getApellido2().equals("")){
+        if(con.getApellido2()!= null && !"".equals(con.getApellido2())){
             email += con.getApellido2().charAt(0);
         }
         int num = 0;
@@ -296,9 +303,9 @@ public class Utilities {
      * Expande el array de DNI correctos.
      */
     private void expandirEmail() {
-        String[] nuevoArray = new String[listaNIFNIE.length + 10];   // Duplicar el tamaño del array
-        System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
-        listaNIFNIE = nuevoArray;   // Asignar el nuevo array al array original.
+        String[] nuevoArray = new String[listaEmail.length + 10];   // Duplicar el tamaño del array
+        System.arraycopy(listaEmail, 0, nuevoArray, 0, listaEmail.length);    // Copiar los elementos del array original al nuevo array
+        listaEmail = nuevoArray;   // Asignar el nuevo array al array original.
     }
     
 }
