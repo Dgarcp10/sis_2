@@ -254,7 +254,7 @@ public class Utilities {
         //      Seria hacer una pasada precia leyendo los emails y metiendoles a la laista si son correctos, posteriormente los saltaria en la segunda pasada si estos ya estan en la lista.
         String email = ("" + con.getNombre().charAt(0) + con.getApellido1().charAt(0));
         
-        if(con.getApellido2()!= null && con.getApellido2().equals("")){
+        if(con.getApellido2()!= null && !"".equals(con.getApellido2())){
             email += con.getApellido2().charAt(0);
         }
         int num = 0;
@@ -296,9 +296,9 @@ public class Utilities {
      * Expande el array de DNI correctos.
      */
     private void expandirEmail() {
-        String[] nuevoArray = new String[listaNIFNIE.length + 10];   // Duplicar el tamaño del array
-        System.arraycopy(listaNIFNIE, 0, nuevoArray, 0, listaNIFNIE.length);    // Copiar los elementos del array original al nuevo array
-        listaNIFNIE = nuevoArray;   // Asignar el nuevo array al array original.
+        String[] nuevoArray = new String[listaEmail.length + 10];   // Duplicar el tamaño del array
+        System.arraycopy(listaEmail, 0, nuevoArray, 0, listaEmail.length);    // Copiar los elementos del array original al nuevo array
+        listaEmail = nuevoArray;   // Asignar el nuevo array al array original.
     }
     
 }

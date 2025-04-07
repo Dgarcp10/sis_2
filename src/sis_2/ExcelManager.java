@@ -225,10 +225,10 @@ public class ExcelManager {
         rowAux.getCell(nifnieColumn).setCellValue(contribuyente.getNifnie());
         rowAux.getCell(CCCColumn).setCellValue(contribuyente.getCcc());
         if(contribuyente.getIban() != null && !"".equals(contribuyente.getIban())){
-            rowAux.getCell(IBANColumn).setCellValue(contribuyente.getIban());
+            rowAux.createCell(IBANColumn).setCellValue(contribuyente.getIban());
         }
         if(contribuyente.getEmail() != null && !"".equals(contribuyente.getEmail())){
-            rowAux.getCell(emailColumn).setCellValue(contribuyente.getEmail());
+            rowAux.createCell(emailColumn).setCellValue(contribuyente.getEmail());
         }
     }
     
