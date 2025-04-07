@@ -25,7 +25,21 @@ public class Sis_2 {
         Utilities u = new Utilities();
         ExcelManager eM = new ExcelManager();
         XmlManager xmlM = new XmlManager();
-
+        
+        Contribuyente c;
+        int aux = 1;
+        while(aux!=-1){     //Pasada para sacar los correos existentes en el excel
+            c = eM.obtenerContribuyente(aux);
+            if(c == null){
+                aux = -1;
+            }else {
+                aux++;
+                if(c.getNombre() != null){
+                    u.addEmail(c);
+                }
+            }
+        }
+        
         int count = 1;
         Contribuyente con;
         Boolean change, correctNif, correctCcc;    //hazIban solo lirve como indicador de di hay que escribir el iban en excel o no.
