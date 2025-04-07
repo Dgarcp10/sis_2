@@ -60,15 +60,17 @@ public class Sis_2 {
                 
                 //INICIO LOGICA CCC E IBAN
                 con = u.validadorCCC(con);
-                if(!"".equals(con.getCccErroneo())){    //si no esta en blnaco entra
+                if(con.getCccErroneo()!=null && !"".equals(con.getCccErroneo())){    //si no esta en blnaco entra
                     
-                    if("IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo())){
-                        xmlM.agregarCcc(con);           //lo pasa a errores
-                        correctCcc = false;
-                    }else{
+                    if(!"IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo())){
                         change =true;
                         xmlM.agregarCcc(con);           //lo pasa a errores y lo actualiza en excell
                         correctCcc = true;
+                        
+                    }else{
+                        xmlM.agregarCcc(con);           //lo pasa a errores
+                        correctCcc = false;
+                        
                     }
                 }else correctCcc = true;
                 //FIN LOGICA CCC E IBAN

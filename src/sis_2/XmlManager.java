@@ -163,7 +163,7 @@ public class XmlManager {
             cuenta.appendChild(NIF_NIE); 
             
                 //añadir ccc e iban si es posible
-            if(con.getCccErroneo()== "IMPOSIBLE GENERAR IBAN"){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
+            if("IMPOSIBLE GENERAR IBAN".equals(con.getCccErroneo())){       //significa que ha sudi actualizado/subsanado el ccc, esto generaria iban
                 Element CccErroneo = documentoCcc.createElement("CCCErroneo");
                 Text textCccErroneo = documentoCcc.createTextNode(con.getCcc());
                 CccErroneo.appendChild(textCccErroneo);
@@ -180,7 +180,7 @@ public class XmlManager {
                 cuenta.appendChild(CccErroneo);
                 //generar iban y anotarlo aqui.
                 Element IBANCorrecto = documentoCcc.createElement("IBANCorrecto");
-                Text textIBANCorrecto = documentoCcc.createTextNode("FALTA GENERAR IBAN");       //Dar una vuelta antes de terminarlo llamar desde aqui a generar IBAN??
+                Text textIBANCorrecto = documentoCcc.createTextNode(con.getIban());       //Dar una vuelta antes de terminarlo llamar desde aqui a generar IBAN??
                 IBANCorrecto.appendChild(textIBANCorrecto);
                 cuenta.appendChild(IBANCorrecto);
             }

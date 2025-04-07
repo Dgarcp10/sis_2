@@ -175,7 +175,11 @@ public class Utilities {
     }
     
     private Contribuyente corregirCCC(Contribuyente con) {
+        
+        System.out.println("Dentro del corrector:");
         String ccc = con.getCcc();
+        
+        System.out.println(ccc);
         int[] parte1 = new int[10];
         int[] parte2 = new int[10];
         int[] control =new int[2];
@@ -195,6 +199,7 @@ public class Utilities {
         
         if(control[0] == aux1 && control[1] == aux2){
             con.setCccErroneo(""); // El CCC es correcto
+        System.out.println(con.getCccErroneo() + "Vacio");
         }else { 
             StringBuilder sb = new StringBuilder(); 
             for(int i=2; i<parte1.length; i++){
@@ -205,7 +210,9 @@ public class Utilities {
             for(int i=0; i<parte2.length; i++){
                 sb.append(parte2[i]);
             }
+        //System.out.println(ccc + "Con algo");
             con.setCccErroneo(ccc);
+       // System.out.println(con.getCccErroneo() + "con algo");
             con.setCcc(sb.toString());
             //Estaba mal, guarda ambos para poder mostrarlo en el erroresCcc.xml
         }
