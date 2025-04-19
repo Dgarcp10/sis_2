@@ -176,10 +176,8 @@ public class Utilities {
     
     private Contribuyente corregirCCC(Contribuyente con) {
         
-        System.out.println("Dentro del corrector:");
         String ccc = con.getCcc();
         
-        System.out.println(ccc);
         int[] parte1 = new int[10];
         int[] parte2 = new int[10];
         int[] control =new int[2];
@@ -199,7 +197,7 @@ public class Utilities {
         
         if(control[0] == aux1 && control[1] == aux2){
             con.setCccErroneo(""); // El CCC es correcto
-        System.out.println(con.getCccErroneo() + "Vacio");
+        
         }else { 
             StringBuilder sb = new StringBuilder(); 
             for(int i=2; i<parte1.length; i++){
@@ -210,9 +208,8 @@ public class Utilities {
             for(int i=0; i<parte2.length; i++){
                 sb.append(parte2[i]);
             }
-        //System.out.println(ccc + "Con algo");
+            
             con.setCccErroneo(ccc);
-       // System.out.println(con.getCccErroneo() + "con algo");
             con.setCcc(sb.toString());
             //Estaba mal, guarda ambos para poder mostrarlo en el erroresCcc.xml
         }
@@ -255,30 +252,50 @@ public class Utilities {
         return con;
     }
     
+    public void addEmail(Contribuyente con) {
+        if(con.getEmail() != null && !"".equals(con.getEmail())){
+            if (isFullEmail()) expandirEmail();
+            for (int i = 0; i < listaEmail.length; i++) {
+
+                if (listaEmail[i] == null || "".equals(listaEmail[i])) {
+                    listaEmail[i] = con.getEmail();
+                    i = listaEmail.length+1;
+                }
+            }
+        }
+        
+    }
+    
     public Contribuyente generadorEmail(Contribuyente con) {
         //      Deberia de leer antes los emails generados ya para no modificarlos en caso de ser ya existentes???
         //      Este codigo no lo contempla
         //      Seria hacer una pasada precia leyendo los emails y metiendoles a la laista si son correctos, posteriormente los saltaria en la segunda pasada si estos ya estan en la lista.
-        String email = ("" + con.getNombre().charAt(0) + con.getApellido1().charAt(0));
         
-        if(con.getApellido2()!= null && !"".equals(con.getApellido2())){
-            email += con.getApellido2().charAt(0);
-        }
-        int num = 0;
-        String emailAux = "";
-        if (isFullEmail()) expandirEmail();
-        for (int i = 0; i < listaEmail.length; i++) {
-            if(num >= 10){
-                emailAux = email + Integer.toString(num);
-            }else{
-                emailAux = email + "0" + Integer.toString(num);
+        
+        if(con.getEmail() == null || "".equals(con.getEmail())){
+            String email = ("" + con.getNombre().charAt(0) + con.getApellido1().charAt(0));
+            if(con.getApellido2()!= null && !"".equals(con.getApellido2())){
+                email += con.getApellido2().charAt(0);
             }
-            if (listaEmail[i] == null || listaEmail[i].equals("")) {
-                listaEmail[i] = emailAux;
-                con.setEmail(emailAux + "@vehiculos2025.com");
-                i = listaEmail.length+1;
-            }else if(listaEmail[i].equals(emailAux)){
-                num++;
+            int num = 0;
+            String emailAux = "";
+            if (isFullEmail()) expandirEmail();
+            for (int i = 0; i < listaEmail.length; i++) {
+                if(num >= 10){
+                    emailAux = email + Integer.toString(num);
+                }else{
+                    emailAux = email + "0" + Integer.toString(num);
+                }
+
+                if (listaEmail[i] == null || "".equals(listaEmail[i])) {
+                    
+                    listaEmail[i] = (emailAux+ "@vehiculos2025.com");
+                    con.setEmail(emailAux + "@vehiculos2025.com");
+                    i = listaEmail.length+1;
+                }else if((emailAux + "@vehiculos2025.com").equals(listaEmail[i])){
+                    num++;
+                    i = -1;
+                }
             }
         }
         return con;
