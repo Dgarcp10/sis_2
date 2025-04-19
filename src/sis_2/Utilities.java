@@ -259,7 +259,6 @@ public class Utilities {
 
                 if (listaEmail[i] == null || "".equals(listaEmail[i])) {
                     listaEmail[i] = con.getEmail();
-                    System.out.println(listaEmail[i]);
                     i = listaEmail.length+1;
                 }
             }
@@ -287,16 +286,13 @@ public class Utilities {
                 }else{
                     emailAux = email + "0" + Integer.toString(num);
                 }
-                    System.out.println("Lista:    " + listaEmail[i]);
-                    System.out.println("Generado: " + emailAux+ "@vehiculos2025.com");
+
                 if (listaEmail[i] == null || "".equals(listaEmail[i])) {
                     
                     listaEmail[i] = (emailAux+ "@vehiculos2025.com");
                     con.setEmail(emailAux + "@vehiculos2025.com");
                     i = listaEmail.length+1;
                 }else if((emailAux + "@vehiculos2025.com").equals(listaEmail[i])){
-                    
-                    System.out.println(listaEmail[i]);
                     num++;
                     i = -1;
                 }
