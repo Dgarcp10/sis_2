@@ -28,12 +28,12 @@ public class Contribuyente  implements java.io.Serializable {
      private Set reciboses = new HashSet(0);
      private Set vehiculoses = new HashSet(0);
 
-     @Transient
-     private int idExcel;
-     @Transient
-     private String errNif;     //vacio si es correcto, NIF ERRONEO, NIF BLANCO, NIF DUPLICADO.
-    public Contribuyente() {
-    }
+    @Transient
+    private int idExcel;
+    @Transient
+    private String errNif;     //vacio si es correcto, NIF ERRONEO, NIF BLANCO, NIF DUPLICADO.
+    @Transient
+    private String cccErroneo;
 
 	
     public Contribuyente(String nombre, String apellido1, String nifnie, String direccion, String ayuntamiento) {
@@ -180,6 +180,16 @@ public class Contribuyente  implements java.io.Serializable {
 
     public void setErrNif(String errNif) {
         this.errNif = errNif;
+    }
+    
+    public String getCccErroneo() {
+        return cccErroneo;
+    }
+
+    public void setCccErroneo(String cccErroneo) {
+        this.cccErroneo = cccErroneo;
+    }
+    public Contribuyente() {
     }
 }
 
