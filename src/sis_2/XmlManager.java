@@ -7,6 +7,7 @@ package sis_2;
 
 import POJOS.Contribuyente;
 import POJOS.Vehiculos;
+import POJOS.Recibos;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.logging.Level;
@@ -36,13 +37,19 @@ public class XmlManager {
     Document documentoNif;
     Element rootElemNIF;
     File archivoNif;
+    
     Document documentoCcc;
     Element rootElemCcc;
     File archivoCcc;
+    
     Document documentoVeh;
     Element rootElemVeh;
     File archivoVeh;
-     
+    
+    Document documentoRec;
+    Element rootElemRec;
+    File archivoRec;
+    
     public XmlManager() {
         
         try {
@@ -76,8 +83,17 @@ public class XmlManager {
             String nombreArchivoVeh = "ErroresVehiculos.xml";
             archivoVeh = new File(rutaArchivoVeh + nombreArchivoVeh);
             
+            documentoRec = builder.newDocument();
+            documentoRec.setXmlVersion("1.0");
+            
+            rootElemRec = documentoRec.createElement("Recibos");
+            documentoRec.appendChild(rootElemRec);
+            String rutaArchivoRec = "resources/";
+            String nombreArchivoRec = "Recibos.xml";
+            archivoRec = new File(rutaArchivoRec + nombreArchivoRec);
+            
         } catch (ParserConfigurationException ex) {
-            System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml o erroresCcc.xml correctamente");
+            System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml, erroresCcc.xml, ErroresVehiculos.xml o Recibos.xml correctamente");
         }
     }
     
@@ -185,13 +201,7 @@ public class XmlManager {
             }
         }  
     }
-    /*
-        <Vehiculo id="2">
-        <Marca>FORD</Marca>
-        <Modelo>ESCORT 5 PUERTAS</Modelo>
-        <Error>Fechas incoherentes.</Error>
-        </Vehiculo>
-    */
+    
     public void agregarVehiculo(Vehiculos v){
         
         Element vehiculo = documentoVeh.createElement("Vehiculo");
@@ -209,9 +219,51 @@ public class XmlManager {
         vehiculo.appendChild(modelo);
 
         Element error = documentoVeh.createElement("Error");
-        Text textError = documentoVeh.createTextNode(v.getErrores());  //de donde sacan los errores y como??  (Pueden ser varios, ¿Stringcon appednd o Array?)
+        Text textError = documentoVeh.createTextNode(v.getErrores());  //de donde sacan los errores y como??  (Pueden ser varios, ¿Stringcon appednd o Array?)  Hay 4 tipos de error posibles
         error.appendChild(textError);
         vehiculo.appendChild(error);  
+    }
+    
+    
+    /*
+        <Recibos fechaPadron="IVTM de 2025" totalPadron="9999,99" numeroTotalRecibos="3">
+        <Recibo idRecibo="1">
+        <Exencion>N</Exencion>
+        <idFilaExcelVehiculo>3</idFilaExcelVehiculo>
+        <nombre>Miguel angel</nombre>
+        <primerApellido>Quintanilla</primerApellido>
+        <segundoApellido>Fernandez</segundoApellido>
+        <NIF>09715890T</NIF>
+        <IBAN>ES5023455254943263234457</IBAN>
+        <tipoVehiculo>REMOLQUE</tipoVehiculo>
+        <marcaModelo>JOHN DEERE F90</marcaModelo>
+        <matricula>M125VE</matricula>
+        <totalRecibo>46.9</totalRecibo>
+        </Recibo>
+    */
+    public void agregarRecibo(Recibos r, Contribuyente con, Vehiculos v){
+        
+        Element recibo = documentoRec.createElement("Recibo");
+        recibo.setAttribute("id", String.valueOf(r.getNumRecibo()));  //de donde saca el id??, es correcto??
+        rootElemRec.appendChild(recibo);
+
+        Element exencion = documentoRec.createElement("Exencion");
+        Text textExencion = documentoRec.createTextNode(String.valueOf(r.getExencion()));
+        exencion.appendChild(textExencion);
+        recibo.appendChild(exencion); 
+        
+        Element idFilaExcelVehiculo = documentoRec.createElement("idFilaExcelVehiculo");
+        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(v.getExcelId());       //como lo saco??   o parece en el recibo y lo saco de ahi??
+        idFilaExcelVehiculo.appendChild(textIdFilaExcelVehiculo);
+        recibo.appendChild(idFilaExcelVehiculo);
+
+        Element nombre = documentoRec.createElement("Nombre");
+        Text textNombre = documentoRec.createTextNode(con.getNombre());  //de donde sacan los errores y como??  (Pueden ser varios, ¿Stringcon appednd o Array?)  Hay 4 tipos de error posibles
+        nombre.appendChild(textNombre);
+        recibo.appendChild(nombre);  
+        
+        //TODO añadir el resto de campos
+        //ejemplo arriba.
     }
     
     public boolean escribir(){
