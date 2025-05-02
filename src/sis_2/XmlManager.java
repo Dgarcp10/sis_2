@@ -49,6 +49,8 @@ public class XmlManager {
     Document documentoRec;
     Element rootElemRec;
     File archivoRec;
+    int numRecibos;
+    float totalRecibos;
     
     public XmlManager() {
         
@@ -87,10 +89,14 @@ public class XmlManager {
             documentoRec.setXmlVersion("1.0");
             
             rootElemRec = documentoRec.createElement("Recibos");
-            documentoRec.appendChild(rootElemRec);
+            rootElemRec.setAttribute("fechaPadron", "IVTM de " + "2025") ;
+            
+            //documentoRec.appendChild(rootElemRec);            //descomentar si da error
             String rutaArchivoRec = "resources/";
             String nombreArchivoRec = "Recibos.xml";
             archivoRec = new File(rutaArchivoRec + nombreArchivoRec);
+            this.numRecibos = 0;
+            this.totalRecibos = 0;
             
         } catch (ParserConfigurationException ex) {
             System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml, erroresCcc.xml, ErroresVehiculos.xml o Recibos.xml correctamente");
@@ -225,6 +231,73 @@ public class XmlManager {
     }
     
     
+    
+    public void agregarRecibo(Recibos r){
+        
+        Element recibo = documentoRec.createElement("Recibo");
+        recibo.setAttribute("id", String.valueOf(r.getNumRecibo()));  //de donde saca el id??, es correcto??
+        rootElemRec.appendChild(recibo);
+
+        Element exencion = documentoRec.createElement("Exencion");
+        Text textExencion = documentoRec.createTextNode(String.valueOf(r.getExencion()));
+        exencion.appendChild(textExencion);
+        recibo.appendChild(exencion); 
+        
+        Element idFilaExcelVehiculo = documentoRec.createElement("idFilaExcelVehiculo");
+        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(String.valueOf(r.getVehiculos().getIdExcel()));       //como lo saco??   o parece en el recibo y lo saco de ahi??
+        idFilaExcelVehiculo.appendChild(textIdFilaExcelVehiculo);
+        recibo.appendChild(idFilaExcelVehiculo);
+
+        Element nombre = documentoRec.createElement("Nombre");
+        Text textNombre = documentoRec.createTextNode(r.getContribuyente().getNombre());
+        nombre.appendChild(textNombre);
+        recibo.appendChild(nombre);  
+        
+        Element apellido1 = documentoRec.createElement("primerApellido");
+        Text textApellido1 = documentoRec.createTextNode(r.getContribuyente().getApellido1());
+        apellido1.appendChild(textApellido1);
+        recibo.appendChild(apellido1);  
+        
+        if(!"".equals(r.getContribuyente().getApellido2()) || r.getContribuyente().getApellido2() != null){
+            Element apellido2 = documentoRec.createElement("segundoApellido");
+            Text textApellido2 = documentoRec.createTextNode(r.getContribuyente().getApellido2());
+            apellido2.appendChild(textApellido2);
+            recibo.appendChild(apellido2);  
+        }
+        
+        Element nif = documentoRec.createElement("NIF");
+        Text textNif = documentoRec.createTextNode(r.getNifContribuyente());
+        nif.appendChild(textNif);
+        recibo.appendChild(nif);  
+        
+        Element iban = documentoRec.createElement("IBAN");
+        Text textIban = documentoRec.createTextNode(r.getIban());
+        iban.appendChild(textIban);
+        recibo.appendChild(iban);  
+        
+        Element tipoVehiculo = documentoRec.createElement("tipoVehiculo");
+        Text textTipoVehiculo = documentoRec.createTextNode(r.getVehiculos().getTipo());
+        tipoVehiculo.appendChild(textTipoVehiculo);
+        recibo.appendChild(tipoVehiculo);  
+        
+        Element marcaModelo = documentoRec.createElement("marcaModelo");
+        Text textMarcaModelo = documentoRec.createTextNode(r.getVehiculos().getMarca() + " " + r.getVehiculos().getModelo());
+        marcaModelo.appendChild(textMarcaModelo);
+        recibo.appendChild(marcaModelo);  
+        
+        Element matricula = documentoRec.createElement("matricula");
+        Text textMatricula = documentoRec.createTextNode(r.getVehiculos().getMatricula());
+        matricula.appendChild(textMatricula);
+        recibo.appendChild(matricula);  
+        
+        Element totalRecivo = documentoRec.createElement("totalRecivo");
+        Text textTotalRecivo = documentoRec.createTextNode(String.valueOf(r.getTotalRecibo()));        // calcular el recivo??
+        this.totalRecibos += r.getTotalRecibo(); 
+        totalRecivo.appendChild(textTotalRecivo);
+        recibo.appendChild(totalRecivo);  
+        
+        this.numRecibos++;
+    }
     /*
         <Recibos fechaPadron="IVTM de 2025" totalPadron="9999,99" numeroTotalRecibos="3">
         <Recibo idRecibo="1">
@@ -241,33 +314,14 @@ public class XmlManager {
         <totalRecibo>46.9</totalRecibo>
         </Recibo>
     */
-    public void agregarRecibo(Recibos r, Contribuyente con, Vehiculos v){
-        
-        Element recibo = documentoRec.createElement("Recibo");
-        recibo.setAttribute("id", String.valueOf(r.getNumRecibo()));  //de donde saca el id??, es correcto??
-        rootElemRec.appendChild(recibo);
-
-        Element exencion = documentoRec.createElement("Exencion");
-        Text textExencion = documentoRec.createTextNode(String.valueOf(r.getExencion()));
-        exencion.appendChild(textExencion);
-        recibo.appendChild(exencion); 
-        
-        Element idFilaExcelVehiculo = documentoRec.createElement("idFilaExcelVehiculo");
-        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(v.getExcelId());       //como lo saco??   o parece en el recibo y lo saco de ahi??
-        idFilaExcelVehiculo.appendChild(textIdFilaExcelVehiculo);
-        recibo.appendChild(idFilaExcelVehiculo);
-
-        Element nombre = documentoRec.createElement("Nombre");
-        Text textNombre = documentoRec.createTextNode(con.getNombre());  //de donde sacan los errores y como??  (Pueden ser varios, ¿Stringcon appednd o Array?)  Hay 4 tipos de error posibles
-        nombre.appendChild(textNombre);
-        recibo.appendChild(nombre);  
-        
-        //TODO añadir el resto de campos
-        //ejemplo arriba.
-    }
     
     public boolean escribir(){
         boolean salida = false;
+        //fechaPadron="IVTM de 2025" totalPadron="9999,99" numeroTotalRecibos="3"
+        rootElemRec.setAttribute("totalPadron", String.valueOf(this.totalRecibos));
+        rootElemRec.setAttribute("numeroTotalRecivos", String.valueOf(this.numRecibos));
+        documentoRec.appendChild(rootElemRec);
+        
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
