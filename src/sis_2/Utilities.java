@@ -7,6 +7,7 @@ package sis_2;
 
 import java.util.regex.Pattern;
 import POJOS.Contribuyente;
+import POJOS.Vehiculos;
 import java.math.BigInteger;
 
 /**
@@ -325,4 +326,14 @@ public class Utilities {
         listaEmail = nuevoArray;   // Asignar el nuevo array al array original.
     }
     
+    
+    
+    /**
+     * 
+     */
+    public Vehiculos comprobarMatricula(Vehiculos v){
+        //TODO
+        
+        return v;
+    }
 }
