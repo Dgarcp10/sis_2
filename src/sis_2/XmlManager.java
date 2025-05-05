@@ -6,6 +6,8 @@
 package sis_2;
 
 import POJOS.Contribuyente;
+import POJOS.Vehiculos;
+import POJOS.Recibos;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.logging.Level;
@@ -35,10 +37,21 @@ public class XmlManager {
     Document documentoNif;
     Element rootElemNIF;
     File archivoNif;
+    
     Document documentoCcc;
     Element rootElemCcc;
     File archivoCcc;
-     
+    
+    Document documentoVeh;
+    Element rootElemVeh;
+    File archivoVeh;
+    
+    Document documentoRec;
+    Element rootElemRec;
+    File archivoRec;
+    int numRecibos;
+    float totalRecibos;
+    
     public XmlManager() {
         
         try {
@@ -63,70 +76,78 @@ public class XmlManager {
             String nombreArchivoCcc = "ErroresCcc.xml";
             archivoCcc = new File(rutaArchivoCcc + nombreArchivoCcc);
             
+            documentoVeh = builder.newDocument();
+            documentoVeh.setXmlVersion("1.0");
+            
+            rootElemVeh = documentoVeh.createElement("Vehiculos");
+            documentoVeh.appendChild(rootElemVeh);
+            String rutaArchivoVeh = "resources/";
+            String nombreArchivoVeh = "ErroresVehiculos.xml";
+            archivoVeh = new File(rutaArchivoVeh + nombreArchivoVeh);
+            
+            documentoRec = builder.newDocument();
+            documentoRec.setXmlVersion("1.0");
+            
+            rootElemRec = documentoRec.createElement("Recibos");
+            rootElemRec.setAttribute("fechaPadron", "IVTM de " + "2025") ;
+            
+            //documentoRec.appendChild(rootElemRec);            //descomentar si da error
+            String rutaArchivoRec = "resources/";
+            String nombreArchivoRec = "Recibos.xml";
+            archivoRec = new File(rutaArchivoRec + nombreArchivoRec);
+            this.numRecibos = 0;
+            this.totalRecibos = 0;
+            
         } catch (ParserConfigurationException ex) {
-            System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml o erroresCcc.xml correctamente");
+            System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml, erroresCcc.xml, ErroresVehiculos.xml o Recibos.xml correctamente");
         }
     }
     
     public void agregarContribuyente(Contribuyente con){
         
-            Element contribuyente = documentoNif.createElement("Contribuyente");
-            contribuyente.setAttribute("id", String.valueOf(con.getIdExcel()+1));
-            rootElemNIF.appendChild(contribuyente);
+        Element contribuyente = documentoNif.createElement("Contribuyente");
+        contribuyente.setAttribute("id", String.valueOf(con.getIdExcel()+1));
+        rootElemNIF.appendChild(contribuyente);
 
-            Element NIF_NIE = documentoNif.createElement("NIF_NIE");
-            Text textNIF_NIE;
-            if (con.getNifnie() == null) {
-                textNIF_NIE = documentoNif.createTextNode("");
-                NIF_NIE.appendChild(textNIF_NIE);
-            }else{
-                String text = con.getNifnie();
-                if (text.matches("\\d+\\.0+")) { 
-                    text = text.substring(0, text.indexOf('.'));
-                }
-                textNIF_NIE = documentoNif.createTextNode(text);
-                NIF_NIE.appendChild(textNIF_NIE);
+        Element NIF_NIE = documentoNif.createElement("NIF_NIE");
+        Text textNIF_NIE;
+        if (con.getNifnie() == null) {
+            textNIF_NIE = documentoNif.createTextNode("");
+            NIF_NIE.appendChild(textNIF_NIE);
+        }else{
+            String text = con.getNifnie();
+            if (text.matches("\\d+\\.0+")) { 
+                text = text.substring(0, text.indexOf('.'));
             }
-            contribuyente.appendChild(NIF_NIE); 
+            textNIF_NIE = documentoNif.createTextNode(text);
+            NIF_NIE.appendChild(textNIF_NIE);
+        }
+        contribuyente.appendChild(NIF_NIE); 
 
-            Element Nombre = documentoNif.createElement("Nombre");
-            Text textNombre = documentoNif.createTextNode(con.getNombre());
-            Nombre.appendChild(textNombre);
-            contribuyente.appendChild(Nombre);
+        Element Nombre = documentoNif.createElement("Nombre");
+        Text textNombre = documentoNif.createTextNode(con.getNombre());
+        Nombre.appendChild(textNombre);
+        contribuyente.appendChild(Nombre);
 
-            Element PrimerApellido = documentoNif.createElement("PrimerApellido");
-            Text textPrimerApellido = documentoNif.createTextNode(con.getApellido1());
-            PrimerApellido.appendChild(textPrimerApellido);
-            contribuyente.appendChild(PrimerApellido);
+        Element PrimerApellido = documentoNif.createElement("PrimerApellido");
+        Text textPrimerApellido = documentoNif.createTextNode(con.getApellido1());
+        PrimerApellido.appendChild(textPrimerApellido);
+        contribuyente.appendChild(PrimerApellido);
 
-            if (con.getApellido2() != null && !con.getApellido2().isEmpty()) {
-                Element SegundoApellido = documentoNif.createElement("SegundoApellido");
-                Text textSegundoApellido = documentoNif.createTextNode(con.getApellido2());
-                SegundoApellido.appendChild(textSegundoApellido);
-                contribuyente.appendChild(SegundoApellido);
-            }
-        
-        
-        
-            Element TipoDeError = documentoNif.createElement("TipoDeError");
-            Text textTipoDeError = documentoNif.createTextNode(con.getErrNif());
-            TipoDeError.appendChild(textTipoDeError);
-            contribuyente.appendChild(TipoDeError);
-        //}
-          
+        if (con.getApellido2() != null && !con.getApellido2().isEmpty()) {
+            Element SegundoApellido = documentoNif.createElement("SegundoApellido");
+            Text textSegundoApellido = documentoNif.createTextNode(con.getApellido2());
+            SegundoApellido.appendChild(textSegundoApellido);
+            contribuyente.appendChild(SegundoApellido);
+        }
+
+
+
+        Element TipoDeError = documentoNif.createElement("TipoDeError");
+        Text textTipoDeError = documentoNif.createTextNode(con.getErrNif());
+        TipoDeError.appendChild(textTipoDeError);
+        contribuyente.appendChild(TipoDeError);   
     }
-    /*
-    <Cuenta id="36">
-        <Nombre>Tomas</Nombre>
-        <Apellidos>Cedron Perez</Apellidos>
-        <NIFNIE>a9731953D</NIFNIE>
-        <CCCErroneo>21508149005421346497</CCCErroneo>
-        <IBANCorrecto>DE5021508149175421346497</IBANCorrecto>
-        o
-        <CCCErroneo>245619375215464975</CCCErroneo>
-        <TipoError>IMPOSIBLE GENERAR IBAN</TipoError>  
-    </Cuenta>
-    */
     
     public void agregarCcc(Contribuyente con){
         if(!("".equals(con.getCccErroneo()) || con.getCccErroneo() == null || "".equals(con.getCcc()) || con.getCcc() == null)){
@@ -184,13 +205,123 @@ public class XmlManager {
                 IBANCorrecto.appendChild(textIBANCorrecto);
                 cuenta.appendChild(IBANCorrecto);
             }
-        }
-            
-            
+        }  
     }
+    
+    public void agregarVehiculo(Vehiculos v){
+        
+        Element vehiculo = documentoVeh.createElement("Vehiculo");
+        vehiculo.setAttribute("id", String.valueOf(v.getIdExcel()+1));  //de donde saca el id??
+        rootElemVeh.appendChild(vehiculo);
+
+        Element marca = documentoVeh.createElement("Marca");
+        Text textMarca = documentoVeh.createTextNode(v.getMarca());
+        marca.appendChild(textMarca);
+        vehiculo.appendChild(marca); 
+        
+        Element modelo = documentoVeh.createElement("Modelo");
+        Text textModelo = documentoVeh.createTextNode(v.getModelo());
+        modelo.appendChild(textModelo);
+        vehiculo.appendChild(modelo);
+
+        Element error = documentoVeh.createElement("Error");
+        Text textError = documentoVeh.createTextNode(v.getErrores());  //de donde sacan los errores y como??  (Pueden ser varios, ¿Stringcon appednd o Array?)  Hay 4 tipos de error posibles
+        error.appendChild(textError);
+        vehiculo.appendChild(error);  
+    }
+    
+    
+    
+    public void agregarRecibo(Recibos r){
+        
+        Element recibo = documentoRec.createElement("Recibo");
+        recibo.setAttribute("id", String.valueOf(r.getNumRecibo()));  //de donde saca el id??, es correcto??
+        rootElemRec.appendChild(recibo);
+
+        Element exencion = documentoRec.createElement("Exencion");
+        Text textExencion = documentoRec.createTextNode(String.valueOf(r.getExencion()));
+        exencion.appendChild(textExencion);
+        recibo.appendChild(exencion); 
+        
+        Element idFilaExcelVehiculo = documentoRec.createElement("idFilaExcelVehiculo");
+        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(String.valueOf(r.getVehiculos().getIdExcel()));       //como lo saco??   o parece en el recibo y lo saco de ahi??
+        idFilaExcelVehiculo.appendChild(textIdFilaExcelVehiculo);
+        recibo.appendChild(idFilaExcelVehiculo);
+
+        Element nombre = documentoRec.createElement("Nombre");
+        Text textNombre = documentoRec.createTextNode(r.getContribuyente().getNombre());
+        nombre.appendChild(textNombre);
+        recibo.appendChild(nombre);  
+        
+        Element apellido1 = documentoRec.createElement("primerApellido");
+        Text textApellido1 = documentoRec.createTextNode(r.getContribuyente().getApellido1());
+        apellido1.appendChild(textApellido1);
+        recibo.appendChild(apellido1);  
+        
+        if(!"".equals(r.getContribuyente().getApellido2()) || r.getContribuyente().getApellido2() != null){
+            Element apellido2 = documentoRec.createElement("segundoApellido");
+            Text textApellido2 = documentoRec.createTextNode(r.getContribuyente().getApellido2());
+            apellido2.appendChild(textApellido2);
+            recibo.appendChild(apellido2);  
+        }
+        
+        Element nif = documentoRec.createElement("NIF");
+        Text textNif = documentoRec.createTextNode(r.getNifContribuyente());
+        nif.appendChild(textNif);
+        recibo.appendChild(nif);  
+        
+        Element iban = documentoRec.createElement("IBAN");
+        Text textIban = documentoRec.createTextNode(r.getIban());
+        iban.appendChild(textIban);
+        recibo.appendChild(iban);  
+        
+        Element tipoVehiculo = documentoRec.createElement("tipoVehiculo");
+        Text textTipoVehiculo = documentoRec.createTextNode(r.getVehiculos().getTipo());
+        tipoVehiculo.appendChild(textTipoVehiculo);
+        recibo.appendChild(tipoVehiculo);  
+        
+        Element marcaModelo = documentoRec.createElement("marcaModelo");
+        Text textMarcaModelo = documentoRec.createTextNode(r.getVehiculos().getMarca() + " " + r.getVehiculos().getModelo());
+        marcaModelo.appendChild(textMarcaModelo);
+        recibo.appendChild(marcaModelo);  
+        
+        Element matricula = documentoRec.createElement("matricula");
+        Text textMatricula = documentoRec.createTextNode(r.getVehiculos().getMatricula());
+        matricula.appendChild(textMatricula);
+        recibo.appendChild(matricula);  
+        
+        Element totalRecivo = documentoRec.createElement("totalRecivo");
+        Text textTotalRecivo = documentoRec.createTextNode(String.valueOf(r.getTotalRecibo()));        // calcular el recivo??
+        this.totalRecibos += r.getTotalRecibo(); 
+        totalRecivo.appendChild(textTotalRecivo);
+        recibo.appendChild(totalRecivo);  
+        
+        this.numRecibos++;
+    }
+    /*
+        <Recibos fechaPadron="IVTM de 2025" totalPadron="9999,99" numeroTotalRecibos="3">
+        <Recibo idRecibo="1">
+        <Exencion>N</Exencion>
+        <idFilaExcelVehiculo>3</idFilaExcelVehiculo>
+        <nombre>Miguel angel</nombre>
+        <primerApellido>Quintanilla</primerApellido>
+        <segundoApellido>Fernandez</segundoApellido>
+        <NIF>09715890T</NIF>
+        <IBAN>ES5023455254943263234457</IBAN>
+        <tipoVehiculo>REMOLQUE</tipoVehiculo>
+        <marcaModelo>JOHN DEERE F90</marcaModelo>
+        <matricula>M125VE</matricula>
+        <totalRecibo>46.9</totalRecibo>
+        </Recibo>
+    */
     
     public boolean escribir(){
         boolean salida = false;
+        //fechaPadron="IVTM de 2025" totalPadron="9999,99" numeroTotalRecibos="3"
+        rootElemRec.setAttribute("totalPadron", String.valueOf(this.totalRecibos));
+        rootElemRec.setAttribute("numeroTotalRecivos", String.valueOf(this.numRecibos));
+        documentoRec.appendChild(rootElemRec);
+        
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -222,7 +353,22 @@ public class XmlManager {
             System.out.println("ERROR 2.1: no se pudo escribir el ErroresCcc.xml correctamente");
         } catch (TransformerException ex) {
             System.out.println("ERROR 2.2: no se pudo escribir el ErroresCcc.xml correctamente");
-            System.out.println(ex);
+        }
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            
+            DOMSource sourceVeh = new DOMSource(documentoVeh);
+            StreamResult resultVeh = new StreamResult(archivoVeh);
+            transformer.transform(sourceVeh, resultVeh);
+            
+            salida = true;
+        } catch (TransformerConfigurationException ex) {
+            System.out.println("ERROR 3.1: no se pudo escribir el ErroresVehiculos.xml correctamente");
+        } catch (TransformerException ex) {
+            System.out.println("ERROR 3.2: no se pudo escribir el ErroresVehiculos.xml correctamente");
         }
         
         return salida;
