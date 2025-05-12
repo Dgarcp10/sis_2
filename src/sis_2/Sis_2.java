@@ -118,6 +118,10 @@ public class Sis_2 {
             }
         }
         
+        count = 1;
+        while(count!=-1){
+            eM.obtenerVehiculo();
+        }
         if(xmlM.escribir()) System.out.println("XMLs guardados exitosamente.");
         if(eM.guardarCambios()) System.out.println("EXCELs guardados exitosamente.");
     }

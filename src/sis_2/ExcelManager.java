@@ -6,9 +6,12 @@
 package sis_2;
 
 import POJOS.Contribuyente;
+import POJOS.Ordenanza;
+import POJOS.Vehiculos;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -216,6 +219,14 @@ public class ExcelManager {
         //if(contribuyenteExcel.getCell(bonificacionColumn) != null && contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim().isEmpty()) contribuyente.setBonificacion(Double.parseDouble(contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim()));
         if(contribuyenteExcel.getCell(bonificacionColumn) != null) contribuyente.setBonificacion(contribuyenteExcel.getCell(bonificacionColumn).getNumericCellValue());
         return contribuyente;
+    }
+    
+    public Vehiculos obtenerVehiculo(int i) {
+        if(i>=hojaVehiculos.getPhysicalNumberOfRows()) return null;
+        Row vehiculoExcel = hojaVehiculos.getRow(i);
+        if(vehiculoExcel.getCell(tipoColumn)==null || vehiculoExcel.getCell(tipoColumn).toString().equals("")) return new Vehiculos();
+        Vehiculos vehiculo = new Vehiculos(Contribuyente contribuyente, Ordenanza ordenanza, String tipo, String marca, String modelo, String matricula, String numeroBastidor, Date fechaMatriculacion, Date fechaAlta);
+        return vehiculo;
     }
     
     public void modificarContribuyente(Contribuyente contribuyente){
