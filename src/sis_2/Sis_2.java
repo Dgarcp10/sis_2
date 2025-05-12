@@ -80,13 +80,16 @@ public class Sis_2 {
                         change =true;
                         xmlM.agregarCcc(con);           //lo pasa a errores y lo actualiza en excell
                         correctCcc = true;
-                        
+                        u.addToLista(con);
                     }else{
                         xmlM.agregarCcc(con);           //lo pasa a errores
                         correctCcc = false;
                         
                     }
-                }else correctCcc = true;
+                }else {
+                    correctCcc = true;
+                    u.addToLista(con);
+                }
                 //FIN LOGICA CCC E IBAN
                 
                 
