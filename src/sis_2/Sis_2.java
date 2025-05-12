@@ -7,7 +7,9 @@ package sis_2;
 
 
 import POJOS.*;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  *
@@ -24,7 +26,12 @@ public class Sis_2 {
         Scanner sc = new Scanner (System.in);
         Utilities u = new Utilities();
         ExcelManager eM = new ExcelManager();
-        XmlManager xmlM = new XmlManager();
+        
+        
+        System.out.println("INTRODUZCA EL AÑO A GENERAR RECIBOS:");
+        String input = sc.nextLine();
+        int anyo = Integer.parseInt(input);
+        XmlManager xmlM = new XmlManager(anyo);
         
         Contribuyente c;
         int aux = 1;

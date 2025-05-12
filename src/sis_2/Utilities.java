@@ -18,7 +18,8 @@ import java.math.BigInteger;
 public class Utilities {
     String[] listaNIFNIE;
     String[] listaEmail;
-
+    Contribuyente[] listaContribuyentes;
+    
     public Utilities(){
        inicializar(); 
     }
@@ -26,6 +27,7 @@ public class Utilities {
     private void inicializar() {
             listaNIFNIE = new String[10];
             listaEmail = new String[10];
+            listaContribuyentes = new Contribuyente [10];
     }
     
     /**
@@ -267,6 +269,16 @@ public class Utilities {
         
     }
     
+    public void addContribuyente(Contribuyente con) {
+        if (isFullContribuyentes()) expandirContribuyentes();
+        for (int i = 0; i < listaContribuyentes.length; i++) {
+            if (listaContribuyentes[i] == null || "".equals(listaContribuyentes[i])) {
+                listaContribuyentes[i] = con;
+                i = listaContribuyentes.length+1;
+            }
+        }       
+    }
+    
     public Contribuyente generadorEmail(Contribuyente con) {
         //      Deberia de leer antes los emails generados ya para no modificarlos en caso de ser ya existentes???
         //      Este codigo no lo contempla
@@ -326,10 +338,34 @@ public class Utilities {
         listaEmail = nuevoArray;   // Asignar el nuevo array al array original.
     }
     
+    /**
+     * @param array
+     * @return true si la lista esta llena false si tiene hueco.
+     */
+    private boolean isFullContribuyentes() {
+        for (Contribuyente c : listaContribuyentes) {
+            if (c == null) {
+                return false; // El array no está lleno
+            }
+        }
+        return true; // El array está lleno
+    }
+
     
+    /**
+     * @param array 
+     * Expande el array de DNI correctos.
+     */
+    private void expandirContribuyentes() {
+        Contribuyente[] nuevoArray = new Contribuyente[listaContribuyentes.length + 10];   // Duplicar el tamaño del array
+        System.arraycopy(listaContribuyentes, 0, nuevoArray, 0, listaContribuyentes.length);    // Copiar los elementos del array original al nuevo array
+        listaContribuyentes = nuevoArray;   // Asignar el nuevo array al array original.
+    }
     
     /**
      * 
+     * @param v
+     * @return 
      */
     public Vehiculos comprobarMatricula(Vehiculos v){
         //TODO

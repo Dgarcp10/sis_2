@@ -50,11 +50,13 @@ public class XmlManager {
     Element rootElemRec;
     File archivoRec;
     int numRecibos;
+    int anyo;
     float totalRecibos;
     
-    public XmlManager() {
+    public XmlManager(int anyo) {
         
         try {
+            this.setAnyo(anyo);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             
@@ -89,7 +91,7 @@ public class XmlManager {
             documentoRec.setXmlVersion("1.0");
             
             rootElemRec = documentoRec.createElement("Recibos");
-            rootElemRec.setAttribute("fechaPadron", "IVTM de " + "2025") ;
+            rootElemRec.setAttribute("fechaPadron", "IVTM de " + this.getAnyo()) ;
             
             //documentoRec.appendChild(rootElemRec);            //descomentar si da error
             String rutaArchivoRec = "resources/";
@@ -373,4 +375,13 @@ public class XmlManager {
         
         return salida;
     }
+
+    public int getAnyo() {
+        return anyo;
+    }
+
+    public void setAnyo(int año) {
+        this.anyo = año;
+    }
+    
 }
