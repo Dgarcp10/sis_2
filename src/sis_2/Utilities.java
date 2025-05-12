@@ -362,6 +362,31 @@ public class Utilities {
         listaContribuyentes = nuevoArray;   // Asignar el nuevo array al array original.
     }
     
+    
+    public Vehiculos comprobarFechas(Vehiculos v){
+        
+        if("".equals(v.getFechaMatriculacion()) || (v.getFechaMatriculacion()) == null || "".equals(v.getFechaAlta()) || v.getFechaAlta() == null){
+            if(v.getFechaMatriculacion().before(v.getFechaAlta())){
+                if(!("".equals(v.getFechaBaja()) || (v.getFechaBaja()) == null)){
+                    if(v.getFechaBaja().before(v.getFechaAlta())){
+                        v.addErrores("Fechas incoherentes");
+                    }
+                }
+                if(!("".equals(v.getFechaBajaTemporal()) || (v.getFechaBajaTemporal()) == null)){
+                    if(v.getFechaBajaTemporal().before(v.getFechaAlta())){
+                        v.addErrores("Fechas incoherentes");
+                    }
+                }
+            }
+        }
+        return v;
+    }
+    
+    
+    
+    
+    
+    
     /**
      * 
      * @param v

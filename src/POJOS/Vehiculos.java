@@ -215,7 +215,11 @@ public class Vehiculos  implements java.io.Serializable {
     public void setErrores(String errores) {
         this.errores = errores;
     }
-
+    
+    public void addErrores(String errores) {
+        this.errores += errores;
+    }
+    
 
     
 }
