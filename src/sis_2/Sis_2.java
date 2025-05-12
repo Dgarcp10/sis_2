@@ -87,7 +87,6 @@ public class Sis_2 {
                         change =true;
                         xmlM.agregarCcc(con);           //lo pasa a errores y lo actualiza en excell
                         correctCcc = true;
-                        u.addToLista(con);
                     }else{
                         xmlM.agregarCcc(con);           //lo pasa a errores
                         correctCcc = false;
@@ -95,7 +94,6 @@ public class Sis_2 {
                     }
                 }else {
                     correctCcc = true;
-                    u.addToLista(con);
                 }
                 //FIN LOGICA CCC E IBAN
                 
@@ -106,6 +104,7 @@ public class Sis_2 {
                     //Se genera el email (el iban ya esta calculado)
                     change = true;
                     con = u.generadorEmail(con);
+                    u.addContribuyente(con);
                 }else {
                     con.setIban("");    //Se borra en caso de que no sea necesario 
                     con.setEmail("");   //Se borra en caso de que no sea necesario, para que la casilla no sea null;
