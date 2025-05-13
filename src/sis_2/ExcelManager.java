@@ -248,9 +248,11 @@ public class ExcelManager {
         Row vehiculoExcel = hojaVehiculos.getRow(i);
         if(vehiculoExcel.getCell(tipoColumn)==null || vehiculoExcel.getCell(tipoColumn).getStringCellValue().equals("")) return new Vehiculos();
         Vehiculos vehiculo = new Vehiculos();
-        //Contribuyente con = obtenerContribuyente(vehiculoExcel.getCell(nifPropietarioColumn).getStringCellValue());
-        //vehiculo.setContribuyente(con);
+        Contribuyente con = obtenerContribuyente(vehiculoExcel.getCell(nifPropietarioColumn).getStringCellValue());
+        vehiculo.setContribuyente(con);
         //ORDENANZA
+        Ordenanza ord = obtenerOrdenanza();
+        vehiculo.setOrdenanza();
         vehiculo.setTipo(vehiculoExcel.getCell(tipoColumn).getStringCellValue());
         if(vehiculoExcel.getCell(marcaColumn)!=null) vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
         if(vehiculoExcel.getCell(modeloColumn)!=null) vehiculo.setModelo(vehiculoExcel.getCell(modeloColumn).getStringCellValue());
