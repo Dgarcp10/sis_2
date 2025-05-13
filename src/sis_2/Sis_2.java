@@ -7,9 +7,14 @@ package sis_2;
 
 
 import POJOS.*;
-import java.util.HashSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+//import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
+//import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,8 +35,15 @@ public class Sis_2 {
         
         System.out.println("INTRODUZCA EL AÑO A GENERAR RECIBOS:");
         String input = sc.nextLine();
-        int anyo = Integer.parseInt(input);
-        XmlManager xmlM = new XmlManager(anyo);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
+        Date fechaPadron=null;
+        try {
+            fechaPadron = sdf.parse(input + "-01-01");
+        } catch (ParseException ex) {
+            Logger.getLogger(Sis_2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        XmlManager xmlM = new XmlManager(fechaPadron);
         
         Contribuyente c;
         int aux = 1;
@@ -121,7 +133,18 @@ public class Sis_2 {
         count = 1;
         while(count!=-1){
             Vehiculos v = eM.obtenerVehiculo(count);
-            if(v.getContribuyente()!=null) u.comprobarContribuyente(v.getContribuyente());
+            //BONIFICACION Y EXENCION ESTAN EN LOS OBJETOS,FECHAS TMBN A COMPROBAR EN EL SIGUIENTE IF, AL IGUAL QUE MATRICULA UNIDADES Y PROPIETARIO
+            if(u.comprobarVehiculo(v)){ //el vehiculo esta bn
+                con = v.getContribuyente();
+                if(con==null) //hacer algo con el error, tengo que investigarlo
+                if(u.comprobarContribuyente(con)){ //el contribuyente esta bien
+                    Recibos r = u.crearRecibo(v, fechaPadron);
+                    xmlM.agregarRecibo(r);
+                }else{//ERRORES.XML (error de contribuyente)                   
+                }
+                
+            }else{ //ERRORES.XML (error de vehiculo)                
+            }
         }
         if(xmlM.escribir()) System.out.println("XMLs guardados exitosamente.");
         if(eM.guardarCambios()) System.out.println("EXCELs guardados exitosamente.");

@@ -10,6 +10,7 @@ import POJOS.Vehiculos;
 import POJOS.Recibos;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -50,10 +51,10 @@ public class XmlManager {
     Element rootElemRec;
     File archivoRec;
     int numRecibos;
-    int anyo;
+    Date anyo;
     float totalRecibos;
     
-    public XmlManager(int anyo) {
+    public XmlManager(Date anyo) {
         
         try {
             this.setAnyo(anyo);
@@ -91,7 +92,7 @@ public class XmlManager {
             documentoRec.setXmlVersion("1.0");
             
             rootElemRec = documentoRec.createElement("Recibos");
-            rootElemRec.setAttribute("fechaPadron", "IVTM de " + this.getAnyo()) ;
+            rootElemRec.setAttribute("fechaPadron", "IVTM de " + getAnyo()) ;
             
             //documentoRec.appendChild(rootElemRec);            //descomentar si da error
             String rutaArchivoRec = "resources/";
@@ -376,11 +377,11 @@ public class XmlManager {
         return salida;
     }
 
-    public int getAnyo() {
+    public Date getAnyo() {
         return anyo;
     }
 
-    public void setAnyo(int año) {
+    public void setAnyo(Date año) {
         this.anyo = año;
     }
     

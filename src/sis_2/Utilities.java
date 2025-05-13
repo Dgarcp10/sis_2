@@ -7,8 +7,11 @@ package sis_2;
 
 import java.util.regex.Pattern;
 import POJOS.Contribuyente;
+import POJOS.Ordenanza;
+import POJOS.Recibos;
 import POJOS.Vehiculos;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  *
@@ -381,12 +384,7 @@ public class Utilities {
         }
         return v;
     }
-    
-    
-    
-    
-    
-    
+      
     /**
      * 
      * @param v
@@ -396,5 +394,31 @@ public class Utilities {
         //TODO
         
         return v;
+    }
+    
+    public Recibos crearRecibo(Vehiculos v, Date fechaPadron){
+        Recibos r = new Recibos();
+        Contribuyente con = v.getContribuyente();
+        if(con!=null) r.setContribuyente(con);
+        r.setVehiculos(v);
+        r.setFechaPadron(fechaPadron);
+        r.setFechaRecibo(new Date());
+        if(con!=null && !"".equals(con.getNifnie())) r.setNifContribuyente(con.getNifnie());
+        String direccion = "";
+        direccion += con.getDireccion();
+        direccion += "  "+con.getNumero();
+        direccion += "  "+con.getAyuntamiento();
+        r.setDireccionCompleta(direccion);
+        r.setIban(con.getIban());
+        r.setTipoVehiculo(v.getTipo());
+        r.setMarcaModelo(v.getMarca()+ " "+ v.getModelo());
+        r.setUnidad(v.getOrdenanza().getUnidad());
+        r.setValorUnidad(v.getCaballosFiscales());
+        r.setTotalRecibo(v.getOrdenanza().getImporte());
+        r.setExencion(v.getExencion());
+        r.setBonificacion(con.getBonificacion());
+        r.setEmail(con.getEmail());
+        r.setAyuntamiento(con.getAyuntamiento());
+        return r;
     }
 }
