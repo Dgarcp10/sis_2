@@ -11,7 +11,8 @@ import POJOS.Vehiculos;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
+//import java.util.Date;
+//import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -250,9 +251,7 @@ public class ExcelManager {
         Vehiculos vehiculo = new Vehiculos();
         Contribuyente con = obtenerContribuyente(vehiculoExcel.getCell(nifPropietarioColumn).getStringCellValue());
         vehiculo.setContribuyente(con);
-        //ORDENANZA
-        Ordenanza ord = obtenerOrdenanza();
-        vehiculo.setOrdenanza();
+        
         vehiculo.setTipo(vehiculoExcel.getCell(tipoColumn).getStringCellValue());
         if(vehiculoExcel.getCell(marcaColumn)!=null) vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
         if(vehiculoExcel.getCell(modeloColumn)!=null) vehiculo.setModelo(vehiculoExcel.getCell(modeloColumn).getStringCellValue());
@@ -267,6 +266,9 @@ public class ExcelManager {
         if(vehiculoExcel.getCell(fechaAltaColumn)!=null) vehiculo.setFechaAlta(vehiculoExcel.getCell(fechaAltaColumn).getDateCellValue());
         if(vehiculoExcel.getCell(fechaBajaColumn)!=null) vehiculo.setFechaBaja(vehiculoExcel.getCell(fechaBajaColumn).getDateCellValue());
         if(vehiculoExcel.getCell(fechaBajaTemporalColumn)!=null) vehiculo.setFechaBajaTemporal(vehiculoExcel.getCell(fechaBajaTemporalColumn).getDateCellValue());
+        
+        Ordenanza ord = obtenerOrdenanza(con, vehiculo);
+        vehiculo.setOrdenanza(ord);
         
         return vehiculo;
     }
@@ -304,6 +306,44 @@ public class ExcelManager {
             salida = false;
         }
         return salida;
+    }
+
+    private Ordenanza obtenerOrdenanza(Contribuyente con, Vehiculos vehiculo) {
+       Ordenanza ord = new Ordenanza();
+       ord.setAyuntamiento(con.getAyuntamiento());
+       ord.setTipoVehiculo(vehiculo.getTipo());
+       String unidad;
+       double valorUnidad;
+       if(vehiculo.getCaballosFiscales()!=null){
+           unidad = "CABALLOS";
+           valorUnidad = vehiculo.getCaballosFiscales();
+       }else if (vehiculo.getCentimetroscubicos()!=null) {
+           unidad = "CC";
+           valorUnidad = vehiculo.getCentimetroscubicos();
+       }else if (vehiculo.getKgcarga()!=null) {
+           unidad = "KG";
+           valorUnidad = vehiculo.getKgcarga();
+       }else {
+           unidad = "PLAZAS";
+           valorUnidad = vehiculo.getPlazas();
+       } 
+       ord.setUnidad(unidad);
+       
+       for(int i = 1; i < hojaOrdenanza.getPhysicalNumberOfRows(); i++){
+            Row vehiculoExcel = hojaOrdenanza.getRow(i);
+            if(ord.getAyuntamiento().equals(vehiculoExcel.getCell(ayuntamientoOrdenanzaColumn).getStringCellValue())
+                && ord.getTipoVehiculo().equals(vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue())
+                && ord.getUnidad().equals(vehiculoExcel.getCell(unidadColumn).getStringCellValue())
+                && valorUnidad >= vehiculoExcel.getCell(minimoColumn).getNumericCellValue()
+                && valorUnidad <= vehiculoExcel.getCell(maximoColumn).getNumericCellValue()) 
+            {
+                    ord.setImporte(vehiculoExcel.getCell(importeColumn).getNumericCellValue());
+                    ord.setMinimoRango(vehiculoExcel.getCell(minimoColumn).getNumericCellValue());
+                    ord.setMaximoRango(vehiculoExcel.getCell(maximoColumn).getNumericCellValue());
+                    return ord;
+            }
+       }
+       return ord;
     }
 
 }
