@@ -214,7 +214,7 @@ public class XmlManager {
     public void agregarVehiculo(Vehiculos v){
         
         Element vehiculo = documentoVeh.createElement("Vehiculo");
-        vehiculo.setAttribute("id", String.valueOf(v.getIdExcel()+1));  //de donde saca el id??
+        vehiculo.setAttribute("id", String.valueOf(v.getIdExcel()+1));
         rootElemVeh.appendChild(vehiculo);
 
         Element marca = documentoVeh.createElement("Marca");
@@ -247,7 +247,7 @@ public class XmlManager {
         recibo.appendChild(exencion); 
         
         Element idFilaExcelVehiculo = documentoRec.createElement("idFilaExcelVehiculo");
-        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(String.valueOf(r.getVehiculos().getIdExcel()));       //como lo saco??   o parece en el recibo y lo saco de ahi??
+        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(String.valueOf(r.getVehiculos().getIdExcel()));
         idFilaExcelVehiculo.appendChild(textIdFilaExcelVehiculo);
         recibo.appendChild(idFilaExcelVehiculo);
 

@@ -286,11 +286,6 @@ public class Utilities {
     }
     
     public Contribuyente generadorEmail(Contribuyente con) {
-        //      Deberia de leer antes los emails generados ya para no modificarlos en caso de ser ya existentes???
-        //      Este codigo no lo contempla
-        //      Seria hacer una pasada precia leyendo los emails y metiendoles a la laista si son correctos, posteriormente los saltaria en la segunda pasada si estos ya estan en la lista.
-        
-        
         if(con.getEmail() == null || "".equals(con.getEmail())){
             String email = ("" + con.getNombre().charAt(0) + con.getApellido1().charAt(0));
             if(con.getApellido2()!= null && !"".equals(con.getApellido2())){
@@ -369,6 +364,24 @@ public class Utilities {
     }
     
     
+    /**
+     * 
+     * @param v
+     * @return 
+     */
+    public Vehiculos comprobarVehiculo(Vehiculos v){
+        //TODO
+        v = comprobarFechas(v);
+        v = comprobarMatriculas(v);
+        v = comprobarContribuyente(v);
+        return v;
+    }
+    
+    /**
+     * 
+     * @param v
+     * @return 
+     */
     private Vehiculos comprobarFechas(Vehiculos v){
         if(v.getFechaMatriculacion() != null && v.getFechaAlta() != null && !(v.getFechaAlta().before(v.getFechaMatriculacion()))){
             //fechas de alta y matriculacion correcttas
@@ -393,11 +406,15 @@ public class Utilities {
         }
         return v;
     }
-      
+     
+    /**
+     * 
+     * @param v
+     * @return 
+     */
     private Vehiculos comprobarMatriculas(Vehiculos v){
         List<String> ciudades = Arrays.asList("VI", "AB", "A", "AL", "AV", "BA", "IB", "B", "BU", "CC", "CA", "CS", "CE", "CR", "CO", "C", "CU", "GI", "GR", "GU", "SS", "H", "HU", "J", "LE", "L", "LO", "LU", "M", "MA", "ML", "MU", "NA", "OR", "O", "P", "GC", "PO", "SA", "TF", "S", "SG", "SE", "SO", "T", "TE", "TO", "V", "VA", "BI", "ZA", "Z");
         
-    
         if(v.getMatricula() != null){
             switch(v.getTipo()){
                 case "TURISMO":
@@ -445,9 +462,6 @@ public class Utilities {
         }else{
             v.addErrores("Matricula Errónea.");
         }
-        //TODO
-        //Queda terminarlo
-        
         return v;
     }
     
@@ -456,27 +470,14 @@ public class Utilities {
      * @param v
      * @return 
      */
-    public Vehiculos comprobarVehiculo(Vehiculos v){
-        //TODO
-        v = comprobarFechas(v);
-        v = comprobarMatriculas(v);
-        v = comprobarContribuyente(v);
-        return v;
-    }
-    
-    /**
-     * 
-     * @param con
-     * @return 
-     */
     private Vehiculos comprobarContribuyente(Vehiculos v){
-        if(v.getContribuyente() == null) v.addErrores("Vehiculo sin propietrio.");
+        if(v.getContribuyente() == null) v.addErrores("Vehículo sin propietario.");
         for (Contribuyente listaContribuyente : listaContribuyentes) {
             if(v.getContribuyente().equals(listaContribuyente)){
                 return v;
             }
         }   
-        v.addErrores("Vehiculo con propietario erroneo.");
+        v.addErrores("Vehículo con propietario erróneo.");
         return v;
     }
     
