@@ -369,32 +369,32 @@ public class Utilities {
     }
     
     
-    public Vehiculos comprobarFechas(Vehiculos v){
+    private Vehiculos comprobarFechas(Vehiculos v){
         if(v.getFechaMatriculacion() != null && v.getFechaAlta() != null && !(v.getFechaAlta().before(v.getFechaMatriculacion()))){
             //fechas de alta y matriculacion correcttas
             if(v.getFechaBajaTemporal() != null){
                 if(v.getFechaBajaTemporal().before(v.getFechaAlta())){
-                    v.addErrores("Fechas incoherentes");
+                    v.addErrores("Fechas incoherentes.");
                 }else if(v.getFechaBaja() != null){
                     if(v.getFechaBaja().before(v.getFechaAlta())){
-                        v.addErrores("Fechas incoherentes");
+                        v.addErrores("Fechas incoherentes.");
                     }else if(v.getFechaBajaTemporal().after(v.getFechaBaja())){
-                        v.addErrores("Fechas incoherentes");
+                        v.addErrores("Fechas incoherentes.");
                     }
                 }
             }else if(v.getFechaBaja() != null){
                 if(v.getFechaBaja().before(v.getFechaAlta())){
-                    v.addErrores("Fechas incoherentes");
+                    v.addErrores("Fechas incoherentes.");
                 }
             }
         }else{
             //fecha de alta o matriculacion erroneas
-            v.addErrores("Fechas incoherentes");
+            v.addErrores("Fechas incoherentes.");
         }
         return v;
     }
       
-    public Vehiculos comprobarMatriculas(Vehiculos v){
+    private Vehiculos comprobarMatriculas(Vehiculos v){
         List<String> ciudades = Arrays.asList("VI", "AB", "A", "AL", "AV", "BA", "IB", "B", "BU", "CC", "CA", "CS", "CE", "CR", "CO", "C", "CU", "GI", "GR", "GU", "SS", "H", "HU", "J", "LE", "L", "LO", "LU", "M", "MA", "ML", "MU", "NA", "OR", "O", "P", "GC", "PO", "SA", "TF", "S", "SG", "SE", "SO", "T", "TE", "TO", "V", "VA", "BI", "ZA", "Z");
         
     
@@ -410,7 +410,7 @@ public class Utilities {
                     if(Pattern.matches(tipo1, v.getMatricula()) || Pattern.matches(tipo2, v.getMatricula()) || Pattern.matches(tipo3, v.getMatricula())){
                         //Si es correcta que hago??
                     }else{
-                        v.addErrores("Matricula Errónea");
+                        v.addErrores("Matricula Errónea.");
                     }
                     break;
                 case "TRACTOR":
@@ -420,7 +420,7 @@ public class Utilities {
                     if(Pattern.matches(tipo4, v.getMatricula()) || Pattern.matches(tipo5, v.getMatricula()) || Pattern.matches(tipo6, v.getMatricula())){
                         //Si es correcta que hago??
                     }else{
-                        v.addErrores("Matricula Errónea");
+                        v.addErrores("Matricula Errónea.");
                     }
                     break;
                 case "REMOLQUE":
@@ -430,7 +430,7 @@ public class Utilities {
                     if(Pattern.matches(tipo7, v.getMatricula()) || Pattern.matches(tipo8, v.getMatricula()) || Pattern.matches(tipo9, v.getMatricula())){
                         //Si es correcta que hago??
                     }else{
-                        v.addErrores("Matricula Errónea");
+                        v.addErrores("Matricula Errónea.");
                     }
                     break;
                 case "CICLOMOTOR":
@@ -438,12 +438,12 @@ public class Utilities {
                     if(Pattern.matches(tipo10, v.getMatricula())){
                         //Si es correcta que hago??    
                     }else{
-                        v.addErrores("Matricula Errónea");
+                        v.addErrores("Matricula Errónea.");
                     }
                     break;
             }
         }else{
-            v.addErrores("Matricula Errónea");
+            v.addErrores("Matricula Errónea.");
         }
         //TODO
         //Queda terminarlo
@@ -456,9 +456,27 @@ public class Utilities {
      * @param v
      * @return 
      */
-    public Vehiculos comprobarMatricula(Vehiculos v){
+    public Vehiculos comprobarVehiculo(Vehiculos v){
         //TODO
-        
+        v = comprobarFechas(v);
+        v = comprobarMatriculas(v);
+        v = comprobarContribuyente(v);
+        return v;
+    }
+    
+    /**
+     * 
+     * @param con
+     * @return 
+     */
+    private Vehiculos comprobarContribuyente(Vehiculos v){
+        if(v.getContribuyente() == null) v.addErrores("Vehiculo sin propietrio.");
+        for (Contribuyente listaContribuyente : listaContribuyentes) {
+            if(v.getContribuyente().equals(listaContribuyente)){
+                return v;
+            }
+        }   
+        v.addErrores("Vehiculo con propietario erroneo.");
         return v;
     }
     
@@ -469,7 +487,8 @@ public class Utilities {
         r.setVehiculos(v);
         r.setFechaPadron(fechaPadron);
         r.setFechaRecibo(new Date());
-        if(con!=null && !"".equals(con.getNifnie())) r.setNifContribuyente(con.getNifnie());
+        if(con==null || "".equals(con.getNifnie())) return null; 
+        r.setNifContribuyente(con.getNifnie());
         String direccion = "";
         direccion += con.getDireccion();
         direccion += "  "+con.getNumero();

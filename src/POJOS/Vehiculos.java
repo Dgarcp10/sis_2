@@ -217,11 +217,10 @@ public class Vehiculos  implements java.io.Serializable {
     }
     
     public void addErrores(String errores) {
-        this.errores += errores;
-    }
-    
-
-    
+        if(this.errores == null) this.errores = "";
+        if("".equals(getErrores())) this.errores += errores;
+        else this.errores += " "+errores;
+    }   
 }
 
 

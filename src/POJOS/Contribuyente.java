@@ -3,6 +3,7 @@ package POJOS;
 
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Transient;
 
@@ -191,6 +192,38 @@ public class Contribuyente  implements java.io.Serializable {
     }
     public Contribuyente() {
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Contribuyente other = (Contribuyente) obj;
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        if (!Objects.equals(this.apellido1, other.apellido1)) {
+            return false;
+        }
+        if (!Objects.equals(this.nifnie, other.nifnie)) {
+            return false;
+        }
+        if (!Objects.equals(this.direccion, other.direccion)) {
+            return false;
+        }
+        if (!Objects.equals(this.ayuntamiento, other.ayuntamiento)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }
 
 

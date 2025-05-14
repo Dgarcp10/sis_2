@@ -134,15 +134,10 @@ public class Sis_2 {
         while(count!=-1){
             Vehiculos v = eM.obtenerVehiculo(count);
             //BONIFICACION Y EXENCION ESTAN EN LOS OBJETOS,FECHAS TMBN A COMPROBAR EN EL SIGUIENTE IF, AL IGUAL QUE MATRICULA UNIDADES Y PROPIETARIO
-            if(u.comprobarVehiculo(v)){ //el vehiculo esta bn
-                con = v.getContribuyente();
-                if(con==null) //hacer algo con el error, tengo que investigarlo
-                if(u.comprobarContribuyente(con)){ //el contribuyente esta bien
-                    Recibos r = u.crearRecibo(v, fechaPadron);
-                    xmlM.agregarRecibo(r);
-                }else{//ERRORES.XML (error de contribuyente)                   
-                }
-                
+            u.comprobarVehiculo(v);
+            if(v.getErrores()== null || "".equals(v.getErrores())){ //el vehiculo esta bn
+                Recibos r = u.crearRecibo(v, fechaPadron);
+                xmlM.agregarRecibo(r);
             }else{ //ERRORES.XML (error de vehiculo)                
             }
         }
