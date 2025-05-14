@@ -5,13 +5,16 @@
  */
 package sis_2;
 
+
 import java.util.regex.Pattern;
 import POJOS.Contribuyente;
 import POJOS.Ordenanza;
 import POJOS.Recibos;
 import POJOS.Vehiculos;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -367,24 +370,87 @@ public class Utilities {
     
     
     public Vehiculos comprobarFechas(Vehiculos v){
-        
-        if("".equals(v.getFechaMatriculacion()) || (v.getFechaMatriculacion()) == null || "".equals(v.getFechaAlta()) || v.getFechaAlta() == null){
-            if(v.getFechaMatriculacion().before(v.getFechaAlta())){
-                if(!("".equals(v.getFechaBaja()) || (v.getFechaBaja()) == null)){
+        if(v.getFechaMatriculacion() != null && v.getFechaAlta() != null && !(v.getFechaAlta().before(v.getFechaMatriculacion()))){
+            //fechas de alta y matriculacion correcttas
+            if(v.getFechaBajaTemporal() != null){
+                if(v.getFechaBajaTemporal().before(v.getFechaAlta())){
+                    v.addErrores("Fechas incoherentes");
+                }else if(v.getFechaBaja() != null){
                     if(v.getFechaBaja().before(v.getFechaAlta())){
                         v.addErrores("Fechas incoherentes");
-                    }
-                }
-                if(!("".equals(v.getFechaBajaTemporal()) || (v.getFechaBajaTemporal()) == null)){
-                    if(v.getFechaBajaTemporal().before(v.getFechaAlta())){
+                    }else if(v.getFechaBajaTemporal().after(v.getFechaBaja())){
                         v.addErrores("Fechas incoherentes");
                     }
                 }
+            }else if(v.getFechaBaja() != null){
+                if(v.getFechaBaja().before(v.getFechaAlta())){
+                    v.addErrores("Fechas incoherentes");
+                }
             }
+        }else{
+            //fecha de alta o matriculacion erroneas
+            v.addErrores("Fechas incoherentes");
         }
         return v;
     }
       
+    public Vehiculos comprobarMatriculas(Vehiculos v){
+        List<String> ciudades = Arrays.asList("VI", "AB", "A", "AL", "AV", "BA", "IB", "B", "BU", "CC", "CA", "CS", "CE", "CR", "CO", "C", "CU", "GI", "GR", "GU", "SS", "H", "HU", "J", "LE", "L", "LO", "LU", "M", "MA", "ML", "MU", "NA", "OR", "O", "P", "GC", "PO", "SA", "TF", "S", "SG", "SE", "SO", "T", "TE", "TO", "V", "VA", "BI", "ZA", "Z");
+        
+    
+        if(v.getMatricula() != null){
+            switch(v.getTipo()){
+                case "TURISMO":
+                case "AUTOBUS":
+                case "CAMION":
+                case "MOTOCICLETA":
+                    String tipo1 = "^\\d{4}[A-Z]{3}$";
+                    String tipo2 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{4}[A-Z]{1,2}$";
+                    String tipo3 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{1,5}";
+                    if(Pattern.matches(tipo1, v.getMatricula()) || Pattern.matches(tipo2, v.getMatricula()) || Pattern.matches(tipo3, v.getMatricula())){
+                        //Si es correcta que hago??
+                    }else{
+                        v.addErrores("Matricula Errónea");
+                    }
+                    break;
+                case "TRACTOR":
+                    String tipo4 = "^E\\d{4}[A-Z]{3}$";
+                    String tipo5 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{5}VE$";
+                    String tipo6 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{1,6}";
+                    if(Pattern.matches(tipo4, v.getMatricula()) || Pattern.matches(tipo5, v.getMatricula()) || Pattern.matches(tipo6, v.getMatricula())){
+                        //Si es correcta que hago??
+                    }else{
+                        v.addErrores("Matricula Errónea");
+                    }
+                    break;
+                case "REMOLQUE":
+                    String tipo7 = "^R\\d{4}[A-Z]{3}$";
+                    String tipo8 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{5}VE$";
+                    String tipo9 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{1,6}";
+                    if(Pattern.matches(tipo7, v.getMatricula()) || Pattern.matches(tipo8, v.getMatricula()) || Pattern.matches(tipo9, v.getMatricula())){
+                        //Si es correcta que hago??
+                    }else{
+                        v.addErrores("Matricula Errónea");
+                    }
+                    break;
+                case "CICLOMOTOR":
+                    String tipo10 = "^[C]{1}\\d{4}[A-Z]{3}$";
+                    if(Pattern.matches(tipo10, v.getMatricula())){
+                        //Si es correcta que hago??    
+                    }else{
+                        v.addErrores("Matricula Errónea");
+                    }
+                    break;
+            }
+        }else{
+            v.addErrores("Matricula Errónea");
+        }
+        //TODO
+        //Queda terminarlo
+        
+        return v;
+    }
+    
     /**
      * 
      * @param v
