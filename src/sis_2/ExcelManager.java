@@ -208,15 +208,15 @@ public class ExcelManager {
     public Contribuyente obtenerContribuyente(int i){ //@return null si hemos llegado al final del excel     * Contribuyente vacio si es una fila del excel sin contribuyente     * Contribuyente con parametros es que se ha encontrado contribuyente  y se ha devuelto
         if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
         Row contribuyenteExcel = hojaContribuyente.getRow(i);
-        if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).toString().equals("")) return new Contribuyente();
-        Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).toString(), contribuyenteExcel.getCell(apellido1Column).toString(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
+        if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).getStringCellValue().equals("")) return new Contribuyente();
+        Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).getStringCellValue(), contribuyenteExcel.getCell(apellido1Column).getStringCellValue(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
         contribuyente.setIdExcel(i);
-        if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).toString());
-        if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).toString());
-        if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).toString());
-        if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).toString());
-        if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).toString());
-        if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).toString());
+        if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).getStringCellValue());
+        if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).getStringCellValue());
         //if(contribuyenteExcel.getCell(bonificacionColumn) != null && contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim().isEmpty()) contribuyente.setBonificacion(Double.parseDouble(contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim()));
         if(contribuyenteExcel.getCell(bonificacionColumn) != null) contribuyente.setBonificacion(contribuyenteExcel.getCell(bonificacionColumn).getNumericCellValue());
         return contribuyente;
@@ -226,16 +226,16 @@ public class ExcelManager {
         for(int i = 1; i<hojaContribuyente.getPhysicalNumberOfRows(); i++){
             if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
             Row contribuyenteExcel = hojaContribuyente.getRow(i);
-            if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).toString().equals("")) continue;
-            if(dni.equals(contribuyenteExcel.getCell(nombreColumn).toString())){
-                Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).toString(), contribuyenteExcel.getCell(apellido1Column).toString(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
+            if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).getStringCellValue().equals("")) continue;
+            if(dni.equals(contribuyenteExcel.getCell(nombreColumn).getStringCellValue())){
+                Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).getStringCellValue(), contribuyenteExcel.getCell(apellido1Column).getStringCellValue(), contribuyenteExcel.getCell(nifnieColumn).getStringCellValue(), contribuyenteExcel.getCell(direccionColumn).getStringCellValue(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).getStringCellValue());
                 contribuyente.setIdExcel(i);
-                if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).toString());
-                if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).toString());
-                if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).toString());
-                if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).toString());
-                if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).toString());
-                if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).toString());
+                if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).getStringCellValue());
+                if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).getStringCellValue());
                 //if(contribuyenteExcel.getCell(bonificacionColumn) != null && contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim().isEmpty()) contribuyente.setBonificacion(Double.parseDouble(contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim()));
                 if(contribuyenteExcel.getCell(bonificacionColumn) != null) contribuyente.setBonificacion(contribuyenteExcel.getCell(bonificacionColumn).getNumericCellValue());
                 return contribuyente;  
@@ -267,7 +267,7 @@ public class ExcelManager {
         if(vehiculoExcel.getCell(fechaBajaColumn)!=null) vehiculo.setFechaBaja(vehiculoExcel.getCell(fechaBajaColumn).getDateCellValue());
         if(vehiculoExcel.getCell(fechaBajaTemporalColumn)!=null) vehiculo.setFechaBajaTemporal(vehiculoExcel.getCell(fechaBajaTemporalColumn).getDateCellValue());
         
-        Ordenanza ord = obtenerOrdenanza(con, vehiculo);
+        Ordenanza ord = obtenerOrdenanza(vehiculo);
         vehiculo.setOrdenanza(ord);
         
         return vehiculo;
@@ -308,9 +308,11 @@ public class ExcelManager {
         return salida;
     }
 
-    private Ordenanza obtenerOrdenanza(Contribuyente con, Vehiculos vehiculo) {
+    private Ordenanza obtenerOrdenanza(Vehiculos vehiculo) {
        Ordenanza ord = new Ordenanza();
-       ord.setAyuntamiento(con.getAyuntamiento());
+       if(vehiculo.getContribuyente() == null) return null;
+       
+       ord.setAyuntamiento(vehiculo.getContribuyente().getAyuntamiento());
        ord.setTipoVehiculo(vehiculo.getTipo());
        String unidad;
        double valorUnidad;
