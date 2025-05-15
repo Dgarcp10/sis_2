@@ -12,6 +12,7 @@ import POJOS.Ordenanza;
 import POJOS.Recibos;
 import POJOS.Vehiculos;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 public class Utilities {
     String[] listaNIFNIE;
     String[] listaEmail;
-    Contribuyente[] listaContribuyentes;
+    List<Contribuyente> listaContribuyentes;
     
     public Utilities(){
        inicializar(); 
@@ -33,7 +34,8 @@ public class Utilities {
     private void inicializar() {
             listaNIFNIE = new String[10];
             listaEmail = new String[10];
-            listaContribuyentes = new Contribuyente [10];
+            //listaContribuyentes = new Contribuyente [10];
+            listaContribuyentes = new ArrayList<>();
     }
     
     /**
@@ -275,7 +277,7 @@ public class Utilities {
         
     }
     
-    public void addContribuyente(Contribuyente con) {
+    /*public void addContribuyente(Contribuyente con) {
         if (isFullContribuyentes()) expandirContribuyentes();
         for (int i = 0; i < listaContribuyentes.length; i++) {
             if (listaContribuyentes[i] == null) {
@@ -283,6 +285,10 @@ public class Utilities {
                 i = listaContribuyentes.length+1;
             }
         }       
+    }*/
+    
+    public void addContribuyente(Contribuyente con) {
+        listaContribuyentes.add(con);
     }
     
     public Contribuyente generadorEmail(Contribuyente con) {
@@ -343,25 +349,25 @@ public class Utilities {
      * @param array
      * @return true si la lista esta llena false si tiene hueco.
      */
-    private boolean isFullContribuyentes() {
+    /*private boolean isFullContribuyentes() {
         for (Contribuyente c : listaContribuyentes) {
             if (c == null){
                 return false; // El array no está lleno
             }
         }
         return true; // El array está lleno
-    }
+    }*/
 
     
     /**
      * @param array 
      * Expande el array de DNI correctos.
      */
-    private void expandirContribuyentes() {
+    /*private void expandirContribuyentes() {
         Contribuyente[] nuevoArray = new Contribuyente[listaContribuyentes.length + 10];   // Duplicar el tamaño del array
         System.arraycopy(listaContribuyentes, 0, nuevoArray, 0, listaContribuyentes.length);    // Copiar los elementos del array original al nuevo array
         listaContribuyentes = nuevoArray;   // Asignar el nuevo array al array original.
-    }
+    }*/
     
     
     /**
@@ -472,15 +478,15 @@ public class Utilities {
      */
     private Vehiculos comprobarContribuyente(Vehiculos v){
         if(v.getContribuyente() == null) {
+            //System.out.println("BLABLA");
             v.addErrores("Vehículo sin propietario.");
             return v;
         }
-        
+        //System.out.println("ESTOY HASTA LA MISMISISMA POLLA");
         for (Contribuyente listaContribuyente : listaContribuyentes) {
-            if(listaContribuyente == null){
-                v.addErrores("Vehículo con propietario erróneo.");
-                break;
-            }
+            //System.out.println(listaContribuyente.getNifnie());
+            if(listaContribuyente == null) break;
+            
             if(v.getContribuyente().equals(listaContribuyente)){
                 return v;
             }

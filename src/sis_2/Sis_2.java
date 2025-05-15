@@ -132,9 +132,13 @@ public class Sis_2 {
         }
         
         count = 1;
-        for(int i =0; i< u.listaContribuyentes.length; i++){
+        /*for(int i =0; i< u.listaContribuyentes.length; i++){
             System.out.println(u.listaContribuyentes[i].getNifnie());
-        }
+        }*/
+        
+        /*for(Contribuyente co : u.listaContribuyentes){
+            System.out.println(co.getNifnie());
+        }*/
         while(count!=-1){
             Vehiculos v = eM.obtenerVehiculo(count);
             if(v == null) break;
