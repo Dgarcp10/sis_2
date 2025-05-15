@@ -149,7 +149,6 @@ public class Sis_2 {
             //BONIFICACION Y EXENCION ESTAN EN LOS OBJETOS,FECHAS TMBN A COMPROBAR EN EL SIGUIENTE IF, AL IGUAL QUE MATRICULA UNIDADES Y PROPIETARIO
             v = u.comprobarVehiculo(v);
             if(v.getErrores() == null || "".equals(v.getErrores())){ //el vehiculo esta bn
-                System.out.println("a");
                 Recibos r = u.crearRecibo(v, fechaPadron);
                 xmlM.agregarRecibo(r);
             }else{ //ERRORES.XML (error de vehiculo) 

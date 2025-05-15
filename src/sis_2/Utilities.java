@@ -421,45 +421,58 @@ public class Utilities {
     private Vehiculos comprobarMatriculas(Vehiculos v){
         List<String> ciudades = Arrays.asList("VI", "AB", "A", "AL", "AV", "BA", "IB", "B", "BU", "CC", "CA", "CS", "CE", "CR", "CO", "C", "CU", "GI", "GR", "GU", "SS", "H", "HU", "J", "LE", "L", "LO", "LU", "M", "MA", "ML", "MU", "NA", "OR", "O", "P", "GC", "PO", "SA", "TF", "S", "SG", "SE", "SO", "T", "TE", "TO", "V", "VA", "BI", "ZA", "Z");
         
-        if(v.getMatricula() != null){
+        if(v.getMatricula() != null && !("".equals(v.getMatricula()))){
+            String historico = "^H\\d{4}[A-Z]{3}$";
+            System.out.println("UTILITIES: " + v.getTipo());
+            System.out.println("UTILITIES: " + v.getMatricula());
+            
             switch(v.getTipo()){
                 case "TURISMO":
                 case "AUTOBUS":
                 case "CAMION":
                 case "MOTOCICLETA":
+                    
+            System.out.println("UTILITIES: Caso1");
                     String tipo1 = "^\\d{4}[A-Z]{3}$";
-                    String tipo2 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{4}[A-Z]{1,2}$";
-                    String tipo3 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{1,5}";
-                    if(Pattern.matches(tipo1, v.getMatricula()) || Pattern.matches(tipo2, v.getMatricula()) || Pattern.matches(tipo3, v.getMatricula())){
+                    String tipo2 = "(" + String.join("|", ciudades) + ")\\d{4}[A-Z]{1,2}$";
+                    String tipo3 = "(" + String.join("|", ciudades) + ")\\d{1,5}";
+                    if(Pattern.matches(tipo1, v.getMatricula().toUpperCase()) || Pattern.matches(tipo2, v.getMatricula().toUpperCase()) || Pattern.matches(tipo3, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
+                        System.out.println("UTILITIES: Caso1          Bueno");
                     }else{
                         v.addErrores("Matricula Errónea.");
                     }
                     break;
                 case "TRACTOR":
+            System.out.println("UTILITIES: Caso2");
                     String tipo4 = "^E\\d{4}[A-Z]{3}$";
-                    String tipo5 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{5}VE$";
-                    String tipo6 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{1,6}";
-                    if(Pattern.matches(tipo4, v.getMatricula()) || Pattern.matches(tipo5, v.getMatricula()) || Pattern.matches(tipo6, v.getMatricula())){
+                    String tipo5 = "(" + String.join("|", ciudades) + ")\\d{5}VE$";
+                    String tipo6 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
+                    if(Pattern.matches(tipo4, v.getMatricula().toUpperCase()) || Pattern.matches(tipo5, v.getMatricula().toUpperCase()) || Pattern.matches(tipo6, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
+                        System.out.println("UTILITIES: Caso2          Bueno");
                     }else{
                         v.addErrores("Matricula Errónea.");
                     }
                     break;
                 case "REMOLQUE":
-                    String tipo7 = "^R\\d{4}[A-Z]{3}$";
-                    String tipo8 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{5}VE$";
-                    String tipo9 = "\\b(" + String.join("|", ciudades) + ")\\b\\d{1,6}";
-                    if(Pattern.matches(tipo7, v.getMatricula()) || Pattern.matches(tipo8, v.getMatricula()) || Pattern.matches(tipo9, v.getMatricula())){
+            System.out.println("UTILITIES: Caso3");
+                    String tipo7 = "^R\\d{4}[a-zA-Z]{3}$";
+                    String tipo8 = "(" + String.join("|", ciudades) + ")\\d{5}VE$";
+                    String tipo9 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
+                    if(Pattern.matches(tipo7, v.getMatricula().toUpperCase()) || Pattern.matches(tipo8, v.getMatricula().toUpperCase()) || Pattern.matches(tipo9, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
+                        System.out.println("UTILITIES: Caso3          Bueno");
                     }else{
                         v.addErrores("Matricula Errónea.");
                     }
                     break;
                 case "CICLOMOTOR":
-                    String tipo10 = "^[C]{1}\\d{4}[A-Z]{3}$";
-                    if(Pattern.matches(tipo10, v.getMatricula())){
-                        //Si es correcta que hago??    
+            System.out.println("UTILITIES: Caso4");
+                    String tipo10 = "^[C]{1}\\d{4}[a-zA-Z]{3}$";
+                    if(Pattern.matches(tipo10, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
+                        //Si es correcta que hago??
+                        System.out.println("UTILITIES: Caso4          Bueno");    
                     }else{
                         v.addErrores("Matricula Errónea.");
                     }
