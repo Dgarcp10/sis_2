@@ -235,10 +235,11 @@ public class XmlManager {
     
     public void agregarVehiculo(Vehiculos v){
         Element vehiculo = documentoVeh.createElement("Vehiculo");
-        vehiculo.setAttribute("id", String.valueOf(v.getIdExcel()+1));
+        vehiculo.setAttribute("id", String.valueOf(v.getIdExcel()));
         rootElemVeh.appendChild(vehiculo);
 
         Element marca = documentoVeh.createElement("Marca");
+        System.out.println(v.getMarca());
         Text textMarca = documentoVeh.createTextNode(v.getMarca());
         marca.appendChild(textMarca);
         vehiculo.appendChild(marca); 
@@ -246,6 +247,7 @@ public class XmlManager {
         Element modelo = documentoVeh.createElement("Modelo");
         Text textModelo = documentoVeh.createTextNode(v.getModelo());
         modelo.appendChild(textModelo);
+        System.out.println(v.getModelo());
         vehiculo.appendChild(modelo);
 
         Element error = documentoVeh.createElement("Error");
@@ -295,8 +297,8 @@ public class XmlManager {
         recibo.appendChild(nif);  
         
         Element iban = documentoRec.createElement("IBAN");
-        Text textIban = documentoRec.createTextNode(r.getIban());
-        iban.appendChild(textIban);
+        //Text textIban = documentoRec.createTextNode(r.getIban());
+        //iban.appendChild(textIban);
         recibo.appendChild(iban);  
         
         Element tipoVehiculo = documentoRec.createElement("tipoVehiculo");

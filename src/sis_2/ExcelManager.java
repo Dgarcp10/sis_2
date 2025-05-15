@@ -259,7 +259,13 @@ public class ExcelManager {
         vehiculo.setContribuyente(con);
         vehiculo.setIdExcel(i);
         vehiculo.setTipo(vehiculoExcel.getCell(tipoColumn).getStringCellValue());
-        if(vehiculoExcel.getCell(marcaColumn)!=null) vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
+        if(vehiculoExcel.getCell(marcaColumn)!=null) {
+            vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
+            //System.out.println(i);
+            //System.out.println(vehiculo.getMarca());
+            //System.out.println(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
+            
+        }
         if(vehiculoExcel.getCell(modeloColumn)!=null){
             if(vehiculoExcel.getCell(modeloColumn).getCellType() == CellType.NUMERIC){
                 vehiculo.setModelo(String.valueOf(vehiculoExcel.getCell(modeloColumn).getNumericCellValue()));
