@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -255,7 +256,11 @@ public class ExcelManager {
         
         vehiculo.setTipo(vehiculoExcel.getCell(tipoColumn).getStringCellValue());
         if(vehiculoExcel.getCell(marcaColumn)!=null) vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
-        if(vehiculoExcel.getCell(modeloColumn)!=null) vehiculo.setModelo(vehiculoExcel.getCell(modeloColumn).getStringCellValue());
+        if(vehiculoExcel.getCell(modeloColumn)!=null){
+            if(vehiculoExcel.getCell(modeloColumn).getCellType() == CellType.NUMERIC){
+                vehiculo.setModelo(String.valueOf(vehiculoExcel.getCell(modeloColumn).getNumericCellValue()));
+            }else vehiculo.setModelo(vehiculoExcel.getCell(modeloColumn).getStringCellValue());
+        }
         if(vehiculoExcel.getCell(matriculaColumn)!=null) vehiculo.setMatricula(vehiculoExcel.getCell(matriculaColumn).getStringCellValue());
         if(vehiculoExcel.getCell(bastidorColumn)!=null) vehiculo.setNumeroBastidor(vehiculoExcel.getCell(bastidorColumn).getStringCellValue());
         if(vehiculoExcel.getCell(caballosColumn)!=null) vehiculo.setCaballosFiscales(vehiculoExcel.getCell(caballosColumn).getNumericCellValue());
