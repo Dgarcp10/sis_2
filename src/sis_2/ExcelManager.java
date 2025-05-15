@@ -211,6 +211,10 @@ public class ExcelManager {
         if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
         Row contribuyenteExcel = hojaContribuyente.getRow(i);
         if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).getStringCellValue().equals("")) return new Contribuyente();
+        if(contribuyenteExcel.getCell(nifnieColumn).getCellType() == CellType.NUMERIC){
+           contribuyenteExcel.getCell(nifnieColumn).setCellType(CellType.STRING);
+        }
+        
         Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).getStringCellValue(), contribuyenteExcel.getCell(apellido1Column).getStringCellValue(), contribuyenteExcel.getCell(nifnieColumn).getStringCellValue(), contribuyenteExcel.getCell(direccionColumn).getStringCellValue(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).getStringCellValue());
         contribuyente.setIdExcel(i);
         if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).getStringCellValue());
