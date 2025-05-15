@@ -476,15 +476,17 @@ public class Utilities {
             return v;
         }
         for (Contribuyente listaContribuyente : listaContribuyentes) {
+                System.out.println(listaContribuyente.getApellido1());
             if(listaContribuyente == null){
                 v.addErrores("Vehículo con propietario erróneo.");
                 return v;
             }
             if(v.getContribuyente().equals(listaContribuyente)){
+                System.out.println("LISTA");
                 return v;
             }
         }   
-        v.addErrores("Vehículo con propietario erróneo.");
+        //v.addErrores("Vehículo con propietario erróneo.");
         return v;
     }
     
