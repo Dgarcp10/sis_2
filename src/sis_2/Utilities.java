@@ -513,7 +513,20 @@ public class Utilities {
         r.setTipoVehiculo(v.getTipo());
         r.setMarcaModelo(v.getMarca()+ " "+ v.getModelo());
         r.setUnidad(v.getOrdenanza().getUnidad());
-        r.setValorUnidad(v.getCaballosFiscales());
+        switch(r.getUnidad()){
+            case "CABALLOS":
+                r.setValorUnidad(v.getCaballosFiscales());
+                break;
+            case "CC":
+                r.setValorUnidad(v.getCentimetroscubicos());
+                break;
+            case "KG":
+                r.setValorUnidad(v.getKgcarga());
+                break;
+            case "PLAZAS":
+                r.setValorUnidad(v.getPlazas());
+                break;
+        }
         r.setTotalRecibo(v.getOrdenanza().getImporte());
         r.setExencion(v.getExencion());
         r.setBonificacion(con.getBonificacion());
