@@ -278,7 +278,7 @@ public class Utilities {
     public void addContribuyente(Contribuyente con) {
         if (isFullContribuyentes()) expandirContribuyentes();
         for (int i = 0; i < listaContribuyentes.length; i++) {
-            if (listaContribuyentes[i] == null || "".equals(listaContribuyentes[i])) {
+            if (listaContribuyentes[i] == null) {
                 listaContribuyentes[i] = con;
                 i = listaContribuyentes.length+1;
             }
@@ -471,8 +471,15 @@ public class Utilities {
      * @return 
      */
     private Vehiculos comprobarContribuyente(Vehiculos v){
-        if(v.getContribuyente() == null) v.addErrores("Vehículo sin propietario.");
+        if(v.getContribuyente() == null) {
+            v.addErrores("Vehículo sin propietario.");
+            return v;
+        }
         for (Contribuyente listaContribuyente : listaContribuyentes) {
+            if(listaContribuyente == null){
+                v.addErrores("Vehículo con propietario erróneo.");
+                return v;
+            }
             if(v.getContribuyente().equals(listaContribuyente)){
                 return v;
             }
