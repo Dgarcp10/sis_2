@@ -345,7 +345,7 @@ public class Utilities {
      */
     private boolean isFullContribuyentes() {
         for (Contribuyente c : listaContribuyentes) {
-            if (c == null) {
+            if (c == null){
                 return false; // El array no está lleno
             }
         }
@@ -475,18 +475,17 @@ public class Utilities {
             v.addErrores("Vehículo sin propietario.");
             return v;
         }
+        
         for (Contribuyente listaContribuyente : listaContribuyentes) {
-                System.out.println(listaContribuyente.getApellido1());
             if(listaContribuyente == null){
                 v.addErrores("Vehículo con propietario erróneo.");
-                return v;
+                break;
             }
             if(v.getContribuyente().equals(listaContribuyente)){
-                System.out.println("LISTA");
                 return v;
             }
-        }   
-        //v.addErrores("Vehículo con propietario erróneo.");
+        } 
+        v.addErrores("Vehículo con propietario erróneo.");
         return v;
     }
     
