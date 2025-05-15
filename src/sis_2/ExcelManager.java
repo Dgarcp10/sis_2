@@ -203,13 +203,14 @@ public class ExcelManager {
     /**
      * 
      * @param i
+     * @return 
      * 
      */         //Revisar comentarios
     public Contribuyente obtenerContribuyente(int i){ //@return null si hemos llegado al final del excel     * Contribuyente vacio si es una fila del excel sin contribuyente     * Contribuyente con parametros es que se ha encontrado contribuyente  y se ha devuelto
         if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
         Row contribuyenteExcel = hojaContribuyente.getRow(i);
         if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).getStringCellValue().equals("")) return new Contribuyente();
-        Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).getStringCellValue(), contribuyenteExcel.getCell(apellido1Column).getStringCellValue(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
+        Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nifnieColumn).getStringCellValue(), contribuyenteExcel.getCell(apellido1Column).getStringCellValue(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
         contribuyente.setIdExcel(i);
         if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).getStringCellValue());
         if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).getStringCellValue());
