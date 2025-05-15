@@ -434,8 +434,8 @@ public class Utilities {
                     
             System.out.println("UTILITIES: Caso1");
                     String tipo1 = "^\\d{4}[A-Z]{3}$";
-                    String tipo2 = "(" + String.join("|", ciudades) + ")\\d{4}[A-Z]{1,2}$";
-                    String tipo3 = "(" + String.join("|", ciudades) + ")\\d{1,5}";
+                    String tipo2 = "(" + String.join("|", ciudades) + ")\\d{1,6}$";
+                    String tipo3 = "(" + String.join("|", ciudades) + ")\\d{1,4}[A-Z]{1,2}$";
                     if(Pattern.matches(tipo1, v.getMatricula().toUpperCase()) || Pattern.matches(tipo2, v.getMatricula().toUpperCase()) || Pattern.matches(tipo3, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
                         System.out.println("UTILITIES: Caso1          Bueno");
@@ -446,8 +446,8 @@ public class Utilities {
                 case "TRACTOR":
             System.out.println("UTILITIES: Caso2");
                     String tipo4 = "^E\\d{4}[A-Z]{3}$";
-                    String tipo5 = "(" + String.join("|", ciudades) + ")\\d{5}VE$";
-                    String tipo6 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
+                    String tipo5 = "(" + String.join("|", ciudades) + ")\\d{1,6}$";
+                    String tipo6 = "(" + String.join("|", ciudades) + ")\\d{1,5}VE$";
                     if(Pattern.matches(tipo4, v.getMatricula().toUpperCase()) || Pattern.matches(tipo5, v.getMatricula().toUpperCase()) || Pattern.matches(tipo6, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
                         System.out.println("UTILITIES: Caso2          Bueno");
@@ -458,8 +458,8 @@ public class Utilities {
                 case "REMOLQUE":
             System.out.println("UTILITIES: Caso3");
                     String tipo7 = "^R\\d{4}[a-zA-Z]{3}$";
-                    String tipo8 = "(" + String.join("|", ciudades) + ")\\d{5}VE$";
-                    String tipo9 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
+                    String tipo8 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
+                    String tipo9 = "(" + String.join("|", ciudades) + ")\\d{1,5}VE$";
                     if(Pattern.matches(tipo7, v.getMatricula().toUpperCase()) || Pattern.matches(tipo8, v.getMatricula().toUpperCase()) || Pattern.matches(tipo9, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
                         System.out.println("UTILITIES: Caso3          Bueno");
