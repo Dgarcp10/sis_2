@@ -257,7 +257,7 @@ public class ExcelManager {
         Vehiculos vehiculo = new Vehiculos();
         Contribuyente con = obtenerContribuyente(vehiculoExcel.getCell(nifPropietarioColumn).getStringCellValue());
         vehiculo.setContribuyente(con);
-        
+        vehiculo.setIdExcel(i);
         vehiculo.setTipo(vehiculoExcel.getCell(tipoColumn).getStringCellValue());
         if(vehiculoExcel.getCell(marcaColumn)!=null) vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
         if(vehiculoExcel.getCell(modeloColumn)!=null){
