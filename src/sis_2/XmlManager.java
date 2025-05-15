@@ -396,6 +396,22 @@ public class XmlManager {
         } catch (TransformerException ex) {
             System.out.println("ERROR 3.2: no se pudo escribir el ErroresVehiculos.xml correctamente");
         }
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            
+            DOMSource sourceRec = new DOMSource(documentoRec);
+            StreamResult resultRec = new StreamResult(archivoRec);
+            transformer.transform(sourceRec, resultRec);
+            
+            salida = true;
+        } catch (TransformerConfigurationException ex) {
+            System.out.println("ERROR 4.1: no se pudo escribir el Recios.xml correctamente");
+        } catch (TransformerException ex) {
+            System.out.println("ERROR 4.2: no se pudo escribir el Recios.xml correctamente");
+        }
         
         return salida;
     }
