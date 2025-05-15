@@ -117,6 +117,7 @@ public class Sis_2 {
                     change = true;
                     con = u.generadorEmail(con);
                     u.addContribuyente(con);
+                    //TODO
                 }else {
                     con.setIban("");    //Se borra en caso de que no sea necesario 
                     con.setEmail("");   //Se borra en caso de que no sea necesario, para que la casilla no sea null;
@@ -138,8 +139,10 @@ public class Sis_2 {
             if(v.getErrores()== null || "".equals(v.getErrores())){ //el vehiculo esta bn
                 Recibos r = u.crearRecibo(v, fechaPadron);
                 xmlM.agregarRecibo(r);
-            }else{ //ERRORES.XML (error de vehiculo)                
+            }else{ //ERRORES.XML (error de vehiculo) 
+                xmlM.agregarVehiculo(v);
             }
+            count++;
         }
         if(xmlM.escribir()) System.out.println("XMLs guardados exitosamente.");
         if(eM.guardarCambios()) System.out.println("EXCELs guardados exitosamente.");
