@@ -328,9 +328,9 @@ public class ExcelManager {
     private Ordenanza obtenerOrdenanza(Vehiculos vehiculo) {
        Ordenanza ord = new Ordenanza();
        if(vehiculo.getContribuyente() == null) return null;
-       
        ord.setAyuntamiento(vehiculo.getContribuyente().getAyuntamiento());
        ord.setTipoVehiculo(vehiculo.getTipo());
+       //System.out.println(ord.getAyuntamiento());
        String unidad;
        double valorUnidad;
        if(vehiculo.getCaballosFiscales()!=null){
@@ -349,7 +349,10 @@ public class ExcelManager {
        ord.setUnidad(unidad);
        
        for(int i = 1; i < hojaOrdenanza.getPhysicalNumberOfRows(); i++){
+            //if(i>=hojaOrdenanza.getPhysicalNumberOfRows()) break;
             Row vehiculoExcel = hojaOrdenanza.getRow(i);
+            if(vehiculoExcel == null) continue;
+            if(vehiculoExcel.getCell(ayuntamientoOrdenanzaColumn) == null) continue;
             if(ord.getAyuntamiento().equals(vehiculoExcel.getCell(ayuntamientoOrdenanzaColumn).getStringCellValue())
                 && ord.getTipoVehiculo().equals(vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue())
                 && ord.getUnidad().equals(vehiculoExcel.getCell(unidadColumn).getStringCellValue())
