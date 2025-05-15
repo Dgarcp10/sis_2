@@ -131,9 +131,10 @@ public class Sis_2 {
             }
         }
         
-        int cont = 1;
-        while(cont!=-1){
-            Vehiculos v = eM.obtenerVehiculo(cont);
+        count = 1;
+        while(count!=-1){
+            Vehiculos v = eM.obtenerVehiculo(count);
+            if(v == null) break;
             //BONIFICACION Y EXENCION ESTAN EN LOS OBJETOS,FECHAS TMBN A COMPROBAR EN EL SIGUIENTE IF, AL IGUAL QUE MATRICULA UNIDADES Y PROPIETARIO
             u.comprobarVehiculo(v);
             if(v.getErrores()== null || "".equals(v.getErrores())){ //el vehiculo esta bn
