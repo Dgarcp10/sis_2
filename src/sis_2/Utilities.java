@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Calendar;
+
 /**
  *
  * @author gar27
@@ -449,7 +451,6 @@ public class Utilities {
                     }
                     break;
                 case "REMOLQUE":
-            System.out.println("UTILITIES: Caso3");
                     String tipo7 = "^R\\d{4}[a-zA-Z]{3}$";
                     String tipo8 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
                     String tipo9 = "(" + String.join("|", ciudades) + ")\\d{1,5}VE$";
@@ -530,11 +531,100 @@ public class Utilities {
                 r.setValorUnidad(v.getPlazas());
                 break;
         }
-        r.setTotalRecibo(v.getOrdenanza().getImporte());
+        
+        System.out.println("UTILITIES: Tipo: " + v.getTipo());
+        System.out.println("UTILITIES: Min: " + v.getOrdenanza().getMinimoRango());
+        System.out.println("UTILITIES: Real: " + r.getValorUnidad());
+        System.out.println("UTILITIES: Max: " + v.getOrdenanza().getMaximoRango());
+        System.out.println("UTILITIES: Importe: " + v.getOrdenanza().getImporte());
+        r.setTotalRecibo((v.getOrdenanza().getImporte()/4)*obtenerTrimestres(v, fechaPadron));
         r.setExencion(v.getExencion());
         r.setBonificacion(con.getBonificacion());
         r.setEmail(con.getEmail());
         r.setAyuntamiento(con.getAyuntamiento());
+        System.out.println("UTILITIES: Importe final: " + r.getTotalRecibo() + "\n");
         return r;
+    }
+    
+    
+    public int obtenerTrimestres(Vehiculos v, Date fechaPadron) {
+        int salida = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fechaPadron);
+        int anioPadron = cal.get(Calendar.YEAR);
+        
+        cal.setTime(v.getFechaAlta());
+        int anioAlta = cal.get(Calendar.YEAR);
+        
+        if(anioAlta < anioPadron){
+            salida = 4;
+        }else if(anioAlta == anioPadron){
+            int mesAlta = cal.get(Calendar.MONTH);
+            if(9 <= mesAlta && mesAlta <=11){
+                salida = 1;
+            }else if(6 <= mesAlta && mesAlta <=8){
+                salida = 2;
+            }else if(3 <= mesAlta && mesAlta <=5){
+                salida = 3;
+            }else if(0 <= mesAlta && mesAlta <=2){
+                salida = 4;
+            }
+        }
+        if(v.getFechaBajaTemporal() != null){
+            cal.setTime(v.getFechaBajaTemporal());
+            int anioBajaT = cal.get(Calendar.YEAR);
+            if(anioBajaT < anioPadron){
+                salida = 0;
+            }else if(anioBajaT == anioPadron){
+                int mesBajaT = cal.get(Calendar.MONTH);
+                if(9 <= mesBajaT && mesBajaT <=11){
+
+                }else if(6 <= mesBajaT && mesBajaT <=8){
+                    salida -= 1;
+                }else if(3 <= mesBajaT && mesBajaT <=5){
+                    salida -= 2;
+                }else if(0 <= mesBajaT && mesBajaT <=2){
+                    salida -= 3;
+                }
+            }
+        }else if(v.getFechaBaja() != null){
+            cal.setTime(v.getFechaBaja());
+            int anioBaja = cal.get(Calendar.YEAR);
+            if(anioBaja < anioPadron){
+                salida = 0;
+            }else if(anioBaja == anioPadron){
+                int mesBaja = cal.get(Calendar.MONTH);
+                if(9 <= mesBaja && mesBaja <=11){
+
+                }else if(6 <= mesBaja && mesBaja <=8){
+                    salida -= 1;
+                }else if(3 <= mesBaja && mesBaja <=5){
+                    salida -= 2;
+                }else if(0 <= mesBaja && mesBaja <=2){
+                    salida -= 3;
+                }
+            }
+        }
+        return salida;
+    }
+    
+    private double calculaImporte(Vehiculos v, Date fechaPadron){
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fechaPadron);
+        int anioPadron = cal.get(Calendar.YEAR);
+        
+        
+        cal.setTime(v.getFechaAlta());
+        int anioAlta = cal.get(Calendar.YEAR);
+        //if(anioAlta == anioPadron){
+            //TODO
+            //Calcular que trimestres
+        //}else if(anioAlta < anioPadron){
+            
+        //}
+        
+    
+        return 0.0;
     }
 }

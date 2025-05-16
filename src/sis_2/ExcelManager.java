@@ -305,7 +305,7 @@ public class ExcelManager {
     }
     
     public boolean guardarCambios() {
-        boolean salida = false;
+        boolean salida;
         try {           
             try (FileOutputStream fosOrdenanzas = new FileOutputStream(direccionOrdenanzas);
                  FileOutputStream fosVehiculos = new FileOutputStream(direccionVehiculos)) {
@@ -348,17 +348,21 @@ public class ExcelManager {
        } 
        ord.setUnidad(unidad);
        
-       for(int i = 1; i < hojaOrdenanza.getPhysicalNumberOfRows(); i++){
+       //for(int i = 1; i < hojaOrdenanza.getPhysicalNumberOfRows(); i++){
+       for(int i = 1; i <= hojaOrdenanza.getLastRowNum(); i++){
             //if(i>=hojaOrdenanza.getPhysicalNumberOfRows()) break;
             Row vehiculoExcel = hojaOrdenanza.getRow(i);
+            
             if(vehiculoExcel == null) continue;
             if(vehiculoExcel.getCell(ayuntamientoOrdenanzaColumn) == null) continue;
+            
             if(ord.getAyuntamiento().equals(vehiculoExcel.getCell(ayuntamientoOrdenanzaColumn).getStringCellValue())
                 && ord.getTipoVehiculo().equals(vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue())
                 && ord.getUnidad().equals(vehiculoExcel.getCell(unidadColumn).getStringCellValue())
                 && valorUnidad >= vehiculoExcel.getCell(minimoColumn).getNumericCellValue()
                 && valorUnidad <= vehiculoExcel.getCell(maximoColumn).getNumericCellValue()) 
             {
+                    System.out.println("ExcelManager: Tipo: " + ord.getTipoVehiculo() + " " + vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue());
                     ord.setImporte(vehiculoExcel.getCell(importeColumn).getNumericCellValue());
                     ord.setMinimoRango(vehiculoExcel.getCell(minimoColumn).getNumericCellValue());
                     ord.setMaximoRango(vehiculoExcel.getCell(maximoColumn).getNumericCellValue());
