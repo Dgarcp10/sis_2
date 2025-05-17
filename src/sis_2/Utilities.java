@@ -540,6 +540,7 @@ public class Utilities {
         System.out.println("UTILITIES: Min: " + v.getOrdenanza().getMinimoRango());
         System.out.println("UTILITIES: Real: " + r.getValorUnidad());
         System.out.println("UTILITIES: Max: " + v.getOrdenanza().getMaximoRango());
+        System.out.println("UTILITIES: N trimestres: " + trimAPagar);
         System.out.println("UTILITIES: Importe: " + v.getOrdenanza().getImporte());
         
         r.setTotalRecibo((v.getOrdenanza().getImporte()/4)*trimAPagar);
