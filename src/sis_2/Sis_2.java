@@ -150,7 +150,7 @@ public class Sis_2 {
             v = u.comprobarVehiculo(v);
             if(v.getErrores() == null || "".equals(v.getErrores())){ //el vehiculo esta bn
                 Recibos r = u.crearRecibo(v, fechaPadron);
-                xmlM.agregarRecibo(r);
+                if(r != null) xmlM.agregarRecibo(r);
             }else{ //ERRORES.XML (error de vehiculo) 
                 xmlM.agregarVehiculo(v);
             }

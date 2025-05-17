@@ -500,6 +500,10 @@ public class Utilities {
     }
     
     public Recibos crearRecibo(Vehiculos v, Date fechaPadron){
+        int trimAPagar = obtenerTrimestres(v, fechaPadron);
+        if(trimAPagar == 0) {
+            return null;
+        }
         Recibos r = new Recibos();
         Contribuyente con = v.getContribuyente();
         if(con!=null) r.setContribuyente(con);
@@ -537,7 +541,8 @@ public class Utilities {
         System.out.println("UTILITIES: Real: " + r.getValorUnidad());
         System.out.println("UTILITIES: Max: " + v.getOrdenanza().getMaximoRango());
         System.out.println("UTILITIES: Importe: " + v.getOrdenanza().getImporte());
-        r.setTotalRecibo((v.getOrdenanza().getImporte()/4)*obtenerTrimestres(v, fechaPadron));
+        
+        r.setTotalRecibo((v.getOrdenanza().getImporte()/4)*trimAPagar);
         r.setExencion(v.getExencion());
         r.setBonificacion(con.getBonificacion());
         r.setEmail(con.getEmail());

@@ -297,8 +297,8 @@ public class XmlManager {
         recibo.appendChild(nif);  
         
         Element iban = documentoRec.createElement("IBAN");
-        //Text textIban = documentoRec.createTextNode(r.getIban());
-        //iban.appendChild(textIban);
+        Text textIban = documentoRec.createTextNode(r.getIban());
+        iban.appendChild(textIban);
         recibo.appendChild(iban);  
         
         Element tipoVehiculo = documentoRec.createElement("tipoVehiculo");
