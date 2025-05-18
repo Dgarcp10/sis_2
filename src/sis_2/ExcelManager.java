@@ -362,7 +362,7 @@ public class ExcelManager {
                 && valorUnidad >= vehiculoExcel.getCell(minimoColumn).getNumericCellValue()
                 && valorUnidad <= vehiculoExcel.getCell(maximoColumn).getNumericCellValue()) 
             {
-                    System.out.println("ExcelManager: Tipo: " + ord.getTipoVehiculo() + " " + vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue());
+                    //System.out.println("ExcelManager: Tipo: " + ord.getTipoVehiculo() + " " + vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue());
                     ord.setImporte(vehiculoExcel.getCell(importeColumn).getNumericCellValue());
                     ord.setMinimoRango(vehiculoExcel.getCell(minimoColumn).getNumericCellValue());
                     ord.setMaximoRango(vehiculoExcel.getCell(maximoColumn).getNumericCellValue());

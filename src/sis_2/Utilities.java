@@ -535,20 +535,20 @@ public class Utilities {
                 r.setValorUnidad(v.getPlazas());
                 break;
         }
-        
+        /*
         System.out.println("UTILITIES: Tipo: " + v.getTipo());
         System.out.println("UTILITIES: Min: " + v.getOrdenanza().getMinimoRango());
         System.out.println("UTILITIES: Real: " + r.getValorUnidad());
         System.out.println("UTILITIES: Max: " + v.getOrdenanza().getMaximoRango());
         System.out.println("UTILITIES: N trimestres: " + trimAPagar);
         System.out.println("UTILITIES: Importe: " + v.getOrdenanza().getImporte());
-        
+        */
         r.setTotalRecibo((v.getOrdenanza().getImporte()/4)*trimAPagar);
         r.setExencion(v.getExencion());
         r.setBonificacion(con.getBonificacion());
         r.setEmail(con.getEmail());
         r.setAyuntamiento(con.getAyuntamiento());
-        System.out.println("UTILITIES: Importe final: " + r.getTotalRecibo() + "\n");
+        //System.out.println("UTILITIES: Importe final: " + r.getTotalRecibo() + "\n");
         return r;
     }
     

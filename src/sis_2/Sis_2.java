@@ -9,6 +9,8 @@ package sis_2;
 import POJOS.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 //import java.util.HashSet;
 import java.util.Scanner;
@@ -150,7 +152,42 @@ public class Sis_2 {
             v = u.comprobarVehiculo(v);
             if(v.getErrores() == null || "".equals(v.getErrores())){ //el vehiculo esta bn
                 Recibos r = u.crearRecibo(v, fechaPadron);
-                if(r != null) xmlM.agregarRecibo(r);
+                if(r != null) {
+                    xmlM.agregarRecibo(r);
+                    //CONTRIBUYENTE
+                    System.out.println("\nNOMBRE: " + r.getContribuyente().getNombre());
+                    System.out.println("APELLIDO 1: " + r.getContribuyente().getApellido1());
+                    if(r.getContribuyente().getApellido2() != null && !"".equals(r.getContribuyente().getApellido2()))System.out.println("APELLIDO 2: " + r.getContribuyente().getApellido2());
+                    System.out.println("NIF NIE: " + r.getContribuyente().getNifnie());
+                    System.out.println("DIRECCION: " + r.getContribuyente().getDireccion());
+                    System.out.println("IBAN: " + r.getContribuyente().getIban());
+                    System.out.println("BONIFICACION: " + r.getContribuyente().getBonificacion());
+                    
+                    //FECHA
+                    LocalDate fechaHoy = LocalDate.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    System.out.println("FECHA RECIBO: " + fechaHoy.format(formatter));
+                    LocalDate fecha = LocalDate.of(Integer.parseInt(input), 1, 1);
+                    System.out.println("FECHA PADRON: " + fecha.format(formatter));
+                    
+                    //VEHICULO
+                    System.out.println("TIPO DE VEHIVULO: " + r.getVehiculos().getTipo());
+                    System.out.println("MARCA: " + r.getVehiculos().getMarca());
+                    System.out.println("MODELO: " + r.getVehiculos().getModelo());
+                    System.out.println("MATRICULA: " + r.getVehiculos().getMatricula());
+                    System.out.println("NUMERO DE BASTIDOR: " + r.getVehiculos().getNumeroBastidor());
+                    System.out.println("UNIDAD POR LA QUE SE COBRA: " + r.getUnidad());
+                    System.out.println("VALOR DE LA UNIDAD: " + r.getValorUnidad());
+                    
+                    System.out.println("IMPORTE: " + r.getTotalRecibo());
+                    if(r.getBonificacion()!= null && !"".equals(r.getBonificacion())){
+                        System.out.println("BONIFICACION: " + r.getBonificacion());                        
+                    }
+                    if(r.getExencion()!= null && !"".equals(r.getExencion())){
+                        System.out.println("EXENCION: " + r.getExencion());                        
+                    }
+                    System.out.println("IMPORTE TOTAL: " + r.getTotalRecibo());
+                }
             }else{ //ERRORES.XML (error de vehiculo)
                 xmlM.agregarVehiculo(v);
             }
