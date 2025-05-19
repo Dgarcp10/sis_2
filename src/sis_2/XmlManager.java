@@ -10,6 +10,7 @@ import POJOS.Vehiculos;
 import POJOS.Recibos;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -50,11 +51,13 @@ public class XmlManager {
     Element rootElemRec;
     File archivoRec;
     int numRecibos;
+    Date anyo;
     float totalRecibos;
     
-    public XmlManager() {
+    public XmlManager(Date anyo) {
         
         try {
+            this.setAnyo(anyo);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             
@@ -89,7 +92,7 @@ public class XmlManager {
             documentoRec.setXmlVersion("1.0");
             
             rootElemRec = documentoRec.createElement("Recibos");
-            rootElemRec.setAttribute("fechaPadron", "IVTM de " + "2025") ;
+            rootElemRec.setAttribute("fechaPadron", "IVTM de " + getAnyo()) ;
             
             //documentoRec.appendChild(rootElemRec);            //descomentar si da error
             String rutaArchivoRec = "resources/";
@@ -101,6 +104,28 @@ public class XmlManager {
         } catch (ParserConfigurationException ex) {
             System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml, erroresCcc.xml, ErroresVehiculos.xml o Recibos.xml correctamente");
         }
+        
+        /*
+        Element vehiculo = documentoVeh.createElement("Vehiculo");
+        vehiculo.setAttribute("id", "5");
+        rootElemVeh.appendChild(vehiculo);
+
+        Element marca = documentoVeh.createElement("Marca");
+        Text textMarca = documentoVeh.createTextNode("Audi");
+        marca.appendChild(textMarca);
+        vehiculo.appendChild(marca); 
+        
+        Element modelo = documentoVeh.createElement("Modelo");
+        Text textModelo = documentoVeh.createTextNode("A4");
+        modelo.appendChild(textModelo);
+        vehiculo.appendChild(modelo);
+
+        Element error = documentoVeh.createElement("Error");
+        Text textError = documentoVeh.createTextNode("Me cago en tus muertos");  //de donde sacan los errores y como??  (Pueden ser varios, ¿Stringcon appednd o Array?)  Hay 4 tipos de error posibles
+        error.appendChild(textError);
+        vehiculo.appendChild(error);
+        
+        */
     }
     
     public void agregarContribuyente(Contribuyente con){
@@ -209,12 +234,12 @@ public class XmlManager {
     }
     
     public void agregarVehiculo(Vehiculos v){
-        
         Element vehiculo = documentoVeh.createElement("Vehiculo");
-        vehiculo.setAttribute("id", String.valueOf(v.getIdExcel()+1));  //de donde saca el id??
+        vehiculo.setAttribute("id", String.valueOf(v.getIdExcel()+1));
         rootElemVeh.appendChild(vehiculo);
 
         Element marca = documentoVeh.createElement("Marca");
+        //System.out.println(v.getMarca());
         Text textMarca = documentoVeh.createTextNode(v.getMarca());
         marca.appendChild(textMarca);
         vehiculo.appendChild(marca); 
@@ -222,6 +247,7 @@ public class XmlManager {
         Element modelo = documentoVeh.createElement("Modelo");
         Text textModelo = documentoVeh.createTextNode(v.getModelo());
         modelo.appendChild(textModelo);
+        //System.out.println(v.getModelo());
         vehiculo.appendChild(modelo);
 
         Element error = documentoVeh.createElement("Error");
@@ -244,7 +270,7 @@ public class XmlManager {
         recibo.appendChild(exencion); 
         
         Element idFilaExcelVehiculo = documentoRec.createElement("idFilaExcelVehiculo");
-        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(String.valueOf(r.getVehiculos().getIdExcel()));       //como lo saco??   o parece en el recibo y lo saco de ahi??
+        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(String.valueOf(r.getVehiculos().getIdExcel()));
         idFilaExcelVehiculo.appendChild(textIdFilaExcelVehiculo);
         recibo.appendChild(idFilaExcelVehiculo);
 
@@ -334,9 +360,9 @@ public class XmlManager {
             
             salida = true;
         } catch (TransformerConfigurationException ex) {
-            System.out.println("ERROR 1.1: no se pudo escribir el ErroresNifNie.xml correctamente");
+            System.out.println("ERROR 1.1: no se pudo escribir el xml correctamente");
         } catch (TransformerException ex) {
-            System.out.println("ERROR 1.2: no se pudo escribir el ErroresNifNie.xml correctamente");
+            System.out.println("ERROR 1.2: no se pudo escribir el xml correctamente");
         }
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -370,7 +396,32 @@ public class XmlManager {
         } catch (TransformerException ex) {
             System.out.println("ERROR 3.2: no se pudo escribir el ErroresVehiculos.xml correctamente");
         }
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            
+            DOMSource sourceRec = new DOMSource(documentoRec);
+            StreamResult resultRec = new StreamResult(archivoRec);
+            transformer.transform(sourceRec, resultRec);
+            
+            salida = true;
+        } catch (TransformerConfigurationException ex) {
+            System.out.println("ERROR 4.1: no se pudo escribir el Recios.xml correctamente");
+        } catch (TransformerException ex) {
+            System.out.println("ERROR 4.2: no se pudo escribir el Recios.xml correctamente");
+        }
         
         return salida;
     }
+
+    public Date getAnyo() {
+        return anyo;
+    }
+
+    public void setAnyo(Date año) {
+        this.anyo = año;
+    }
+    
 }

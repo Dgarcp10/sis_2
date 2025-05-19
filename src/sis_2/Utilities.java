@@ -5,9 +5,19 @@
  */
 package sis_2;
 
+
 import java.util.regex.Pattern;
 import POJOS.Contribuyente;
+import POJOS.Ordenanza;
+import POJOS.Recibos;
+import POJOS.Vehiculos;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import java.util.Calendar;
 
 /**
  *
@@ -17,7 +27,8 @@ import java.math.BigInteger;
 public class Utilities {
     String[] listaNIFNIE;
     String[] listaEmail;
-
+    List<Contribuyente> listaContribuyentes;
+    
     public Utilities(){
        inicializar(); 
     }
@@ -25,6 +36,8 @@ public class Utilities {
     private void inicializar() {
             listaNIFNIE = new String[10];
             listaEmail = new String[10];
+            //listaContribuyentes = new Contribuyente [10];
+            listaContribuyentes = new ArrayList<>();
     }
     
     /**
@@ -266,12 +279,21 @@ public class Utilities {
         
     }
     
+    /*public void addContribuyente(Contribuyente con) {
+        if (isFullContribuyentes()) expandirContribuyentes();
+        for (int i = 0; i < listaContribuyentes.length; i++) {
+            if (listaContribuyentes[i] == null) {
+                listaContribuyentes[i] = con;
+                i = listaContribuyentes.length+1;
+            }
+        }       
+    }*/
+    
+    public void addContribuyente(Contribuyente con) {
+        listaContribuyentes.add(con);
+    }
+    
     public Contribuyente generadorEmail(Contribuyente con) {
-        //      Deberia de leer antes los emails generados ya para no modificarlos en caso de ser ya existentes???
-        //      Este codigo no lo contempla
-        //      Seria hacer una pasada precia leyendo los emails y metiendoles a la laista si son correctos, posteriormente los saltaria en la segunda pasada si estos ya estan en la lista.
-        
-        
         if(con.getEmail() == null || "".equals(con.getEmail())){
             String email = ("" + con.getNombre().charAt(0) + con.getApellido1().charAt(0));
             if(con.getApellido2()!= null && !"".equals(con.getApellido2())){
@@ -325,4 +347,290 @@ public class Utilities {
         listaEmail = nuevoArray;   // Asignar el nuevo array al array original.
     }
     
+    /**
+     * @param array
+     * @return true si la lista esta llena false si tiene hueco.
+     */
+    /*private boolean isFullContribuyentes() {
+        for (Contribuyente c : listaContribuyentes) {
+            if (c == null){
+                return false; // El array no está lleno
+            }
+        }
+        return true; // El array está lleno
+    }*/
+
+    
+    /**
+     * @param array 
+     * Expande el array de DNI correctos.
+     */
+    /*private void expandirContribuyentes() {
+        Contribuyente[] nuevoArray = new Contribuyente[listaContribuyentes.length + 10];   // Duplicar el tamaño del array
+        System.arraycopy(listaContribuyentes, 0, nuevoArray, 0, listaContribuyentes.length);    // Copiar los elementos del array original al nuevo array
+        listaContribuyentes = nuevoArray;   // Asignar el nuevo array al array original.
+    }*/
+    
+    
+    /**
+     * 
+     * @param v
+     * @return 
+     */
+    public Vehiculos comprobarVehiculo(Vehiculos v){
+        //TODO
+        v = comprobarFechas(v);
+        v = comprobarMatriculas(v);
+        v = comprobarContribuyente(v);
+        return v;
+    }
+    
+    /**
+     * 
+     * @param v
+     * @return 
+     */
+    private Vehiculos comprobarFechas(Vehiculos v){
+        if(v.getFechaMatriculacion() != null && v.getFechaAlta() != null && !(v.getFechaAlta().before(v.getFechaMatriculacion()))){
+            //fechas de alta y matriculacion correcttas
+            if(v.getFechaBajaTemporal() != null){
+                if(v.getFechaBajaTemporal().before(v.getFechaAlta())){
+                    v.addErrores("Fechas incoherentes.");
+                }else if(v.getFechaBaja() != null){
+                    if(v.getFechaBaja().before(v.getFechaAlta())){
+                        v.addErrores("Fechas incoherentes.");
+                    }else if(v.getFechaBajaTemporal().after(v.getFechaBaja())){
+                        v.addErrores("Fechas incoherentes.");
+                    }
+                }
+            }else if(v.getFechaBaja() != null){
+                if(v.getFechaBaja().before(v.getFechaAlta())){
+                    v.addErrores("Fechas incoherentes.");
+                }
+            }
+        }else{
+            //fecha de alta o matriculacion erroneas
+            v.addErrores("Fechas incoherentes.");
+        }
+        return v;
+    }
+     
+    /**
+     * 
+     * @param v
+     * @return 
+     */
+    private Vehiculos comprobarMatriculas(Vehiculos v){
+        List<String> ciudades = Arrays.asList("VI", "AB", "A", "AL", "AV", "BA", "IB", "B", "BU", "CC", "CA", "CS", "CE", "CR", "CO", "C", "CU", "GI", "GR", "GU", "SS", "H", "HU", "J", "LE", "L", "LO", "LU", "M", "MA", "ML", "MU", "NA", "OR", "O", "P", "GC", "PO", "SA", "TF", "S", "SG", "SE", "SO", "T", "TE", "TO", "V", "VA", "BI", "ZA", "Z");
+        
+        if(v.getMatricula() != null && !("".equals(v.getMatricula()))){
+            String historico = "^H\\d{4}[A-Z]{3}$";
+            
+            switch(v.getTipo()){
+                case "TURISMO":
+                case "AUTOBUS":
+                case "CAMION":
+                case "MOTOCICLETA":
+                    String tipo1 = "^\\d{4}[A-Z]{3}$";
+                    String tipo2 = "(" + String.join("|", ciudades) + ")\\d{1,6}$";
+                    String tipo3 = "(" + String.join("|", ciudades) + ")\\d{1,4}[A-Z]{1,2}$";
+                    if(Pattern.matches(tipo1, v.getMatricula().toUpperCase()) || Pattern.matches(tipo2, v.getMatricula().toUpperCase()) || Pattern.matches(tipo3, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
+                        //Si es correcta que hago??
+                    }else{
+                        v.addErrores("Matricula Errónea.");
+                    }
+                    break;
+                case "TRACTOR":
+                    String tipo4 = "^E\\d{4}[A-Z]{3}$";
+                    String tipo5 = "(" + String.join("|", ciudades) + ")\\d{1,6}$";
+                    String tipo6 = "(" + String.join("|", ciudades) + ")\\d{1,5}VE$";
+                    if(Pattern.matches(tipo4, v.getMatricula().toUpperCase()) || Pattern.matches(tipo5, v.getMatricula().toUpperCase()) || Pattern.matches(tipo6, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
+                        //Si es correcta que hago??
+                    }else{
+                        v.addErrores("Matricula Errónea.");
+                    }
+                    break;
+                case "REMOLQUE":
+                    String tipo7 = "^R\\d{4}[a-zA-Z]{3}$";
+                    String tipo8 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
+                    String tipo9 = "(" + String.join("|", ciudades) + ")\\d{1,5}VE$";
+                    if(Pattern.matches(tipo7, v.getMatricula().toUpperCase()) || Pattern.matches(tipo8, v.getMatricula().toUpperCase()) || Pattern.matches(tipo9, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
+                        //Si es correcta que hago??
+                    }else{
+                        v.addErrores("Matricula Errónea.");
+                    }
+                    break;
+                case "CICLOMOTOR":
+                    String tipo10 = "^C\\d{4}[a-zA-Z]{3}$";
+                    if(Pattern.matches(tipo10, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
+                        //Si es correcta que hago??   
+                    }else{
+                        v.addErrores("Matricula Errónea.");
+                    }
+                    break;
+            }
+        }else{
+            v.addErrores("Matricula Errónea.");
+        }
+        return v;
+    }
+    
+    /**
+     * 
+     * @param v
+     * @return 
+     */
+    private Vehiculos comprobarContribuyente(Vehiculos v){
+        if(v.getContribuyente() == null) {
+            //System.out.println("BLABLA");
+            v.addErrores("Vehículo sin propietario.");
+            return v;
+        }
+        //System.out.println("ESTOY HASTA LA MISMISISMA POLLA");
+        for (Contribuyente listaContribuyente : listaContribuyentes) {
+            //System.out.println(listaContribuyente.getNifnie());
+            if(listaContribuyente == null) break;
+            
+            if(v.getContribuyente().equals(listaContribuyente)){
+                return v;
+            }
+        } 
+        v.addErrores("Vehículo con propietario erróneo.");
+        return v;
+    }
+    
+    public Recibos crearRecibo(Vehiculos v, Date fechaPadron){
+        int trimAPagar = obtenerTrimestres(v, fechaPadron);
+        if(trimAPagar == 0) {
+            return null;
+        }
+        Recibos r = new Recibos();
+        Contribuyente con = v.getContribuyente();
+        if(con!=null) r.setContribuyente(con);
+        r.setVehiculos(v);
+        r.setFechaPadron(fechaPadron);
+        r.setFechaRecibo(new Date());
+        if(con==null || "".equals(con.getNifnie())) return null; 
+        r.setNifContribuyente(con.getNifnie());
+        String direccion = "";
+        direccion += con.getDireccion();
+        direccion += "  "+con.getNumero();
+        direccion += "  "+con.getAyuntamiento();
+        r.setDireccionCompleta(direccion);
+        r.setIban(con.getIban());
+        r.setTipoVehiculo(v.getTipo());
+        r.setMarcaModelo(v.getMarca()+ " "+ v.getModelo());
+        r.setUnidad(v.getOrdenanza().getUnidad());
+        switch(r.getUnidad()){
+            case "CABALLOS":
+                r.setValorUnidad(v.getCaballosFiscales());
+                break;
+            case "CC":
+                r.setValorUnidad(v.getCentimetroscubicos());
+                break;
+            case "KG":
+                r.setValorUnidad(v.getKgcarga());
+                break;
+            case "PLAZAS":
+                r.setValorUnidad(v.getPlazas());
+                break;
+        }
+        /*
+        System.out.println("UTILITIES: Tipo: " + v.getTipo());
+        System.out.println("UTILITIES: Min: " + v.getOrdenanza().getMinimoRango());
+        System.out.println("UTILITIES: Real: " + r.getValorUnidad());
+        System.out.println("UTILITIES: Max: " + v.getOrdenanza().getMaximoRango());
+        System.out.println("UTILITIES: N trimestres: " + trimAPagar);
+        System.out.println("UTILITIES: Importe: " + v.getOrdenanza().getImporte());
+        */
+        r.setTotalRecibo((v.getOrdenanza().getImporte()/4)*trimAPagar);
+        r.setExencion(v.getExencion());
+        r.setBonificacion(con.getBonificacion());
+        r.setEmail(con.getEmail());
+        r.setAyuntamiento(con.getAyuntamiento());
+        //System.out.println("UTILITIES: Importe final: " + r.getTotalRecibo() + "\n");
+        return r;
+    }
+    
+    
+    public int obtenerTrimestres(Vehiculos v, Date fechaPadron) {
+        int salida = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fechaPadron);
+        int anioPadron = cal.get(Calendar.YEAR);
+        
+        cal.setTime(v.getFechaAlta());
+        int anioAlta = cal.get(Calendar.YEAR);
+        
+        if(anioAlta < anioPadron){
+            salida = 4;
+        }else if(anioAlta == anioPadron){
+            int mesAlta = cal.get(Calendar.MONTH);
+            if(9 <= mesAlta && mesAlta <=11){
+                salida = 1;
+            }else if(6 <= mesAlta && mesAlta <=8){
+                salida = 2;
+            }else if(3 <= mesAlta && mesAlta <=5){
+                salida = 3;
+            }else if(0 <= mesAlta && mesAlta <=2){
+                salida = 4;
+            }
+        }
+        if(v.getFechaBajaTemporal() != null){
+            cal.setTime(v.getFechaBajaTemporal());
+            int anioBajaT = cal.get(Calendar.YEAR);
+            if(anioBajaT < anioPadron){
+                salida = 0;
+            }else if(anioBajaT == anioPadron){
+                int mesBajaT = cal.get(Calendar.MONTH);
+                if(9 <= mesBajaT && mesBajaT <=11){
+
+                }else if(6 <= mesBajaT && mesBajaT <=8){
+                    salida -= 1;
+                }else if(3 <= mesBajaT && mesBajaT <=5){
+                    salida -= 2;
+                }else if(0 <= mesBajaT && mesBajaT <=2){
+                    salida -= 3;
+                }
+            }
+        }else if(v.getFechaBaja() != null){
+            cal.setTime(v.getFechaBaja());
+            int anioBaja = cal.get(Calendar.YEAR);
+            if(anioBaja < anioPadron){
+                salida = 0;
+            }else if(anioBaja == anioPadron){
+                int mesBaja = cal.get(Calendar.MONTH);
+                if(9 <= mesBaja && mesBaja <=11){
+
+                }else if(6 <= mesBaja && mesBaja <=8){
+                    salida -= 1;
+                }else if(3 <= mesBaja && mesBaja <=5){
+                    salida -= 2;
+                }else if(0 <= mesBaja && mesBaja <=2){
+                    salida -= 3;
+                }
+            }
+        }
+        return salida;
+    }
+    
+    private double calculaImporte(Vehiculos v, Date fechaPadron){
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fechaPadron);
+        int anioPadron = cal.get(Calendar.YEAR);
+        
+        
+        cal.setTime(v.getFechaAlta());
+        int anioAlta = cal.get(Calendar.YEAR);
+        //if(anioAlta == anioPadron){
+            //TODO
+            //Calcular que trimestres
+        //}else if(anioAlta < anioPadron){
+            
+        //}
+        
+    
+        return 0.0;
+    }
 }

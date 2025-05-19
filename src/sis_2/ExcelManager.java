@@ -6,14 +6,19 @@
 package sis_2;
 
 import POJOS.Contribuyente;
+import POJOS.Ordenanza;
+import POJOS.Vehiculos;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+//import java.util.Date;
+//import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -199,23 +204,90 @@ public class ExcelManager {
     /**
      * 
      * @param i
+     * @return 
      * 
      */         //Revisar comentarios
     public Contribuyente obtenerContribuyente(int i){ //@return null si hemos llegado al final del excel     * Contribuyente vacio si es una fila del excel sin contribuyente     * Contribuyente con parametros es que se ha encontrado contribuyente  y se ha devuelto
         if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
         Row contribuyenteExcel = hojaContribuyente.getRow(i);
-        if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).toString().equals("")) return new Contribuyente();
-        Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).toString(), contribuyenteExcel.getCell(apellido1Column).toString(), contribuyenteExcel.getCell(nifnieColumn).toString(), contribuyenteExcel.getCell(direccionColumn).toString(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).toString());
+        if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).getStringCellValue().equals("")) return new Contribuyente();
+        if(contribuyenteExcel.getCell(nifnieColumn).getCellType() == CellType.NUMERIC){
+           contribuyenteExcel.getCell(nifnieColumn).setCellType(CellType.STRING);
+        }
+        
+        Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).getStringCellValue(), contribuyenteExcel.getCell(apellido1Column).getStringCellValue(), contribuyenteExcel.getCell(nifnieColumn).getStringCellValue(), contribuyenteExcel.getCell(direccionColumn).getStringCellValue(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).getStringCellValue());
         contribuyente.setIdExcel(i);
-        if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).toString());
-        if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).toString());
-        if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).toString());
-        if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).toString());
-        if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).toString());
-        if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).toString());
+        if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).getStringCellValue());
+        if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).getStringCellValue());
+        if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).getStringCellValue());
         //if(contribuyenteExcel.getCell(bonificacionColumn) != null && contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim().isEmpty()) contribuyente.setBonificacion(Double.parseDouble(contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim()));
         if(contribuyenteExcel.getCell(bonificacionColumn) != null) contribuyente.setBonificacion(contribuyenteExcel.getCell(bonificacionColumn).getNumericCellValue());
         return contribuyente;
+    }
+    
+    public Contribuyente obtenerContribuyente(String dni){ //@return null si hemos llegado al final del excel     * Contribuyente vacio si es una fila del excel sin contribuyente     * Contribuyente con parametros es que se ha encontrado contribuyente  y se ha devuelto
+        for(int i = 1; i<hojaContribuyente.getPhysicalNumberOfRows(); i++){
+            if(i>=hojaContribuyente.getPhysicalNumberOfRows()) return null;
+            Row contribuyenteExcel = hojaContribuyente.getRow(i);
+            if(contribuyenteExcel.getCell(nombreColumn)==null || contribuyenteExcel.getCell(nombreColumn).getStringCellValue().equals("")) continue;
+            if(dni.equals(contribuyenteExcel.getCell(nifnieColumn).getStringCellValue())){
+                Contribuyente contribuyente = new Contribuyente(contribuyenteExcel.getCell(nombreColumn).getStringCellValue(), contribuyenteExcel.getCell(apellido1Column).getStringCellValue(), contribuyenteExcel.getCell(nifnieColumn).getStringCellValue(), contribuyenteExcel.getCell(direccionColumn).getStringCellValue(), contribuyenteExcel.getCell(ayuntamientoContribuyenteColumn).getStringCellValue());
+                contribuyente.setIdExcel(i);
+                if(contribuyenteExcel.getCell(apellido2Column) != null) contribuyente.setApellido2(contribuyenteExcel.getCell(apellido2Column).getStringCellValue());
+                if(contribuyenteExcel.getCell(numeroColumn) != null) contribuyente.setNumero(contribuyenteExcel.getCell(numeroColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(paisCCCColumn) != null) contribuyente.setPaisCcc(contribuyenteExcel.getCell(paisCCCColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(CCCColumn) != null) contribuyente.setCcc(contribuyenteExcel.getCell(CCCColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(IBANColumn) != null) contribuyente.setIban(contribuyenteExcel.getCell(IBANColumn).getStringCellValue());
+                if(contribuyenteExcel.getCell(emailColumn) != null) contribuyente.setEmail(contribuyenteExcel.getCell(emailColumn).getStringCellValue());
+                //if(contribuyenteExcel.getCell(bonificacionColumn) != null && contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim().isEmpty()) contribuyente.setBonificacion(Double.parseDouble(contribuyenteExcel.getCell(bonificacionColumn).getStringCellValue().trim()));
+                if(contribuyenteExcel.getCell(bonificacionColumn) != null) contribuyente.setBonificacion(contribuyenteExcel.getCell(bonificacionColumn).getNumericCellValue());
+                return contribuyente;  
+            }
+        }
+        return null;
+    }
+    
+    public Vehiculos obtenerVehiculo(int i) {
+        if(i>=hojaVehiculos.getPhysicalNumberOfRows()) return null;
+        Row vehiculoExcel = hojaVehiculos.getRow(i);
+        if(vehiculoExcel.getCell(tipoColumn)==null || vehiculoExcel.getCell(tipoColumn).getStringCellValue().equals("")) return new Vehiculos();
+        Vehiculos vehiculo = new Vehiculos();
+        Contribuyente con = obtenerContribuyente(vehiculoExcel.getCell(nifPropietarioColumn).getStringCellValue());
+        //if(con!=null)System.out.println(con.getNifnie());
+        vehiculo.setContribuyente(con);
+        vehiculo.setIdExcel(i);
+        vehiculo.setTipo(vehiculoExcel.getCell(tipoColumn).getStringCellValue());
+        if(vehiculoExcel.getCell(marcaColumn)!=null) {
+            vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
+            //System.out.println(i);
+            //System.out.println(vehiculo.getMarca());
+            //System.out.println(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
+            
+        }
+        if(vehiculoExcel.getCell(modeloColumn)!=null){
+            if(vehiculoExcel.getCell(modeloColumn).getCellType() == CellType.NUMERIC){
+                vehiculo.setModelo(String.valueOf(vehiculoExcel.getCell(modeloColumn).getNumericCellValue()));
+            }else vehiculo.setModelo(vehiculoExcel.getCell(modeloColumn).getStringCellValue());
+        }
+        if(vehiculoExcel.getCell(matriculaColumn)!=null) vehiculo.setMatricula(vehiculoExcel.getCell(matriculaColumn).getStringCellValue());
+        if(vehiculoExcel.getCell(bastidorColumn)!=null) vehiculo.setNumeroBastidor(vehiculoExcel.getCell(bastidorColumn).getStringCellValue());
+        if(vehiculoExcel.getCell(caballosColumn)!=null) vehiculo.setCaballosFiscales(vehiculoExcel.getCell(caballosColumn).getNumericCellValue());
+        if(vehiculoExcel.getCell(plazasColumn)!=null) vehiculo.setPlazas(vehiculoExcel.getCell(plazasColumn).getNumericCellValue());
+        if(vehiculoExcel.getCell(CCColumn)!=null) vehiculo.setCentimetroscubicos(vehiculoExcel.getCell(CCColumn).getNumericCellValue());
+        if(vehiculoExcel.getCell(kgColumn)!=null) vehiculo.setKgcarga(vehiculoExcel.getCell(kgColumn).getNumericCellValue());
+        if(vehiculoExcel.getCell(exencionColumn)!=null) vehiculo.setExencion(vehiculoExcel.getCell(exencionColumn).getStringCellValue().charAt(0));
+        if(vehiculoExcel.getCell(fechaMatriculaciónColumn)!=null) vehiculo.setFechaMatriculacion(vehiculoExcel.getCell(fechaMatriculaciónColumn).getDateCellValue());
+        if(vehiculoExcel.getCell(fechaAltaColumn)!=null) vehiculo.setFechaAlta(vehiculoExcel.getCell(fechaAltaColumn).getDateCellValue());
+        if(vehiculoExcel.getCell(fechaBajaColumn)!=null) vehiculo.setFechaBaja(vehiculoExcel.getCell(fechaBajaColumn).getDateCellValue());
+        if(vehiculoExcel.getCell(fechaBajaTemporalColumn)!=null) vehiculo.setFechaBajaTemporal(vehiculoExcel.getCell(fechaBajaTemporalColumn).getDateCellValue());
+        
+        Ordenanza ord = obtenerOrdenanza(vehiculo);
+        vehiculo.setOrdenanza(ord);
+        
+        return vehiculo;
     }
     
     public void modificarContribuyente(Contribuyente contribuyente){
@@ -233,7 +305,7 @@ public class ExcelManager {
     }
     
     public boolean guardarCambios() {
-        boolean salida = false;
+        boolean salida;
         try {           
             try (FileOutputStream fosOrdenanzas = new FileOutputStream(direccionOrdenanzas);
                  FileOutputStream fosVehiculos = new FileOutputStream(direccionVehiculos)) {
@@ -251,6 +323,53 @@ public class ExcelManager {
             salida = false;
         }
         return salida;
+    }
+
+    private Ordenanza obtenerOrdenanza(Vehiculos vehiculo) {
+       Ordenanza ord = new Ordenanza();
+       if(vehiculo.getContribuyente() == null) return null;
+       ord.setAyuntamiento(vehiculo.getContribuyente().getAyuntamiento());
+       ord.setTipoVehiculo(vehiculo.getTipo());
+       //System.out.println(ord.getAyuntamiento());
+       String unidad;
+       double valorUnidad;
+       if(vehiculo.getCaballosFiscales()!=null){
+           unidad = "CABALLOS";
+           valorUnidad = vehiculo.getCaballosFiscales();
+       }else if (vehiculo.getCentimetroscubicos()!=null) {
+           unidad = "CC";
+           valorUnidad = vehiculo.getCentimetroscubicos();
+       }else if (vehiculo.getKgcarga()!=null) {
+           unidad = "KG";
+           valorUnidad = vehiculo.getKgcarga();
+       }else {
+           unidad = "PLAZAS";
+           valorUnidad = vehiculo.getPlazas();
+       } 
+       ord.setUnidad(unidad);
+       
+       //for(int i = 1; i < hojaOrdenanza.getPhysicalNumberOfRows(); i++){
+       for(int i = 1; i <= hojaOrdenanza.getLastRowNum(); i++){
+            //if(i>=hojaOrdenanza.getPhysicalNumberOfRows()) break;
+            Row vehiculoExcel = hojaOrdenanza.getRow(i);
+            
+            if(vehiculoExcel == null) continue;
+            if(vehiculoExcel.getCell(ayuntamientoOrdenanzaColumn) == null) continue;
+            
+            if(ord.getAyuntamiento().equals(vehiculoExcel.getCell(ayuntamientoOrdenanzaColumn).getStringCellValue())
+                && ord.getTipoVehiculo().equals(vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue())
+                && ord.getUnidad().equals(vehiculoExcel.getCell(unidadColumn).getStringCellValue())
+                && valorUnidad >= vehiculoExcel.getCell(minimoColumn).getNumericCellValue()
+                && valorUnidad <= vehiculoExcel.getCell(maximoColumn).getNumericCellValue()) 
+            {
+                    //System.out.println("ExcelManager: Tipo: " + ord.getTipoVehiculo() + " " + vehiculoExcel.getCell(tipoVehiculoColumn).getStringCellValue());
+                    ord.setImporte(vehiculoExcel.getCell(importeColumn).getNumericCellValue());
+                    ord.setMinimoRango(vehiculoExcel.getCell(minimoColumn).getNumericCellValue());
+                    ord.setMaximoRango(vehiculoExcel.getCell(maximoColumn).getNumericCellValue());
+                    return ord;
+            }
+       }
+       return ord;
     }
 
 }
