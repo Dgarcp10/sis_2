@@ -161,14 +161,10 @@ public class Sis_2 {
                     System.out.println("NIF NIE: " + r.getContribuyente().getNifnie());
                     System.out.println("DIRECCION: " + r.getContribuyente().getDireccion());
                     System.out.println("IBAN: " + r.getContribuyente().getIban());
-                    System.out.println("BONIFICACION: " + r.getContribuyente().getBonificacion());
                     
-                    //FECHA
-                    LocalDate fechaHoy = LocalDate.now();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    System.out.println("FECHA RECIBO: " + fechaHoy.format(formatter));
-                    LocalDate fecha = LocalDate.of(Integer.parseInt(input), 1, 1);
-                    System.out.println("FECHA PADRON: " + fecha.format(formatter));
+                    //FECHAS
+                    System.out.println("FECHA RECIBO: " + r.getFechaRecibo());
+                    System.out.println("FECHA PADRON: " + r.getFechaPadron());
                     
                     //VEHICULO
                     System.out.println("TIPO DE VEHIVULO: " + r.getVehiculos().getTipo());
@@ -179,12 +175,13 @@ public class Sis_2 {
                     System.out.println("UNIDAD POR LA QUE SE COBRA: " + r.getUnidad());
                     System.out.println("VALOR DE LA UNIDAD: " + r.getValorUnidad());
                     
-                    System.out.println("IMPORTE: " + r.getTotalRecibo());
+                    System.out.println("IMPORTE: " + r.getReciboBruto());
                     if(r.getBonificacion()!= null && !"".equals(r.getBonificacion())){
-                        System.out.println("BONIFICACION: " + r.getBonificacion());                        
+                        if(0 != r.getBonificacion()) System.out.println("BONIFICACION: " + r.getBonificacion() + "%");                        
                     }
                     if(r.getExencion()!= null && !"".equals(r.getExencion())){
-                        System.out.println("EXENCION: " + r.getExencion());                        
+                        if('S' == (r.getExencion())) System.out.println("EXENCION: Si");
+                        if('N' == (r.getExencion())) System.out.println("EXENCION: No");                        
                     }
                     System.out.println("IMPORTE TOTAL: " + r.getTotalRecibo());
                 }
