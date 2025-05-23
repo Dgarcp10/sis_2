@@ -158,8 +158,66 @@ public class pdfManager {
         tabla3.addCell(cell6);
         tabla3.addCell(cell7);
         
+        Table tabla3_5 = new Table(3);
+        tabla3_5.setWidth(500);
+        tabla3_5.setBorder(new SolidBorder(1));
+        
+        Cell cell8 = new Cell();
+        cell8.setBorder(Border.NO_BORDER);
+        cell8.setPadding(10);
+        cell8.setTextAlignment(TextAlignment.CENTER);
+        cell8.add(new Paragraph("Bastidor: " + rec.getVehiculos().getNumeroBastidor()));
+        
+        tabla3_5.addCell(cell8);
+        
+        // Agregar la tabla con los detalles del recibo (como en el PDF ejemplo)
+        Table tabla4 = new Table(6);
+        tabla4.setWidth(500);
+        tabla4.setBorder(new SolidBorder(1));
+        tabla4.setTextAlignment(TextAlignment.CENTER);
+
+        // Encabezados
+        tabla4.addHeaderCell("Tipo");
+        tabla4.addHeaderCell("Marca");
+        tabla4.addHeaderCell("Modelo");
+        tabla4.addHeaderCell("Unidad");
+        tabla4.addHeaderCell("Valor unidad");
+        tabla4.addHeaderCell("Importe");
+
+        // Datos (ejemplo, podrías adaptarlo si usas una lista de detalles en vez de 1 línea fija)
+        tabla4.addCell(rec.getTipoVehiculo()); // ej. "MOTOCICLETA"
+        tabla4.addCell(rec.getVehiculos().getMarca());        // ej. "YAMAHA"
+        tabla4.addCell(rec.getVehiculos().getModelo());       // ej. "MTN850-A"
+        tabla4.addCell(rec.getUnidad());          // o puedes hacer que venga del objeto si es variable
+        tabla4.addCell(String.valueOf(rec.getValorUnidad()));              // esto debería venir del objeto, aquí se pone como ejemplo
+        tabla4.addCell(String.valueOf(rec.getReciboBruto()));               // idem, puedes usar DecimalFormat si es float
+
+        // Línea para "TOTAL BASE IMPONIBLE"
+        Cell totalBase = new Cell(1, 5);
+        totalBase.setTextAlignment(TextAlignment.RIGHT);
+        totalBase.setBorder(Border.NO_BORDER);
+        totalBase.add(new Paragraph("TOTAL BASE IMPONIBLE"));
+        tabla4.addCell(totalBase);
+        tabla4.addCell(new Cell().add(new Paragraph(String.valueOf(rec.getReciboBruto())))); // valor real
+
+        // Línea para "TOTAL RECIBO"
+        Cell totalRecibo = new Cell(1, 5);
+        totalRecibo.setTextAlignment(TextAlignment.RIGHT);
+        totalRecibo.setBorder(Border.NO_BORDER);
+        totalRecibo.add(new Paragraph("TOTAL RECIBO"));
+        tabla4.addCell(totalRecibo);
+        tabla4.addCell(new Cell().add(new Paragraph(String.valueOf(rec.getTotalRecibo())))); // valor real
+
+        
+
+        
         doc.add(tabla1);
         doc.add(tabla2);
+        doc.add(empty); 
+        doc.add(tabla3);
+        doc.add(tabla3_5);
+        doc.add(empty);  // espacio si quieres separarlo visualmente
+        doc.add(tabla4); // nueva tabla con los detalles
 
         doc.close();
         } catch (IOException ex) {
