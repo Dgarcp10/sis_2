@@ -109,6 +109,8 @@ public class pdfManager {
         Cell cell3 = new Cell();
         try {
             img = new Image(ImageDataFactory.create(imagen));
+            img.scaleToFit(100, 60); // Ancho y alto máximos
+            img.setAutoScale(true); // También puedes probar con esto
             img.setBorder(Border.NO_BORDER);
             img.setPadding(10);
             cell3.add(img);
