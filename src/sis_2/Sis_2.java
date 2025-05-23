@@ -156,8 +156,8 @@ public class Sis_2 {
             v = u.comprobarVehiculo(v);
             if(v.getErrores() == null || "".equals(v.getErrores())){ //el vehiculo esta bn
                 Recibos r = u.crearRecibo(v, fechaPadron);
-                pdfM.addRecibo(r);
                 if(r != null) {
+                    pdfM.addRecibo(r);
                     xmlM.agregarRecibo(r);
                     //CONTRIBUYENTE
                     System.out.println("\nNOMBRE: " + r.getContribuyente().getNombre());
