@@ -50,14 +50,11 @@ public class XmlManager {
     Document documentoRec;
     Element rootElemRec;
     File archivoRec;
-    int numRecibos;
-    Date anyo;
-    float totalRecibos;
     
-    public XmlManager(Date anyo) {
+    
+    public XmlManager() {
         
         try {
-            this.setAnyo(anyo);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             
@@ -92,14 +89,11 @@ public class XmlManager {
             documentoRec.setXmlVersion("1.0");
             
             rootElemRec = documentoRec.createElement("Recibos");
-            rootElemRec.setAttribute("fechaPadron", "IVTM de " + getAnyo()) ;
             
             //documentoRec.appendChild(rootElemRec);            //descomentar si da error
             String rutaArchivoRec = "resources/";
             String nombreArchivoRec = "Recibos.xml";
             archivoRec = new File(rutaArchivoRec + nombreArchivoRec);
-            this.numRecibos = 0;
-            this.totalRecibos = 0;
             
         } catch (ParserConfigurationException ex) {
             System.out.println("ERROR: no se pudo abrir/crear el ErroresNifNie.xml, erroresCcc.xml, ErroresVehiculos.xml o Recibos.xml correctamente");
@@ -317,36 +311,25 @@ public class XmlManager {
         recibo.appendChild(matricula);  
         
         Element totalRecivo = documentoRec.createElement("totalRecivo");
-        Text textTotalRecivo = documentoRec.createTextNode(String.valueOf(r.getTotalRecibo()));        // calcular el recivo??
-        this.totalRecibos += r.getTotalRecibo(); 
+        Text textTotalRecivo = documentoRec.createTextNode(String.valueOf(r.getTotalRecibo()));
         totalRecivo.appendChild(textTotalRecivo);
         recibo.appendChild(totalRecivo);  
         
-        this.numRecibos++;
     }
-    /*
-        <Recibos fechaPadron="IVTM de 2025" totalPadron="9999,99" numeroTotalRecibos="3">
-        <Recibo idRecibo="1">
-        <Exencion>N</Exencion>
-        <idFilaExcelVehiculo>3</idFilaExcelVehiculo>
-        <nombre>Miguel angel</nombre>
-        <primerApellido>Quintanilla</primerApellido>
-        <segundoApellido>Fernandez</segundoApellido>
-        <NIF>09715890T</NIF>
-        <IBAN>ES5023455254943263234457</IBAN>
-        <tipoVehiculo>REMOLQUE</tipoVehiculo>
-        <marcaModelo>JOHN DEERE F90</marcaModelo>
-        <matricula>M125VE</matricula>
-        <totalRecibo>46.9</totalRecibo>
-        </Recibo>
-    */
+    
+    public void completaRecibosXml(String anyo, double totalRecibos, int numRecibos){
+        rootElemRec.setAttribute("fechaPadron", "IVTM de " + anyo);
+        rootElemRec.setAttribute("totalPadron", String.valueOf(totalRecibos));
+        rootElemRec.setAttribute("numeroTotalRecivos", String.valueOf(numRecibos));
+        documentoRec.appendChild(rootElemRec);
+    }
     
     public boolean escribir(){
-        boolean salida = false;
-        //fechaPadron="IVTM de 2025" totalPadron="9999,99" numeroTotalRecibos="3"
-        rootElemRec.setAttribute("totalPadron", String.valueOf(this.totalRecibos));
-        rootElemRec.setAttribute("numeroTotalRecivos", String.valueOf(this.numRecibos));
-        documentoRec.appendChild(rootElemRec);
+        boolean salidaNif = false;
+        boolean salidaCcc = false;
+        boolean salidaVeh = false;
+        boolean salidaRec = false;
+
         
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -358,7 +341,7 @@ public class XmlManager {
             StreamResult resultNif = new StreamResult(archivoNif);
             transformer.transform(sourceNif, resultNif);
             
-            salida = true;
+            salidaNif = true;
         } catch (TransformerConfigurationException ex) {
             System.out.println("ERROR 1.1: no se pudo escribir el xml correctamente");
         } catch (TransformerException ex) {
@@ -374,7 +357,7 @@ public class XmlManager {
             StreamResult resultCcc = new StreamResult(archivoCcc);
             transformer.transform(sourceCcc, resultCcc);
             
-            salida = true;
+            salidaCcc = true;
         } catch (TransformerConfigurationException ex) {
             System.out.println("ERROR 2.1: no se pudo escribir el ErroresCcc.xml correctamente");
         } catch (TransformerException ex) {
@@ -390,7 +373,7 @@ public class XmlManager {
             StreamResult resultVeh = new StreamResult(archivoVeh);
             transformer.transform(sourceVeh, resultVeh);
             
-            salida = true;
+            salidaVeh = true;
         } catch (TransformerConfigurationException ex) {
             System.out.println("ERROR 3.1: no se pudo escribir el ErroresVehiculos.xml correctamente");
         } catch (TransformerException ex) {
@@ -406,22 +389,14 @@ public class XmlManager {
             StreamResult resultRec = new StreamResult(archivoRec);
             transformer.transform(sourceRec, resultRec);
             
-            salida = true;
+            salidaRec = true;
         } catch (TransformerConfigurationException ex) {
             System.out.println("ERROR 4.1: no se pudo escribir el Recios.xml correctamente");
         } catch (TransformerException ex) {
             System.out.println("ERROR 4.2: no se pudo escribir el Recios.xml correctamente");
         }
-        
-        return salida;
+        if(salidaNif && salidaCcc && salidaVeh && salidaRec)return true;
+        return false;
     }
 
-    public Date getAnyo() {
-        return anyo;
-    }
-
-    public void setAnyo(Date año) {
-        this.anyo = año;
-    }
-    
 }
