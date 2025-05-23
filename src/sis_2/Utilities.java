@@ -535,6 +535,10 @@ public class Utilities {
                 r.setValorUnidad(v.getPlazas());
                 break;
         }
+        r.setExencion(v.getExencion());
+        r.setBonificacion(con.getBonificacion());
+        r.setEmail(con.getEmail());
+        r.setAyuntamiento(con.getAyuntamiento());
         /*
         System.out.println("UTILITIES: Tipo: " + v.getTipo());
         System.out.println("UTILITIES: Min: " + v.getOrdenanza().getMinimoRango());
@@ -543,12 +547,23 @@ public class Utilities {
         System.out.println("UTILITIES: N trimestres: " + trimAPagar);
         System.out.println("UTILITIES: Importe: " + v.getOrdenanza().getImporte());
         */
-        r.setTotalRecibo((v.getOrdenanza().getImporte()/4)*trimAPagar);
+        double aux;
+        aux = Math.round((v.getOrdenanza().getImporte()/4)*trimAPagar * 100.0) / 100.0;
+        r.setReciboBruto(aux);
+        //System.out.println("\t\tUTILITIES: " + v.getOrdenanza().getImporte() + "\n\t\tPAGA " + trimAPagar + " TRIMESTRE.");
+        if(r.getExencion()!= null && 'S' == (r.getExencion())){
+            r.setTotalRecibo(0);
+        }else if(r.getBonificacion() != null && 0.0 != r.getBonificacion()){
+            aux = Math.round(r.getReciboBruto() * (1.0 - (r.getBonificacion() / 100.0)) * 100.0) / 100.0;
+            r.setTotalRecibo(aux);
+        }else{
+            aux = Math.round(r.getReciboBruto() * 100.0) / 100.0;
+            r.setTotalRecibo(aux);
+        }
         r.setExencion(v.getExencion());
         r.setBonificacion(con.getBonificacion());
         r.setEmail(con.getEmail());
         r.setAyuntamiento(con.getAyuntamiento());
-        //System.out.println("UTILITIES: Importe final: " + r.getTotalRecibo() + "\n");
         return r;
     }
     
