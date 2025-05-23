@@ -93,8 +93,8 @@ public class DAO {
         sesion.close();
     }
     
-    public boolean anyadirRecibo(Recibos rec) {
-        boolean exito = true;
+    public Recibos anyadirRecibo(Recibos rec) {
+        //boolean exito = true;
         sesion = ConexionManager.getSession();
         tx = sesion.beginTransaction();
 
@@ -116,13 +116,14 @@ public class DAO {
             qRecibo.setParameter("matricula", vehiculo.getMatricula());
 
             Recibos rExistente = (Recibos) qRecibo.uniqueResult();
-
+            rec.setNumRecibo(rExistente.getNumRecibo());
             rec.setContribuyente(contribuyente);
             rec.setVehiculos(vehiculo);
 
             if (rExistente == null) {
                 sesion.save(rec);
             } else {
+                rec.setNumRecibo(rExistente.getNumRecibo());
                 rExistente.setTotalRecibo(rec.getTotalRecibo());
                 rExistente.setValorUnidad(rec.getValorUnidad());
                 rExistente.setUnidad(rec.getUnidad());
@@ -134,14 +135,15 @@ public class DAO {
 
             tx.commit();
         } catch (Exception e) {
-            exito = false;
+            //exito = false;
+            //return null;
             if (tx != null) tx.rollback();
             e.printStackTrace();
         } finally {
             if (sesion != null) sesion.close();
         }
 
-        return exito;
+        return rec;
     }
 
 
@@ -157,8 +159,10 @@ public class DAO {
 
         if (existente == null) {
             sesion.save(c);
+                
             return c;
         } else {
+            c.setIdContribuyente(existente.getIdContribuyente());
             existente.setDireccion(c.getDireccion());
             existente.setEmail(c.getEmail());
             existente.setIban(c.getIban());
@@ -181,6 +185,7 @@ public class DAO {
             sesion.save(v);
             return v;
         } else {
+            v.setIdVehiculo(v.getIdVehiculo());
             existente.setModelo(v.getModelo());
             existente.setTipo(v.getTipo());
             existente.setFechaAlta(v.getFechaAlta());
@@ -206,6 +211,7 @@ public class DAO {
             sesion.save(o);
             return o;
         } else {
+            o.setId(existente.getId());
             existente.setImporte(o.getImporte()); // En caso de que cambie
             sesion.update(existente);
             return existente;

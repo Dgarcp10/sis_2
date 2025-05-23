@@ -159,8 +159,8 @@ public class Sis_2 {
                 Recibos r = u.crearRecibo(v, fechaPadron);
                 if(r != null) {
                     pdfM.addRecibo(r);
-                    xmlM.agregarRecibo(r);
                     dao.anyadirRecibo(r);
+                    xmlM.agregarRecibo(r);
                     
                     //CONTRIBUYENTE
                     System.out.println("\nNOMBRE: " + r.getContribuyente().getNombre());
