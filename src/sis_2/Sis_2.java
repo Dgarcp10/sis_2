@@ -33,7 +33,7 @@ public class Sis_2 {
         Scanner sc = new Scanner (System.in);
         Utilities u = new Utilities();
         ExcelManager eM = new ExcelManager();
-        
+        pdfManager pdfM = new pdfManager();
         
         System.out.println("INTRODUZCA EL AÑO A GENERAR RECIBOS:");
         String input = sc.nextLine();
@@ -152,8 +152,10 @@ public class Sis_2 {
             v = u.comprobarVehiculo(v);
             if(v.getErrores() == null || "".equals(v.getErrores())){ //el vehiculo esta bn
                 Recibos r = u.crearRecibo(v, fechaPadron);
+                pdfM.addRecibo(r);
                 if(r != null) {
                     xmlM.agregarRecibo(r);
+                    
                     //CONTRIBUYENTE
                     System.out.println("\nNOMBRE: " + r.getContribuyente().getNombre());
                     System.out.println("APELLIDO 1: " + r.getContribuyente().getApellido1());
