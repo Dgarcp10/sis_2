@@ -24,28 +24,31 @@ import java.util.logging.Logger;
  * @author Diego
  */
 public class Sis_2 {
-    
+    static double totalRecibos;
+    static int numRecibos;
+    static String anyo;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        totalRecibos = 0.0;
+        numRecibos = 0;
         Scanner sc = new Scanner (System.in);
         Utilities u = new Utilities();
         ExcelManager eM = new ExcelManager();
-        pdfManager pdfM = new pdfManager();
+        XmlManager xmlM = new XmlManager();
         
         System.out.println("INTRODUZCA EL AÑO A GENERAR RECIBOS:");
         String input = sc.nextLine();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        
+        anyo = input;
         Date fechaPadron=null;
         try {
             fechaPadron = sdf.parse(input + "-01-01");
         } catch (ParseException ex) {
             Logger.getLogger(Sis_2.class.getName()).log(Level.SEVERE, null, ex);
         }
-        XmlManager xmlM = new XmlManager(fechaPadron);
         
         Contribuyente c;
         int aux = 1;
@@ -155,7 +158,6 @@ public class Sis_2 {
                 pdfM.addRecibo(r);
                 if(r != null) {
                     xmlM.agregarRecibo(r);
-                    
                     //CONTRIBUYENTE
                     System.out.println("\nNOMBRE: " + r.getContribuyente().getNombre());
                     System.out.println("APELLIDO 1: " + r.getContribuyente().getApellido1());
@@ -163,14 +165,10 @@ public class Sis_2 {
                     System.out.println("NIF NIE: " + r.getContribuyente().getNifnie());
                     System.out.println("DIRECCION: " + r.getContribuyente().getDireccion());
                     System.out.println("IBAN: " + r.getContribuyente().getIban());
-                    System.out.println("BONIFICACION: " + r.getContribuyente().getBonificacion());
                     
-                    //FECHA
-                    LocalDate fechaHoy = LocalDate.now();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    System.out.println("FECHA RECIBO: " + fechaHoy.format(formatter));
-                    LocalDate fecha = LocalDate.of(Integer.parseInt(input), 1, 1);
-                    System.out.println("FECHA PADRON: " + fecha.format(formatter));
+                    //FECHAS
+                    System.out.println("FECHA RECIBO: " + r.getFechaRecibo());
+                    System.out.println("FECHA PADRON: " + r.getFechaPadron());
                     
                     //VEHICULO
                     System.out.println("TIPO DE VEHIVULO: " + r.getVehiculos().getTipo());
@@ -181,12 +179,13 @@ public class Sis_2 {
                     System.out.println("UNIDAD POR LA QUE SE COBRA: " + r.getUnidad());
                     System.out.println("VALOR DE LA UNIDAD: " + r.getValorUnidad());
                     
-                    System.out.println("IMPORTE: " + r.getTotalRecibo());
+                    System.out.println("IMPORTE: " + r.getReciboBruto());
                     if(r.getBonificacion()!= null && !"".equals(r.getBonificacion())){
-                        System.out.println("BONIFICACION: " + r.getBonificacion());                        
+                        if(0 != r.getBonificacion()) System.out.println("BONIFICACION: " + r.getBonificacion() + "%");                        
                     }
                     if(r.getExencion()!= null && !"".equals(r.getExencion())){
-                        System.out.println("EXENCION: " + r.getExencion());                        
+                        if('S' == (r.getExencion())) System.out.println("EXENCION: Si");
+                        if('N' == (r.getExencion())) System.out.println("EXENCION: No");                        
                     }
                     System.out.println("IMPORTE TOTAL: " + r.getTotalRecibo());
                 }
@@ -195,6 +194,7 @@ public class Sis_2 {
             }
             count++;
         }
+        xmlM.completaRecibosXml(anyo, totalRecibos, numRecibos);
         if(xmlM.escribir()) System.out.println("XMLs guardados exitosamente.");
         if(eM.guardarCambios()) System.out.println("EXCELs guardados exitosamente.");
     }
