@@ -57,7 +57,7 @@ public class pdfManager {
 
         String anioStr = String.valueOf(anio);
 
-        PdfWriter writer = new PdfWriter(ruta+rec.getContribuyente().getNifnie()+rec.getContribuyente().getNombre()+apellidos+rec.getVehiculos().getMatricula()+anioStr);
+        PdfWriter writer = new PdfWriter(ruta+rec.getContribuyente().getNifnie()+rec.getContribuyente().getNombre()+apellidos+rec.getVehiculos().getMatricula()+anioStr+ ".pdf");
         
         PdfDocument pdfDoc = new PdfDocument(writer);
         
