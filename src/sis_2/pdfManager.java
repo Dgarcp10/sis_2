@@ -162,7 +162,7 @@ public class pdfManager {
         tabla3.addCell(cell6);
         tabla3.addCell(cell7);
         
-        Table tabla3_5 = new Table(3);
+        Table tabla3_5 = new Table(1);
         tabla3_5.setWidth(500);
         tabla3_5.setBorder(new SolidBorder(1));
         
