@@ -391,25 +391,28 @@ public class Utilities {
      * @return 
      */
     private Vehiculos comprobarFechas(Vehiculos v){
-        if(v.getFechaMatriculacion() != null && v.getFechaAlta() != null && !(v.getFechaAlta().before(v.getFechaMatriculacion()))){
-            //fechas de alta y matriculacion correcttas
-            if(v.getFechaBajaTemporal() != null){
-                if(v.getFechaBajaTemporal().before(v.getFechaAlta())){
-                    v.addErrores("Fechas incoherentes.");
+        if(v.getFechaMatriculacion() != null && v.getFechaAlta() != null){
+            if(v.getFechaAlta().before(v.getFechaMatriculacion())){
+                v.addErrores("Fechas incoherentes.");
+            }else{
+                //fechas de alta y matriculacion correcttas
+                if(v.getFechaBajaTemporal() != null){
+                    if(v.getFechaBajaTemporal().before(v.getFechaAlta())){
+                        v.addErrores("Fechas incoherentes.");
+                    }else if(v.getFechaBaja() != null){
+                        if(v.getFechaBaja().before(v.getFechaAlta())){
+                            v.addErrores("Fechas incoherentes.");
+                        }else if(v.getFechaBajaTemporal().after(v.getFechaBaja())){
+                            v.addErrores("Fechas incoherentes.");
+                        }
+                    }
                 }else if(v.getFechaBaja() != null){
                     if(v.getFechaBaja().before(v.getFechaAlta())){
                         v.addErrores("Fechas incoherentes.");
-                    }else if(v.getFechaBajaTemporal().after(v.getFechaBaja())){
-                        v.addErrores("Fechas incoherentes.");
                     }
-                }
-            }else if(v.getFechaBaja() != null){
-                if(v.getFechaBaja().before(v.getFechaAlta())){
-                    v.addErrores("Fechas incoherentes.");
                 }
             }
         }else{
-            //fecha de alta o matriculacion erroneas
             v.addErrores("Fechas incoherentes.");
         }
         return v;
@@ -433,7 +436,7 @@ public class Utilities {
                 case "MOTOCICLETA":
                     String tipo1 = "^\\d{4}[A-Z]{3}$";
                     String tipo2 = "(" + String.join("|", ciudades) + ")\\d{1,6}$";
-                    String tipo3 = "(" + String.join("|", ciudades) + ")\\d{1,4}[A-Z]{1,2}$";
+                    String tipo3 = "(" + String.join("|", ciudades) + ")\\d{4}[A-Z]{1,2}$";
                     if(Pattern.matches(tipo1, v.getMatricula().toUpperCase()) || Pattern.matches(tipo2, v.getMatricula().toUpperCase()) || Pattern.matches(tipo3, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
                     }else{
@@ -443,7 +446,7 @@ public class Utilities {
                 case "TRACTOR":
                     String tipo4 = "^E\\d{4}[A-Z]{3}$";
                     String tipo5 = "(" + String.join("|", ciudades) + ")\\d{1,6}$";
-                    String tipo6 = "(" + String.join("|", ciudades) + ")\\d{1,5}VE$";
+                    String tipo6 = "(" + String.join("|", ciudades) + ")\\d{5}VE$";
                     if(Pattern.matches(tipo4, v.getMatricula().toUpperCase()) || Pattern.matches(tipo5, v.getMatricula().toUpperCase()) || Pattern.matches(tipo6, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
                     }else{
@@ -452,8 +455,8 @@ public class Utilities {
                     break;
                 case "REMOLQUE":
                     String tipo7 = "^R\\d{4}[a-zA-Z]{3}$";
-                    String tipo8 = "(" + String.join("|", ciudades) + ")\\d{1,6}";
-                    String tipo9 = "(" + String.join("|", ciudades) + ")\\d{1,5}VE$";
+                    String tipo8 = "(" + String.join("|", ciudades) + ")\\d{1,6}$";
+                    String tipo9 = "(" + String.join("|", ciudades) + ")\\d{5}VE$";
                     if(Pattern.matches(tipo7, v.getMatricula().toUpperCase()) || Pattern.matches(tipo8, v.getMatricula().toUpperCase()) || Pattern.matches(tipo9, v.getMatricula().toUpperCase()) || Pattern.matches(historico, v.getMatricula().toUpperCase())){
                         //Si es correcta que hago??
                     }else{
