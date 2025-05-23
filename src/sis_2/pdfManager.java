@@ -46,7 +46,7 @@ public class pdfManager {
         String apellido1 = c.getApellido1() != null ? c.getApellido1() : "";
         String apellido2 = c.getApellido2() != null ? c.getApellido2() : "";
 
-        String apellidos = (apellido1 + " " + apellido2).trim();
+        String apellidos = (apellido1 + apellido2).trim();
         
         Date fecha = rec.getFechaPadron();
 
