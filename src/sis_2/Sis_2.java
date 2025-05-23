@@ -38,6 +38,7 @@ public class Sis_2 {
         Utilities u = new Utilities();
         ExcelManager eM = new ExcelManager();
         XmlManager xmlM = new XmlManager();
+        pdfManager pdfM = new pdfManager();
         
         System.out.println("INTRODUZCA EL AÑO A GENERAR RECIBOS:");
         String input = sc.nextLine();
