@@ -22,6 +22,7 @@ public class DAO {
     static ConexionManager con = null;
     static Session sesion = null;
     static Transaction tx = null;
+    
     public DAO (){
         sesion.getSession();
     }
