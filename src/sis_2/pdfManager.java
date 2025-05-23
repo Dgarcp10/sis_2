@@ -21,6 +21,8 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.logging.Level;
@@ -223,6 +225,46 @@ public class pdfManager {
         } catch (IOException ex) {
             Logger.getLogger(pdfManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void addReciboFinal(String anyo, double totalRecibos, int numRecibos) {
+        try {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setDecimalSeparator(',');
+        DecimalFormat df = new DecimalFormat("0.00", symbols);
+        String totalFormateado = df.format(totalRecibos);
+
+        String nombreArchivo = "ResumenIVTM_" + anyo + ".pdf";
+        PdfWriter writer = new PdfWriter(ruta + nombreArchivo);
+        PdfDocument pdfDoc = new PdfDocument(writer);
+        Document doc = new Document(pdfDoc, PageSize.LETTER);
+
+        // Título
+        Paragraph titulo = new Paragraph("RESUMEN IVTM  Ejercicio " + anyo + ".")
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFontSize(16);
+        doc.add(titulo);
+
+        doc.add(new Paragraph("\n")); // Espacio
+
+        // Total base imponible
+        Paragraph total = new Paragraph("TOTAL BASE IMPONIBLE.................. " + totalFormateado + " EUROS.")
+                .setTextAlignment(TextAlignment.LEFT)
+                .setFontSize(12);
+        doc.add(total);
+
+        doc.add(new Paragraph("\n")); // Espacio
+
+        // Número de recibos
+        Paragraph num = new Paragraph("NUMERO TOTAL DE RECIBOS................ " + numRecibos + " RECIBOS.")
+                .setTextAlignment(TextAlignment.LEFT)
+                .setFontSize(12);
+        doc.add(num);
+
+        doc.close();
+    } catch (IOException ex) {
+        Logger.getLogger(pdfManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 }
 
