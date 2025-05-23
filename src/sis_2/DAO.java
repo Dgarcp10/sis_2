@@ -24,7 +24,7 @@ public class DAO {
     static Transaction tx = null;
     
     public DAO (){
-        sesion.getSession();
+        //sesion.getSession();
     }
     
     public static boolean mostrarContribuyente(String DNI){
