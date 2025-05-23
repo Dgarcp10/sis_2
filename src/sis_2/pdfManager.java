@@ -174,6 +174,16 @@ public class pdfManager {
         
         tabla3_5.addCell(cell8);
         
+        Table tabla6 = new Table(1);
+        tabla6.setWidth(500);
+        tabla6.setBorder(new SolidBorder(1));
+        Cell cell9 = new Cell();
+        cell9.setBorder(Border.NO_BORDER);
+        cell9.setPadding(10);
+        cell9.setTextAlignment(TextAlignment.CENTER);
+        cell9.add(new Paragraph("Recibo vehiculo: Ejercicio"+anioStr+". Numero de trimestres: "+rec.getVehiculos().getTrimestres()));
+        tabla6.addCell(cell9);
+        
         // Agregar la tabla con los detalles del recibo (como en el PDF ejemplo)
         Table tabla4 = new Table(6);
         tabla4.setWidth(500);
@@ -220,6 +230,8 @@ public class pdfManager {
         doc.add(empty); 
         doc.add(tabla3);
         doc.add(tabla3_5);
+        doc.add(empty);  // espacio si quieres separarlo visualmente
+        doc.add(tabla6);
         doc.add(empty);  // espacio si quieres separarlo visualmente
         doc.add(tabla4); // nueva tabla con los detalles
 
