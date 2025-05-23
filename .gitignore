@@ -4,3 +4,4 @@ build/
 
 resources/
 /nbproject/private/
+src/hibernate.cfg.xml
