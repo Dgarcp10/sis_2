@@ -189,13 +189,17 @@ public class Sis_2 {
                         if('N' == (r.getExencion())) System.out.println("EXENCION: No");                        
                     }
                     System.out.println("IMPORTE TOTAL: " + r.getTotalRecibo());
+                    totalRecibos += r.getTotalRecibo();
+                    numRecibos++;
                 }
             }else{ //ERRORES.XML (error de vehiculo)
                 xmlM.agregarVehiculo(v);
             }
             count++;
         }
-        xmlM.completaRecibosXml(anyo, totalRecibos, numRecibos);
+        
+        double totRec = Math.round(totalRecibos * 100.0) / 100.0;
+        xmlM.completaRecibosXml(anyo, totRec, numRecibos);
         pdfM.addReciboFinal(anyo, totalRecibos, numRecibos);
         if(xmlM.escribir()) System.out.println("XMLs guardados exitosamente.");
         if(eM.guardarCambios()) System.out.println("EXCELs guardados exitosamente.");
