@@ -274,7 +274,7 @@ public class ExcelManager {
         }
         if(vehiculoExcel.getCell(matriculaColumn)!=null) vehiculo.setMatricula(vehiculoExcel.getCell(matriculaColumn).getStringCellValue());
         if(vehiculoExcel.getCell(bastidorColumn)!=null) vehiculo.setNumeroBastidor(vehiculoExcel.getCell(bastidorColumn).getStringCellValue());
-        if(vehiculoExcel.getCell(caballosColumn)!=null) vehiculo.setCaballosFiscales(vehiculoExcel.getCell(caballosColumn).getNumericCellValue());
+        if(vehiculoExcel.getCell(caballosColumn)!=null || "".equals(vehiculoExcel.getCell(caballosColumn))) vehiculo.setCaballosFiscales(vehiculoExcel.getCell(caballosColumn).getNumericCellValue());
         if(vehiculoExcel.getCell(plazasColumn)!=null) vehiculo.setPlazas(vehiculoExcel.getCell(plazasColumn).getNumericCellValue());
         if(vehiculoExcel.getCell(CCColumn)!=null) vehiculo.setCentimetroscubicos(vehiculoExcel.getCell(CCColumn).getNumericCellValue());
         if(vehiculoExcel.getCell(kgColumn)!=null) vehiculo.setKgcarga(vehiculoExcel.getCell(kgColumn).getNumericCellValue());
@@ -333,7 +333,7 @@ public class ExcelManager {
        //System.out.println(ord.getAyuntamiento());
        String unidad;
        double valorUnidad;
-       if(vehiculo.getCaballosFiscales()!=null){
+       if(vehiculo.getCaballosFiscales()!=null && 0.0 != vehiculo.getCaballosFiscales() ){
            unidad = "CABALLOS";
            valorUnidad = vehiculo.getCaballosFiscales();
        }else if (vehiculo.getCentimetroscubicos()!=null) {
