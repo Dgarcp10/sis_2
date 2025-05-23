@@ -38,6 +38,9 @@ public class Vehiculos  implements java.io.Serializable {
     @Transient
     private String errores;
     
+    @Transient
+    private int trimestres;
+    
     public Vehiculos() {
     }
 
@@ -221,6 +224,16 @@ public class Vehiculos  implements java.io.Serializable {
         if("".equals(getErrores())) this.errores += errores;
         else this.errores += " "+errores;
     }   
+
+    public int getTrimestres() {
+        return trimestres;
+    }
+
+    public void setTrimestres(int trimestres) {
+        this.trimestres = trimestres;
+    }
+    
+    
 }
 
 

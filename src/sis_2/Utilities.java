@@ -503,8 +503,8 @@ public class Utilities {
     }
     
     public Recibos crearRecibo(Vehiculos v, Date fechaPadron){
-        int trimAPagar = obtenerTrimestres(v, fechaPadron);
-        if(trimAPagar == 0) {
+        v.setTrimestres(obtenerTrimestres(v, fechaPadron));
+        if(v.getTrimestres() == 0) {
             return null;
         }
         Recibos r = new Recibos();
@@ -551,7 +551,7 @@ public class Utilities {
         System.out.println("UTILITIES: Importe: " + v.getOrdenanza().getImporte());
         */
         double aux;
-        aux = Math.round((v.getOrdenanza().getImporte()/4)*trimAPagar * 100.0) / 100.0;
+        aux = Math.round((v.getOrdenanza().getImporte()/4)*v.getTrimestres() * 100.0) / 100.0;
         r.setReciboBruto(aux);
         //System.out.println("\t\tUTILITIES: " + v.getOrdenanza().getImporte() + "\n\t\tPAGA " + trimAPagar + " TRIMESTRE.");
         if(r.getExencion()!= null && 'S' == (r.getExencion())){

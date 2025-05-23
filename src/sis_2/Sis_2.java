@@ -39,6 +39,7 @@ public class Sis_2 {
         ExcelManager eM = new ExcelManager();
         XmlManager xmlM = new XmlManager();
         pdfManager pdfM = new pdfManager();
+        DAO dao = new DAO();
         
         System.out.println("INTRODUZCA EL AÑO A GENERAR RECIBOS:");
         String input = sc.nextLine();
@@ -159,6 +160,7 @@ public class Sis_2 {
                 if(r != null) {
                     pdfM.addRecibo(r);
                     xmlM.agregarRecibo(r);
+                    dao.anyadirRecibo(r);
                     //CONTRIBUYENTE
                     System.out.println("\nNOMBRE: " + r.getContribuyente().getNombre());
                     System.out.println("APELLIDO 1: " + r.getContribuyente().getApellido1());
