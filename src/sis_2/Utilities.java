@@ -382,6 +382,7 @@ public class Utilities {
         v = comprobarFechas(v);
         v = comprobarMatriculas(v);
         v = comprobarContribuyente(v);
+        //System.out.println(v.getIdExcel()+1);
         return v;
     }
     
@@ -511,6 +512,7 @@ public class Utilities {
         Contribuyente con = v.getContribuyente();
         if(con!=null) r.setContribuyente(con);
         r.setVehiculos(v);
+        //System.out.println(r.getVehiculos().getIdExcel()+1);
         r.setFechaPadron(fechaPadron);
         r.setFechaRecibo(new Date());
         if(con==null || "".equals(con.getNifnie())) return null; 

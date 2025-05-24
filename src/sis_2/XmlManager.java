@@ -264,7 +264,7 @@ public class XmlManager {
         recibo.appendChild(exencion); 
         
         Element idFilaExcelVehiculo = documentoRec.createElement("idFilaExcelVehiculo");
-        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(String.valueOf(r.getVehiculos().getIdExcel()+1));
+        Text textIdFilaExcelVehiculo = documentoRec.createTextNode(""+(r.getVehiculos().getIdExcel()+1));
         idFilaExcelVehiculo.appendChild(textIdFilaExcelVehiculo);
         recibo.appendChild(idFilaExcelVehiculo);
 

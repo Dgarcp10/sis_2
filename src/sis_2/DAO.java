@@ -115,8 +115,8 @@ public class DAO {
 
             Recibos rExistente = (Recibos) qRecibo.uniqueResult();
             //rec.setNumRecibo(rExistente.getNumRecibo());
-            rec.setContribuyente(contribuyente);
-            rec.setVehiculos(vehiculo);
+            //rec.setContribuyente(contribuyente);
+            //rec.setVehiculos(vehiculo);
 
             if (rExistente == null) {
                 sesion.save(rec);

@@ -259,6 +259,7 @@ public class ExcelManager {
         //if(con!=null)System.out.println(con.getNifnie());
         vehiculo.setContribuyente(con);
         vehiculo.setIdExcel(i);
+        //System.out.println(vehiculo.getIdExcel());
         vehiculo.setTipo(vehiculoExcel.getCell(tipoColumn).getStringCellValue());
         if(vehiculoExcel.getCell(marcaColumn)!=null) {
             vehiculo.setMarca(vehiculoExcel.getCell(marcaColumn).getStringCellValue());
