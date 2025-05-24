@@ -97,16 +97,12 @@ public class DAO {
             Session sesion = ConexionManager.getSession();
         try {
             Transaction tx = sesion.beginTransaction();
-            // 1. Verificar y añadir/actualizar Contribuyente
             Contribuyente contribuyente = comprobarOInsertarContribuyente(rec.getContribuyente());
 
-            // 2. Verificar y añadir/actualizar Ordenanza
             Ordenanza ordenanza = comprobarOInsertarOrdenanza(rec.getVehiculos().getOrdenanza());
-
-            // 3. Verificar y añadir/actualizar Vehículo
+            
             Vehiculos vehiculo = comprobarOInsertarVehiculo(rec.getVehiculos(), contribuyente, ordenanza);
 
-            // 4. Verificar si ya existe el recibo
             Query qRecibo = sesion.createQuery(
                 "FROM Recibos r WHERE r.nifContribuyente = :nif AND r.fechaPadron = :fecha AND r.vehiculos.matricula = :matricula");
             qRecibo.setParameter("nif", rec.getNifContribuyente());
