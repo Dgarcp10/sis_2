@@ -169,32 +169,36 @@ public class DAO {
     }
 
 
-        private Vehiculos comprobarOInsertarVehiculo(Vehiculos v, Contribuyente c, Ordenanza ord) {
+        private Vehiculos comprobarOInsertarVehiculo(Vehiculos nuevoVehiculo, Contribuyente contribuyente, Ordenanza ordenanza) {
             Session sesion = ConexionManager.getSession();
-        Query q = sesion.createQuery("FROM Vehiculos v WHERE v.matricula = :m");
-        q.setParameter("m", v.getMatricula());
 
-        Vehiculos existente = (Vehiculos) q.uniqueResult();
+            Query q = sesion.createQuery("FROM Vehiculos veh WHERE veh.matricula = :m");
+            q.setParameter("m", nuevoVehiculo.getMatricula());
 
-        if (existente == null) {
-            v.setContribuyente(c);
-            v.setOrdenanza(ord);
-            sesion.save(v);
-            sesion.close();
-            return v;
-        } else {
-            v.setIdVehiculo(v.getIdVehiculo());
-            existente.setModelo(v.getModelo());
-            existente.setTipo(v.getTipo());
-            existente.setFechaAlta(v.getFechaAlta());
-            existente.setCentimetroscubicos(v.getCentimetroscubicos());
-            existente.setContribuyente(c);
-            existente.setOrdenanza(ord);
-            sesion.update(existente);
-            sesion.close();
-            return existente;
+            Vehiculos existente = (Vehiculos) q.uniqueResult();
+
+            if (existente == null) {
+                // No existe, lo insertamos
+                nuevoVehiculo.setContribuyente(contribuyente);
+                nuevoVehiculo.setOrdenanza(ordenanza);
+                sesion.save(nuevoVehiculo);
+                sesion.close();
+                return nuevoVehiculo;
+            } else {
+                // Existe, actualizamos sus campos
+                existente.setIdExcel(nuevoVehiculo.getIdExcel());
+                existente.setModelo(nuevoVehiculo.getModelo());
+                existente.setTipo(nuevoVehiculo.getTipo());
+                existente.setFechaAlta(nuevoVehiculo.getFechaAlta());
+                existente.setCentimetroscubicos(nuevoVehiculo.getCentimetroscubicos());
+                existente.setContribuyente(contribuyente);
+                existente.setOrdenanza(ordenanza);
+                sesion.update(existente);
+                sesion.close();
+                return existente;
+            }
         }
-    }
+
 
         private Ordenanza comprobarOInsertarOrdenanza(Ordenanza o) {
             Session sesion = ConexionManager.getSession();
