@@ -206,5 +206,6 @@ public class Sis_2 {
         pdfM.addReciboFinal(anyo, totalRecibos, numRecibos);
         if(xmlM.escribir()) System.out.println("XMLs guardados exitosamente.");
         if(eM.guardarCambios()) System.out.println("EXCELs guardados exitosamente.");
+        dao.close();
     }
 }

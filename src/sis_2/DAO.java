@@ -19,19 +19,19 @@ import org.hibernate.Transaction;
  * @author Nicol
  */
 public class DAO {
-    static ConexionManager con = null;
-    static Session sesion = null;
-    static Transaction tx = null;
+    //static ConexionManager con = null;
+    //static Session sesion = null;
+    //static Transaction tx = null;
     
     public DAO (){
         //sesion.getSession();
     }
     
-    public static boolean mostrarContribuyente(String DNI){
+    /*public static boolean mostrarContribuyente(String DNI){
         
         boolean salida = true;
         //con = ConexionManager.getIntance();
-        sesion = ConexionManager.getSession();
+        Session sesion = ConexionManager.getSession();
             
         Query query = sesion.createQuery("SELECT c FROM Contribuyente c WHERE c.nifnie = :n");
         query.setParameter("n", DNI);
@@ -54,22 +54,23 @@ public class DAO {
     
     public static void importeTotalReciboContribuyente(String DNI){
         
-        sesion = ConexionManager.getSession();
+        Session sesion = ConexionManager.getSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r WHERE r.nifContribuyente = :n");
         query.setParameter("n", DNI);
             
         List<Recibos> listaRecibos = query.list();
-        tx = sesion.beginTransaction();
+        Transaction tx = sesion.beginTransaction();
         for (Recibos r : listaRecibos) {
             r.setTotalRecibo(115D);
             sesion.update(r);
         }
         tx.commit();
+        sesion.close();
     }
     
     public static void eliminarRecibosMenorMedia(){
         
-        sesion = ConexionManager.getSession();
+        Session sesion = ConexionManager.getSession();
         Query query = sesion.createQuery("SELECT r FROM Recibos r");
             
         List<Recibos> listaRecibos = query.list();
@@ -80,25 +81,22 @@ public class DAO {
         }
         media = media/listaRecibos.size();
         //System.out.println("Media: " + media);
-        tx = sesion.beginTransaction();
+        Transaction tx = sesion.beginTransaction();
         for (Recibos r : listaRecibos) {
             if(r.getTotalRecibo()<media){
                 sesion.delete(r);
             }
         }
         tx.commit();
-
-
-
         sesion.close();
-    }
+    }*/
     
     public Recibos anyadirRecibo(Recibos rec) {
         //boolean exito = true;
-        sesion = ConexionManager.getSession();
-        tx = sesion.beginTransaction();
 
+            Session sesion = ConexionManager.getSession();
         try {
+            Transaction tx = sesion.beginTransaction();
             // 1. Verificar y añadir/actualizar Contribuyente
             Contribuyente contribuyente = comprobarOInsertarContribuyente(rec.getContribuyente());
 
@@ -137,17 +135,18 @@ public class DAO {
         } catch (Exception e) {
             //exito = false;
             //return null;
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
+            //if (tx != null) tx.rollback();
+            //e.printStackTrace();
         } finally {
             if (sesion != null) sesion.close();
         }
-
+        //sesion.close();
         return rec;
     }
 
 
         private Contribuyente comprobarOInsertarContribuyente(Contribuyente c) {
+        Session sesion = ConexionManager.getSession();
         Query q = sesion.createQuery(
             "FROM Contribuyente c WHERE c.nombre = :n AND c.apellido1 = :a1 AND c.apellido2 = :a2 AND c.nifnie = :nif");
         q.setParameter("n", c.getNombre());
@@ -174,6 +173,7 @@ public class DAO {
 
 
         private Vehiculos comprobarOInsertarVehiculo(Vehiculos v, Contribuyente c, Ordenanza ord) {
+            Session sesion = ConexionManager.getSession();
         Query q = sesion.createQuery("FROM Vehiculos v WHERE v.matricula = :m");
         q.setParameter("m", v.getMatricula());
 
@@ -183,6 +183,7 @@ public class DAO {
             v.setContribuyente(c);
             v.setOrdenanza(ord);
             sesion.save(v);
+            sesion.close();
             return v;
         } else {
             v.setIdVehiculo(v.getIdVehiculo());
@@ -193,11 +194,13 @@ public class DAO {
             existente.setContribuyente(c);
             existente.setOrdenanza(ord);
             sesion.update(existente);
+            sesion.close();
             return existente;
         }
     }
 
         private Ordenanza comprobarOInsertarOrdenanza(Ordenanza o) {
+            Session sesion = ConexionManager.getSession();
         Query q = sesion.createQuery("FROM Ordenanza o WHERE o.ayuntamiento = :a AND o.tipoVehiculo = :t AND o.unidad = :u AND o.minimoRango = :min AND o.maximoRango = :max");
         q.setParameter("a", o.getAyuntamiento());
         q.setParameter("t", o.getTipoVehiculo());
@@ -209,13 +212,18 @@ public class DAO {
 
         if (existente == null) {
             sesion.save(o);
+            sesion.close();
             return o;
         } else {
             o.setId(existente.getId());
             existente.setImporte(o.getImporte()); // En caso de que cambie
             sesion.update(existente);
+            sesion.close();
             return existente;
         }
     }
-
+        public void close(){
+            ConexionManager.getIntance().close();
+            //con.close();
+        }
 }
