@@ -274,7 +274,7 @@ public class pdfManager {
         DecimalFormat df = new DecimalFormat("0.00", symbols);
         String totalFormateado = df.format(totalRecibos);
 
-        String nombreArchivo = "ResumenIVTM_" + anyo + ".pdf";
+        String nombreArchivo = "71314712S_16625997X_Resumen.pdf";
         PdfWriter writer = new PdfWriter(ruta + nombreArchivo);
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document doc = new Document(pdfDoc, PageSize.LETTER);
