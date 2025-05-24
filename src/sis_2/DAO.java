@@ -114,9 +114,9 @@ public class DAO {
             qRecibo.setParameter("matricula", vehiculo.getMatricula());
 
             Recibos rExistente = (Recibos) qRecibo.uniqueResult();
-            rec.setNumRecibo(rExistente.getNumRecibo());
-            //rec.setContribuyente(contribuyente);
-            //rec.setVehiculos(vehiculo);
+            //rec.setNumRecibo(rExistente.getNumRecibo());
+            rec.setContribuyente(contribuyente);
+            rec.setVehiculos(vehiculo);
 
             if (rExistente == null) {
                 sesion.save(rec);
