@@ -318,7 +318,6 @@ public class XmlManager {
     }
     
     public void completaRecibosXml(String anyo, double totalRecibos, int numRecibos){
-        System.out.println("\t\t\t\t" + totalRecibos + "   " + numRecibos);
         rootElemRec.setAttribute("fechaPadron", "IVTM de " + anyo);
         rootElemRec.setAttribute("totalPadron", String.valueOf(totalRecibos));
         rootElemRec.setAttribute("numeroTotalRecivos", String.valueOf(numRecibos));
