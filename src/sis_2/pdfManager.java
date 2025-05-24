@@ -46,7 +46,7 @@ public class pdfManager {
         String apellido1 = c.getApellido1() != null ? c.getApellido1() : "";
         String apellido2 = c.getApellido2() != null ? c.getApellido2() : "";
 
-        String apellidos = (apellido1 + apellido2).trim();
+        String apellidos = (apellido1 + " " +apellido2).trim();
         
         Date fecha = rec.getFechaPadron();
 
@@ -57,7 +57,7 @@ public class pdfManager {
 
         String anioStr = String.valueOf(anio);
 
-        PdfWriter writer = new PdfWriter(ruta+rec.getContribuyente().getNifnie()+rec.getContribuyente().getNombre()+apellidos+rec.getVehiculos().getMatricula()+anioStr+ ".pdf");
+        PdfWriter writer = new PdfWriter(ruta+rec.getContribuyente().getNifnie()+rec.getContribuyente().getNombre()+apellidos.replaceAll(" ", "")+rec.getVehiculos().getMatricula()+anioStr+ ".pdf");
         
         PdfDocument pdfDoc = new PdfDocument(writer);
         
@@ -91,16 +91,24 @@ public class pdfManager {
         cell2.add(new Paragraph("IBAN: "+rec.getIban()));      
         cell2.add(new Paragraph("Fecha de recibo: "+rec.getFechaRecibo().toInstant()
                         .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
-                        .getYear()));
+                        .toLocalDate()));
+                        //.getYear()));
         cell2.add(new Paragraph("Fecha de matriculacion: "+rec.getVehiculos().getFechaMatriculacion().toInstant()
                         .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
-                        .getYear()));
+                        .toLocalDate()));
+                        //.getYear()));
         cell2.add(new Paragraph("Fecha de alta: "+rec.getVehiculos().getFechaAlta().toInstant()
                         .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
-                        .getYear()));
+                        .toLocalDate()));
+                        //.getYear()));
+        if(rec.getVehiculos().getFechaBajaTemporal()!=null)cell2.add(new Paragraph("Fecha de baja temporal: "+rec.getVehiculos().getFechaBajaTemporal().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()));
+                        //.getYear()));
+        if(rec.getVehiculos().getFechaBaja()!=null)cell2.add(new Paragraph("Fecha de baja definitiva: "+rec.getVehiculos().getFechaBaja().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()));
+                        //.getYear()));
         tabla1.addCell(cell2);
         
         Table tabla2 = new Table(2);
@@ -132,6 +140,8 @@ public class pdfManager {
         cell4.add(new Paragraph(c.getNombre()+" "+apellidos));
         cell4.add(new Paragraph("DNI: "+c.getNifnie()));
         cell4.add(new Paragraph(c.getDireccion()));
+        cell4.add(new Paragraph(c.getAyuntamiento()));
+        
         
         tabla2.addCell(cell3);
         tabla2.addCell(cell4);
@@ -176,7 +186,7 @@ public class pdfManager {
         
         Table tabla6 = new Table(1);
         tabla6.setWidth(500);
-        tabla6.setBorder(new SolidBorder(1));
+        tabla6.setBorder(Border.NO_BORDER);
         Cell cell9 = new Cell();
         cell9.setBorder(Border.NO_BORDER);
         cell9.setPadding(10);
@@ -184,63 +194,79 @@ public class pdfManager {
         cell9.add(new Paragraph("Recibo vehiculo: Ejercicio"+anioStr+". Numero de trimestres: "+rec.getVehiculos().getTrimestres()));
         tabla6.addCell(cell9);
         
-        // Agregar la tabla con los detalles del recibo (como en el PDF ejemplo)
-        Table tabla4 = new Table(6);
+        int columnas = 6;
+        if (rec.getBonificacion() != 0) columnas++;
+        if ('S' == rec.getExencion()) columnas++;
+        Table tabla4 = new Table(columnas);
         tabla4.setWidth(500);
         tabla4.setBorder(new SolidBorder(1));
         tabla4.setTextAlignment(TextAlignment.CENTER);
 
-        // Encabezados
+        
         tabla4.addHeaderCell("Tipo");
         tabla4.addHeaderCell("Marca");
         tabla4.addHeaderCell("Modelo");
         tabla4.addHeaderCell("Unidad");
         tabla4.addHeaderCell("Valor unidad");
         tabla4.addHeaderCell("Importe");
-
-        // Datos (ejemplo, podrías adaptarlo si usas una lista de detalles en vez de 1 línea fija)
-        tabla4.addCell(rec.getTipoVehiculo()); // ej. "MOTOCICLETA"
-        tabla4.addCell(rec.getVehiculos().getMarca());        // ej. "YAMAHA"
-        tabla4.addCell(rec.getVehiculos().getModelo());       // ej. "MTN850-A"
-        tabla4.addCell(rec.getUnidad());          // o puedes hacer que venga del objeto si es variable
-        tabla4.addCell(String.valueOf(rec.getValorUnidad()));              // esto debería venir del objeto, aquí se pone como ejemplo
-        tabla4.addCell(String.valueOf(rec.getReciboBruto()));               // idem, puedes usar DecimalFormat si es float
-
-        // Línea para "TOTAL BASE IMPONIBLE"
-        Cell totalBase = new Cell(1, 5);
-        totalBase.setTextAlignment(TextAlignment.RIGHT);
-        totalBase.setBorder(Border.NO_BORDER);
-        totalBase.add(new Paragraph("TOTAL BASE IMPONIBLE"));
-        tabla4.addCell(totalBase);
-        tabla4.addCell(new Cell().add(new Paragraph(String.valueOf(rec.getReciboBruto())))); // valor real
-
-        // Línea para "TOTAL RECIBO"
-        Cell totalRecibo = new Cell(1, 5);
-        totalRecibo.setTextAlignment(TextAlignment.RIGHT);
-        totalRecibo.setBorder(Border.NO_BORDER);
-        totalRecibo.add(new Paragraph("TOTAL RECIBO"));
-        tabla4.addCell(totalRecibo);
-        tabla4.addCell(new Cell().add(new Paragraph(String.valueOf(rec.getTotalRecibo())))); // valor real
-
+        if(rec.getBonificacion()!=0) tabla4.addHeaderCell("Bonificacion");
+        if('S'==(rec.getExencion())) tabla4.addHeaderCell("Exencion");
         
-
         
+        tabla4.addCell(rec.getTipoVehiculo()); 
+        tabla4.addCell(rec.getVehiculos().getMarca());        
+        tabla4.addCell(rec.getVehiculos().getModelo());       
+        tabla4.addCell(rec.getUnidad());          
+        tabla4.addCell(String.valueOf(rec.getValorUnidad()));              
+        tabla4.addCell(String.valueOf(rec.getReciboBruto()));               
+        if(rec.getBonificacion()!=0) tabla4.addCell(new Paragraph("Bonificacion: "+rec.getBonificacion()));
+        if('S'==(rec.getExencion())) tabla4.addCell(new Paragraph("Exencion: "+rec.getExencion()));
+       
+        Table tabla4_5 = new Table(2);
+        tabla4_5.setWidth(500);
+        tabla4_5.setBorder(Border.NO_BORDER);
+        Cell cell10 = new Cell();
+        cell10.setTextAlignment(TextAlignment.LEFT);
+        cell10.setBorder(Border.NO_BORDER);
+        cell10.add(new Paragraph("TOTAL BASE IMPONIBLE..."));
+        Cell cell11 = new Cell();
+        cell11.setTextAlignment(TextAlignment.RIGHT);
+        cell11.setBorder(Border.NO_BORDER);
+        cell11.add(new Paragraph(String.valueOf(rec.getReciboBruto())));
+        Cell cell12 = new Cell();
+        cell12.setTextAlignment(TextAlignment.LEFT);
+        cell12.setBorder(Border.NO_BORDER);
+        cell12.add(new Paragraph("TOTAL RECIBO..."));
+        Cell cell13 = new Cell();
+        cell13.setTextAlignment(TextAlignment.RIGHT);
+        cell13.setBorder(Border.NO_BORDER);
+        cell13.add(new Paragraph(String.valueOf(rec.getTotalRecibo())));
+
+        tabla4_5.addCell(cell10);
+        tabla4_5.addCell(cell11);
+        tabla4_5.addCell(cell12);
+        tabla4_5.addCell(cell13);
+
+                
         doc.add(tabla1);
         doc.add(tabla2);
         doc.add(empty); 
         doc.add(tabla3);
         doc.add(tabla3_5);
+        
         doc.add(empty);  // espacio si quieres separarlo visualmente
         doc.add(tabla6);
         doc.add(empty);  // espacio si quieres separarlo visualmente
         doc.add(tabla4); // nueva tabla con los detalles
 
+        doc.add(empty);  // espacio si quieres separarlo visualmente
+        doc.add(tabla4_5);
         doc.close();
         } catch (IOException ex) {
             Logger.getLogger(pdfManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+        
     public void addReciboFinal(String anyo, double totalRecibos, int numRecibos) {
         try {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
