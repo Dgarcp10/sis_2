@@ -163,8 +163,8 @@ public class Sis_2 {
                     pdfM.addRecibo(r);
                     //System.out.println(r.getVehiculos().getIdExcel());
                     dao.anyadirRecibo(r);
-                    System.out.println(r.getVehiculos().getIdExcel());
                     xmlM.agregarRecibo(r);
+                    //System.out.println(r.getVehiculos().getIdExcel());
                     
                     //CONTRIBUYENTE
                     System.out.println("\nNOMBRE: " + r.getContribuyente().getNombre());
