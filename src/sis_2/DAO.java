@@ -158,7 +158,7 @@ public class DAO {
 
         if (existente == null) {
             sesion.save(c);
-                
+            sesion.close();
             return c;
         } else {
             c.setIdContribuyente(existente.getIdContribuyente());
@@ -167,6 +167,7 @@ public class DAO {
             existente.setIban(c.getIban());
             existente.setBonificacion(c.getBonificacion());
             sesion.update(existente);
+            sesion.close();
             return existente;
         }
     }
